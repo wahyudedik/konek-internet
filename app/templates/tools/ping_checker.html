@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Ping Checker - Uji Konektivitas{% endblock %}
+{% block content %}
+<a href="/" class="back-link">← Kembali ke Beranda</a>
+<h1 class="section-title">📡 Ping Checker</h1>
+<p style="color:#666;margin-bottom:20px">Uji konektivitas dan response time ke server website.</p>
+
+<div class="tool-form">
+    <form id="pingForm">
+        <div class="form-group">
+            <label for="domain">Domain / URL</label>
+            <input type="text" id="domain" placeholder="contoh: google.com" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Cek Sekarang</button>
+    </form>
+    <div class="loading">
+        <div class="spinner"></div>
+        <p>Sedang melakukan ping...</p>
+    </div>
+    <div class="results"></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    document.getElementById('pingForm').addEventListener('submit', function (e) {
+        handleToolForm(e, `/ping/${extractDomain(document.getElementById('domain').value)}`);
+    });
+</script>
+{% endblock %}

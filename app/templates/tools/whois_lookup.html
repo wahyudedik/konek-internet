@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}WHOIS Lookup - Informasi Registrasi Domain{% endblock %}
+{% block content %}
+<a href="/" class="back-link">← Kembali ke Beranda</a>
+<h1 class="section-title">🌍 WHOIS Lookup</h1>
+<p style="color:#666;margin-bottom:20px">Informasi lengkap registrasi domain: registrar, tanggal registrasi, expiry,
+    nameserver.</p>
+
+<div class="tool-form">
+    <form id="whoisForm">
+        <div class="form-group">
+            <label for="domain">Domain</label>
+            <input type="text" id="domain" placeholder="contoh: google.com" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Cek Sekarang</button>
+    </form>
+    <div class="loading">
+        <div class="spinner"></div>
+        <p>Sedang mengecek WHOIS data...</p>
+    </div>
+    <div class="results"></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    document.getElementById('whoisForm').addEventListener('submit', function (e) {
+        handleToolForm(e, `/whois/${extractDomain(document.getElementById('domain').value)}`);
+    });
+</script>
+{% endblock %}

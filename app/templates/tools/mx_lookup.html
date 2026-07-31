@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}MX Lookup - Mail Exchange Records{% endblock %}
+{% block content %}
+<a href="/" class="back-link">← Kembali ke Beranda</a>
+<h1 class="section-title">📧 MX Lookup</h1>
+<p style="color:#666;margin-bottom:20px">Cek Mail Exchange records untuk konfigurasi email domain.</p>
+
+<div class="tool-form">
+    <form id="mxForm">
+        <div class="form-group">
+            <label for="domain">Domain</label>
+            <input type="text" id="domain" placeholder="contoh: google.com" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Cek Sekarang</button>
+    </form>
+    <div class="loading">
+        <div class="spinner"></div>
+        <p>Sedang mengecek MX records...</p>
+    </div>
+    <div class="results"></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    document.getElementById('mxForm').addEventListener('submit', function (e) {
+        handleToolForm(e, `/dns/${extractDomain(document.getElementById('domain').value)}/mx`);
+    });
+</script>
+{% endblock %}

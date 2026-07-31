@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}HTTP Status Checker - Cek Status HTTP{% endblock %}
+{% block content %}
+<a href="/" class="back-link">← Kembali ke Beranda</a>
+<h1 class="section-title">📊 HTTP Status Checker</h1>
+<p style="color:#666;margin-bottom:20px">Cek status HTTP response: 200 OK, 301 Redirect, 404 Not Found, 500 Error, dll.
+</p>
+
+<div class="tool-form">
+    <form id="httpForm">
+        <div class="form-group">
+            <label for="domain">Domain / URL</label>
+            <input type="text" id="domain" placeholder="contoh: google.com" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Cek Sekarang</button>
+    </form>
+    <div class="loading">
+        <div class="spinner"></div>
+        <p>Sedang mengecek HTTP status...</p>
+    </div>
+    <div class="results"></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    document.getElementById('httpForm').addEventListener('submit', function (e) {
+        handleToolForm(e, `/http-status/${extractDomain(document.getElementById('domain').value)}`);
+    });
+</script>
+{% endblock %}

@@ -1,7 +1,9 @@
 import httpx
 from typing import Dict, Any
+from app.utils.cache import cached
 
 
+@cached(ttl=3600)
 async def lookup_ip(ip_address: str) -> Dict[str, Any]:
     """IP Lookup - Informasi IP address"""
     results = {
@@ -18,7 +20,7 @@ async def lookup_ip(ip_address: str) -> Dict[str, Any]:
     
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.get(f"http://ip-api.com/json/{ip_address}")
+            response = await client.get(f"http://ip-api.com/json/{ip_address}", timeout=10)
             data = response.json()
             
             if data.get("status") == "success":
@@ -37,11 +39,11 @@ async def lookup_ip(ip_address: str) -> Dict[str, Any]:
     return results
 
 
+@cached(ttl=3600)
 async def lookup_asn(ip_address: str) -> Dict[str, Any]:
     """ASN Lookup - Cek Autonomous System Number"""
     results = await lookup_ip(ip_address)
     
-    # Extract ASN from as field
     if results.get("as"):
         asn_parts = results["as"].split(" ", 1)
         results["asn"] = asn_parts[0] if asn_parts else None
@@ -50,6 +52,7 @@ async def lookup_asn(ip_address: str) -> Dict[str, Any]:
     return results
 
 
+@cached(ttl=3600)
 async def check_blacklist(ip_address: str) -> Dict[str, Any]:
     """Blacklist Checker - Cek apakah IP ada di blacklist"""
     results = {
@@ -59,7 +62,6 @@ async def check_blacklist(ip_address: str) -> Dict[str, Any]:
         "error": None
     }
     
-    # Daftar blacklist servers yang umum digunakan
     blacklist_servers = [
         "zen.spamhaus.org",
         "bl.spamcop.net",
@@ -71,7 +73,6 @@ async def check_blacklist(ip_address: str) -> Dict[str, Any]:
     try:
         import dns.resolver
         
-        # Reverse IP untuk DNS lookup
         reversed_ip = ".".join(reversed(ip_address.split(".")))
         
         for bl_server in blacklist_servers:
@@ -81,10 +82,8 @@ async def check_blacklist(ip_address: str) -> Dict[str, Any]:
                 results["blacklists"].append(bl_server)
                 results["blacklisted"] = True
             except dns.resolver.NXDOMAIN:
-                # Tidak ada di blacklist ini
                 pass
             except Exception:
-                # Error lain, skip
                 pass
     except Exception as e:
         results["error"] = str(e)

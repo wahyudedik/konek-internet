@@ -1,0 +1,11 @@
+# Konektivitas.com - Infrastruktur Internet Gratis untuk Indonesia
+# https://konektivitas.com
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /docs
+Disallow: /redoc
+Disallow: /openapi.json
+
+Sitemap: https://konektivitas.com/sitemap.xml

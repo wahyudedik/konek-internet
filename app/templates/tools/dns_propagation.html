@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}DNS Propagation Checker - Cek Propagasi DNS Global{% endblock %}
+{% block content %}
+<a href="/" class="back-link">← Kembali ke Beranda</a>
+<h1 class="section-title">🌍 DNS Propagation Checker</h1>
+<p style="color:#666;margin-bottom:20px">Cek propagasi DNS dari 7 nameserver global: Google, Cloudflare, OpenDNS, Quad9,
+    AdGuard.</p>
+
+<div class="tool-form">
+    <form id="propagationForm">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="domain">Domain</label>
+                <input type="text" id="domain" placeholder="contoh: google.com" required>
+            </div>
+            <div class="form-group">
+                <label for="recordType">Record Type</label>
+                <select id="recordType">
+                    <option value="A">A (IPv4)</option>
+                    <option value="AAAA">AAAA (IPv6)</option>
+                    <option value="MX">MX</option>
+                    <option value="TXT">TXT</option>
+                    <option value="CNAME">CNAME</option>
+                    <option value="NS">NS</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Cek Propagasi</button>
+            </div>
+        </div>
+    </form>
+    <div class="loading">
+        <div class="spinner"></div>
+        <p>Sedang mengecek propagasi DNS ke 7 nameserver...</p>
+    </div>
+    <div class="results"></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    document.getElementById('propagationForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const domain = extractDomain(document.getElementById('domain').value);
+        const type = document.getElementById('recordType').value;
+        const loading = this.parentElement.querySelector('.loading');
+        const results = this.parentElement.querySelector('.results');
+        const btn = this.querySelector('.btn-primary');
+
+        loading.classList.add('active');
+        results.innerHTML = '';
+        btn.disabled = true;
+        btn.textContent = 'Mengecek...';
+
+        try {
+            const response = await fetch(`/api/v1/dns/${domain}/propagation?record_type=${type}`);
+            const data = await response.json();
+
+            if (data.error) {
+                results.innerHTML = `<div class="result-header"><h3>Error</h3><span class="result-status status-error">Gagal</span></div><p>${data.error}</p>`;
+            } else {
+                let html = `<div class="result-header"><h3>Propagasi DNS: ${domain}</h3><span class="result-status status-success">Selesai</span></div>`;
+                html += `<p style="color:#666;margin-bottom:15px">Record type: <strong>${type}</strong> | Record unik: <strong>${data.unique_records.length}</strong></p>`;
+                html += '<table class="result-table">';
+                html += '<tr><th>Nameserver</th><th>IP</th><th>Status</th><th>Records</th></tr>';
+                for (const [name, info] of Object.entries(data.results)) {
+                    const statusColor = info.status === 'ok' ? 'color:#2e7d32' : 'color:#c62828';
+                    const statusIcon = info.status === 'ok' ? '✅' : '❌';
+                    html += `<tr><td><strong>${name}</strong></td><td>${info.ip}</td><td style="${statusColor}">${statusIcon} ${info.status}</td><td>${info.records.join(', ') || '-'}</td></tr>`;
+                }
+                html += '</table>';
+
+                if (data.unique_records.length > 0) {
+                    html += `<div style="margin-top:20px"><h4>Records Unik:</h4><div class="result-json">${data.unique_records.join('\n')}</div></div>`;
+                }
+
+                html += `<details style="margin-top:20px"><summary style="cursor:pointer;color:#666">Lihat Raw JSON</summary><div class="result-json">${JSON.stringify(data, null, 2)}</div></details>`;
+                results.innerHTML = html;
+            }
+        } catch (error) {
+            results.innerHTML = `<div class="result-header"><h3>Error</h3><span class="result-status status-error">Gagal</span></div><p>${error.message}</p>`;
+        } finally {
+            loading.classList.remove('active');
+            btn.disabled = false;
+            btn.textContent = 'Cek Propagasi';
+        }
+    });
+</script>
+{% endblock %}

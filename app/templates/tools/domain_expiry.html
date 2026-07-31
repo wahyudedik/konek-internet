@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Domain Expiry Checker - Cek Masa Aktif Domain{% endblock %}
+{% block content %}
+<a href="/" class="back-link">← Kembali ke Beranda</a>
+<h1 class="section-title">⏰ Domain Expiry Checker</h1>
+<p style="color:#666;margin-bottom:20px">Cek sisa waktu aktif domain dan dapatkan peringatan sebelum expired.</p>
+
+<div class="tool-form">
+    <form id="expiryForm">
+        <div class="form-group">
+            <label for="domain">Domain</label>
+            <input type="text" id="domain" placeholder="contoh: google.com" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Cek Sekarang</button>
+    </form>
+    <div class="loading">
+        <div class="spinner"></div>
+        <p>Sedang mengecek masa aktif domain...</p>
+    </div>
+    <div class="results"></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    document.getElementById('expiryForm').addEventListener('submit', function (e) {
+        handleToolForm(e, `/domain/${extractDomain(document.getElementById('domain').value)}/expiry`);
+    });
+</script>
+{% endblock %}

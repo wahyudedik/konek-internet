@@ -12,12 +12,43 @@
 
 ```
 konek-internet/
-├── BRIEF.md           # Brief proyek (visi, misi, target)
-├── BRIEF2.md          # Detail teknis & arsitektur
-├── ROADMAP.md         # Roadmap 5 tahun (2026-2031)
-├── FEATURES.md        # Daftar lengkap fitur per fase
-├── AGENT.md           # Dokumen ini
-└── [Source Code]      # Akan ditambahkan saat implementasi
+├── BRIEF.md              # Brief proyek (visi, misi, target)
+├── BRIEF2.md             # Detail teknis & arsitektur
+├── ROADMAP.md            # Roadmap 5 tahun (2026-2031)
+├── FEATURES.md           # Daftar lengkap fitur per fase
+├── AGENT.md              # Dokumen ini
+├── requirements.txt      # Python dependencies
+├── .venv/                # Virtual environment
+└── app/
+    ├── __init__.py
+    ├── main.py           # FastAPI app + middleware
+    ├── config.py         # Konfigurasi (Pydantic)
+    ├── routers/          # API endpoints (5 router, 19 endpoints)
+    │   ├── dns.py        # 8 endpoints: lookup, reverse, mx, txt, cname, spf, dmarc, propagation
+    │   ├── domain.py     # 2 endpoints: whois, expiry
+    │   ├── ssl.py        # 2 endpoints: ssl check, expiry
+    │   ├── website.py    # 4 endpoints: ping, http-status, redirect, headers
+    │   └── ip.py         # 3 endpoints: ip lookup, asn, blacklist
+    ├── services/         # Business logic (4 services)
+    │   ├── dns_service.py    # DNS operations + @cached
+    │   ├── whois_service.py  # WHOIS lookup + @cached
+    │   ├── ip_service.py     # IP lookup via ip-api.com
+    │   └── ssl_service.py    # SSL verification + @cached
+    ├── utils/            # Helper functions
+    │   ├── cache.py      # Redis + in-memory fallback cache
+    │   └── rate_limit.py # Per-IP rate limiting (60 req/min)
+    ├── models/           # Data models (Pydantic)
+    ├── templates/        # Jinja2 HTML templates
+    │   ├── base.html     # Base layout (navbar, footer, JSON-LD)
+    │   ├── index.html    # Homepage (19 tools grid)
+    │   ├── 404.html      # Custom 404 page
+    │   └── tools/        # 19 tool pages
+    └── static/           # Static files
+        ├── favicon.svg   # SVG favicon
+        ├── robots.txt    # SEO robots
+        ├── sitemap.xml   # SEO sitemap
+        ├── css/style.css # Responsive CSS
+        └── js/app.js     # Frontend JavaScript
 ```
 
 ## Arsitektur Teknis
@@ -54,23 +85,78 @@ Internet → Cloudflare → AAPanel → Nginx → FastAPI → Redis → Database
 - Elasticsearch
 - RabbitMQ
 
+## Status Implementasi
+
+### Fase 1 - MVP (2026) ✅ SELESAI
+- 19 API endpoints aktif
+- 19 halaman frontend
+- Redis caching + in-memory fallback
+- Rate limiting (60 req/min per IP)
+- Security headers middleware
+- SEO: JSON-LD, robots.txt, sitemap.xml, canonical URL
+- Health check endpoint
+- Response time display
+
+### Cara Menjalankan
+```bash
+# Install dependencies
+e:\PROJEKU\konek-internet\.venv\Scripts\python.exe -m pip install -r requirements.txt
+
+# Start server
+e:\PROJEKU\konek-internet\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8002
+
+# Akses
+# Web: http://localhost:8002
+# API: http://localhost:8002/api/v1/
+# Docs: http://localhost:8002/docs
+# Health: http://localhost:8002/health
+```
+
 ## Konvensi Penamaan
 
-### URL Pattern
+### URL Pattern (kebab-case)
 ```
-/dns-lookup
-/whois-lookup
-/ip-lookup
-/ssl-checker
-/ping-checker
+/dns-lookup          /whois-lookup       /ssl-checker
+/reverse-dns         /domain-expiry      /ssl-expiry
+/dns-propagation     /ping-checker       /ip-lookup
+/mx-lookup           /http-status        /asn-lookup
+/txt-lookup          /redirect-checker   /blacklist-checker
+/cname-lookup        /header-checker
+/spf-checker         /dmarc-checker
 ```
 
 ### API Pattern
 ```
-/api/dns/{domain}
-/api/ip/{ip_address}
-/api/whois/{domain}
-/api/ssl/{domain}
+GET /api/v1/dns/{domain}
+GET /api/v1/dns/{domain}/reverse
+GET /api/v1/dns/{domain}/mx
+GET /api/v1/dns/{domain}/txt
+GET /api/v1/dns/{domain}/cname
+GET /api/v1/dns/{domain}/spf
+GET /api/v1/dns/{domain}/dmarc
+GET /api/v1/dns/{domain}/propagation
+GET /api/v1/whois/{domain}
+GET /api/v1/domain/{domain}/expiry
+GET /api/v1/ssl/{domain}
+GET /api/v1/ssl/{domain}/expiry
+GET /api/v1/ping/{host}
+GET /api/v1/http-status/{url}
+GET /api/v1/redirect/{url}
+GET /api/v1/headers/{url}
+GET /api/v1/ip/{ip}
+GET /api/v1/ip/{ip}/asn
+GET /api/v1/ip/{ip}/blacklist
+```
+
+### Security Headers (otomatis ditambahkan)
+```
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: camera=(), microphone=(), geolocation=()
+X-Process-Time: {ms}
+Strict-Transport-Security: max-age=31536000 (HTTPS only)
 ```
 
 ## Fase Pengembangan
@@ -114,20 +200,32 @@ Internet → Cloudflare → AAPanel → Nginx → FastAPI → Redis → Database
 ### Struktur Code yang Diharapkan
 ```
 app/
-├── main.py           # FastAPI app
-├── routers/          # API endpoints
-│   ├── dns.py
-│   ├── domain.py
-│   ├── ssl.py
-│   ├── website.py
-│   └── ip.py
-├── services/         # Business logic
+├── main.py           # FastAPI app + middleware (Security, RateLimit)
+├── config.py         # Pydantic settings
+├── routers/          # API endpoints (5 router, 19 endpoints)
+│   ├── dns.py        # DNS: lookup, reverse, mx, txt, cname, spf, dmarc, propagation
+│   ├── domain.py     # Domain: whois, expiry
+│   ├── ssl.py        # SSL: check, expiry
+│   ├── website.py    # Website: ping, http-status, redirect, headers
+│   └── ip.py         # IP: lookup, asn, blacklist
+├── services/         # Business logic (dengan @cached decorator)
 │   ├── dns_service.py
 │   ├── whois_service.py
+│   ├── ip_service.py
 │   └── ssl_service.py
-├── models/           # Data models
-├── utils/            # Helper functions
-└── config.py         # Configuration
+├── utils/
+│   ├── cache.py      # Redis + in-memory cache
+│   └── rate_limit.py # Per-IP rate limiting
+├── templates/        # Jinja2 HTML (19 pages)
+│   ├── base.html     # Base layout + JSON-LD
+│   ├── index.html    # Homepage
+│   ├── 404.html      # Error page
+│   └── tools/        # 19 tool pages
+├── static/
+│   ├── css/style.css
+│   ├── js/app.js     # handleToolForm(), displayResults(), copyJSON()
+│   └── favicon.svg
+└── models/           # Data models
 ```
 
 ### Naming Convention
@@ -139,18 +237,22 @@ app/
 - **API Endpoint:** kebab-case (/dns-lookup)
 
 ### Performance Checklist
-- [ ] Response time < 1 detik
-- [ ] Memory usage < 100MB per request
-- [ ] No heavy dependencies
-- [ ] Redis cache untuk data yang sering diakses
-- [ ] Graceful error handling
+- [x] Response time < 1 detik
+- [x] Memory usage < 100MB per request
+- [x] No heavy dependencies
+- [x] Redis cache untuk data yang sering diakses (+ in-memory fallback)
+- [x] Graceful error handling
+- [x] X-Process-Time header
 
 ### SEO Checklist
-- [ ] Meta title & description
-- [ ] Open Graph tags
-- [ ] Structured data (JSON-LD)
-- [ ] Fast loading time
-- [ ] Mobile friendly
+- [x] Meta title & description
+- [x] Open Graph tags
+- [x] Structured data (JSON-LD)
+- [x] Fast loading time
+- [x] Mobile friendly
+- [x] robots.txt
+- [x] sitemap.xml
+- [x] Canonical URL
 
 ## Target Metrics
 

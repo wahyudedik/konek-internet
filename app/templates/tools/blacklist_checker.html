@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Blacklist Checker - Cek IP Blacklist{% endblock %}
+{% block content %}
+<a href="/" class="back-link">← Kembali ke Beranda</a>
+<h1 class="section-title">🚫 Blacklist Checker</h1>
+<p style="color:#666;margin-bottom:20px">Cek apakah IP address ada di blacklist email/abuse (Spamhaus, SpamCop, dll).
+</p>
+
+<div class="tool-form">
+    <form id="blacklistForm">
+        <div class="form-group">
+            <label for="ip">IP Address</label>
+            <input type="text" id="ip" placeholder="contoh: 8.8.8.8" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Cek Sekarang</button>
+    </form>
+    <div class="loading">
+        <div class="spinner"></div>
+        <p>Sedang mengecek blacklist...</p>
+    </div>
+    <div class="results"></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    document.getElementById('blacklistForm').addEventListener('submit', function (e) {
+        handleToolForm(e, `/ip/${document.getElementById('ip').value}/blacklist`);
+    });
+</script>
+{% endblock %}

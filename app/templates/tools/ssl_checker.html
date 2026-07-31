@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}SSL Checker - Verifikasi Sertifikat SSL{% endblock %}
+{% block content %}
+<a href="/" class="back-link">← Kembali ke Beranda</a>
+<h1 class="section-title">🔒 SSL Checker</h1>
+<p style="color:#666;margin-bottom:20px">Verifikasi sertifikat SSL: issuer, expiry, validity, serial number.</p>
+
+<div class="tool-form">
+    <form id="sslForm">
+        <div class="form-group">
+            <label for="domain">Domain</label>
+            <input type="text" id="domain" placeholder="contoh: google.com" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Cek Sekarang</button>
+    </form>
+    <div class="loading">
+        <div class="spinner"></div>
+        <p>Sedang mengecek sertifikat SSL...</p>
+    </div>
+    <div class="results"></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    document.getElementById('sslForm').addEventListener('submit', function (e) {
+        handleToolForm(e, `/ssl/${extractDomain(document.getElementById('domain').value)}`);
+    });
+</script>
+{% endblock %}

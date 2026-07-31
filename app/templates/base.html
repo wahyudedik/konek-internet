@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ title }} - Konektivitas.com{% endblock %}</title>
+    <meta name="description"
+        content="{% block description %}Infrastruktur Internet Gratis untuk Indonesia - DNS Lookup, WHOIS, SSL Checker, IP Lookup, dan tools internet lainnya{% endblock %}">
+    <meta name="keywords"
+        content="dns lookup, whois lookup, ssl checker, ip lookup, ping, http header, tools internet, indonesia">
+    <meta property="og:title" content="{% block og_title %}Konektivitas.com{% endblock %}">
+    <meta property="og:description"
+        content="{% block og_desc %}Infrastruktur Internet Gratis untuk Indonesia{% endblock %}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://konektivitas.com">
+    <link rel="canonical" href="https://konektivitas.com{{ request.url.path }}">
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Konektivitas.com",
+        "url": "https://konektivitas.com",
+        "description": "Infrastruktur Internet Gratis untuk Indonesia - DNS Lookup, WHOIS, SSL Checker, IP Lookup",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Web",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "IDR" },
+        "inLanguage": "id"
+    }
+    </script>
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="/" class="logo">🌐 Konektivitas<span>.com</span></a>
+            <nav class="nav">
+                <a href="/dns-lookup">DNS</a>
+                <a href="/whois-lookup">WHOIS</a>
+                <a href="/ssl-checker">SSL</a>
+                <a href="/ip-lookup">IP</a>
+                <a href="/ping-checker">Ping</a>
+            </nav>
+            <button class="menu-toggle" onclick="document.querySelector('.nav').classList.toggle('active')">☰</button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Konektivitas.com - Infrastruktur Internet Gratis untuk Indonesia</p>
+            <div class="footer-links">
+                <a href="/dns-lookup">DNS</a>
+                <a href="/whois-lookup">WHOIS</a>
+                <a href="/ssl-checker">SSL</a>
+                <a href="/ip-lookup">IP</a>
+                <a href="/ping-checker">Ping</a>
+                <a href="/sitemap.xml">Sitemap</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

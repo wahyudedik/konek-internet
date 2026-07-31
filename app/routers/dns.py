@@ -44,3 +44,9 @@ async def spf_checker(domain: str):
 async def dmarc_checker(domain: str):
     """DMARC Checker - Validasi DMARC policies"""
     return await dns_service.check_dmarc(domain)
+
+
+@router.get("/dns/{domain}/propagation")
+async def dns_propagation(domain: str, record_type: str = Query("A", description="Record type: A, AAAA, MX, TXT, CNAME, NS")):
+    """DNS Propagation Checker - Cek DNS dari multiple nameserver global"""
+    return await dns_service.propagation_check(domain, record_type)
