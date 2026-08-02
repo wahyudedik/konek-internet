@@ -9,6 +9,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from app.config import get_settings
 from app.routers import dns, domain, ssl, website, ip
 from app.utils.rate_limit import check_rate_limit, get_client_ip, get_remaining_requests
+from app.data.education import EDUCATION_DATA
 
 settings = get_settings()
 
@@ -116,97 +117,97 @@ async def homepage(request: Request):
 
 @app.get("/dns-lookup")
 async def page_dns_lookup(request: Request):
-    return templates.TemplateResponse("tools/dns_lookup.html", {"request": request, "title": "DNS Lookup"})
+    return templates.TemplateResponse("tools/dns_lookup.html", {"request": request, "title": "DNS Lookup", "edu_data": EDUCATION_DATA.get("dns_lookup")})
 
 
 @app.get("/reverse-dns")
 async def page_reverse_dns(request: Request):
-    return templates.TemplateResponse("tools/reverse_dns.html", {"request": request, "title": "Reverse DNS"})
+    return templates.TemplateResponse("tools/reverse_dns.html", {"request": request, "title": "Reverse DNS", "edu_data": EDUCATION_DATA.get("reverse_dns")})
 
 
 @app.get("/dns-propagation")
 async def page_dns_propagation(request: Request):
-    return templates.TemplateResponse("tools/dns_propagation.html", {"request": request, "title": "DNS Propagation Checker"})
+    return templates.TemplateResponse("tools/dns_propagation.html", {"request": request, "title": "DNS Propagation Checker", "edu_data": EDUCATION_DATA.get("dns_propagation")})
 
 
 @app.get("/mx-lookup")
 async def page_mx_lookup(request: Request):
-    return templates.TemplateResponse("tools/mx_lookup.html", {"request": request, "title": "MX Lookup"})
+    return templates.TemplateResponse("tools/mx_lookup.html", {"request": request, "title": "MX Lookup", "edu_data": EDUCATION_DATA.get("mx_lookup")})
 
 
 @app.get("/txt-lookup")
 async def page_txt_lookup(request: Request):
-    return templates.TemplateResponse("tools/txt_lookup.html", {"request": request, "title": "TXT Lookup"})
+    return templates.TemplateResponse("tools/txt_lookup.html", {"request": request, "title": "TXT Lookup", "edu_data": EDUCATION_DATA.get("txt_lookup")})
 
 
 @app.get("/cname-lookup")
 async def page_cname_lookup(request: Request):
-    return templates.TemplateResponse("tools/cname_lookup.html", {"request": request, "title": "CNAME Lookup"})
+    return templates.TemplateResponse("tools/cname_lookup.html", {"request": request, "title": "CNAME Lookup", "edu_data": EDUCATION_DATA.get("cname_lookup")})
 
 
 @app.get("/spf-checker")
 async def page_spf_checker(request: Request):
-    return templates.TemplateResponse("tools/spf_checker.html", {"request": request, "title": "SPF Checker"})
+    return templates.TemplateResponse("tools/spf_checker.html", {"request": request, "title": "SPF Checker", "edu_data": EDUCATION_DATA.get("spf_checker")})
 
 
 @app.get("/dmarc-checker")
 async def page_dmarc_checker(request: Request):
-    return templates.TemplateResponse("tools/dmarc_checker.html", {"request": request, "title": "DMARC Checker"})
+    return templates.TemplateResponse("tools/dmarc_checker.html", {"request": request, "title": "DMARC Checker", "edu_data": EDUCATION_DATA.get("dmarc_checker")})
 
 
 @app.get("/whois-lookup")
 async def page_whois_lookup(request: Request):
-    return templates.TemplateResponse("tools/whois_lookup.html", {"request": request, "title": "WHOIS Lookup"})
+    return templates.TemplateResponse("tools/whois_lookup.html", {"request": request, "title": "WHOIS Lookup", "edu_data": EDUCATION_DATA.get("whois_lookup")})
 
 
 @app.get("/domain-expiry")
 async def page_domain_expiry(request: Request):
-    return templates.TemplateResponse("tools/domain_expiry.html", {"request": request, "title": "Domain Expiry Checker"})
+    return templates.TemplateResponse("tools/domain_expiry.html", {"request": request, "title": "Domain Expiry Checker", "edu_data": EDUCATION_DATA.get("domain_expiry")})
 
 
 @app.get("/ssl-checker")
 async def page_ssl_checker(request: Request):
-    return templates.TemplateResponse("tools/ssl_checker.html", {"request": request, "title": "SSL Checker"})
+    return templates.TemplateResponse("tools/ssl_checker.html", {"request": request, "title": "SSL Checker", "edu_data": EDUCATION_DATA.get("ssl_checker")})
 
 
 @app.get("/ssl-expiry")
 async def page_ssl_expiry(request: Request):
-    return templates.TemplateResponse("tools/ssl_expiry.html", {"request": request, "title": "SSL Expiry Checker"})
+    return templates.TemplateResponse("tools/ssl_expiry.html", {"request": request, "title": "SSL Expiry Checker", "edu_data": EDUCATION_DATA.get("ssl_expiry")})
 
 
 @app.get("/ping-checker")
 async def page_ping_checker(request: Request):
-    return templates.TemplateResponse("tools/ping_checker.html", {"request": request, "title": "Ping Checker"})
+    return templates.TemplateResponse("tools/ping_checker.html", {"request": request, "title": "Ping Checker", "edu_data": EDUCATION_DATA.get("ping_checker")})
 
 
 @app.get("/http-status")
 async def page_http_status(request: Request):
-    return templates.TemplateResponse("tools/http_status.html", {"request": request, "title": "HTTP Status Checker"})
+    return templates.TemplateResponse("tools/http_status.html", {"request": request, "title": "HTTP Status Checker", "edu_data": EDUCATION_DATA.get("http_status")})
 
 
 @app.get("/redirect-checker")
 async def page_redirect_checker(request: Request):
-    return templates.TemplateResponse("tools/redirect_checker.html", {"request": request, "title": "Redirect Checker"})
+    return templates.TemplateResponse("tools/redirect_checker.html", {"request": request, "title": "Redirect Checker", "edu_data": EDUCATION_DATA.get("redirect_checker")})
 
 
 @app.get("/header-checker")
 async def page_header_checker(request: Request):
-    return templates.TemplateResponse("tools/header_checker.html", {"request": request, "title": "Header Checker"})
+    return templates.TemplateResponse("tools/header_checker.html", {"request": request, "title": "Header Checker", "edu_data": EDUCATION_DATA.get("header_checker")})
 
 
 @app.get("/ip-lookup")
 async def page_ip_lookup(request: Request):
-    return templates.TemplateResponse("tools/ip_lookup.html", {"request": request, "title": "IP Lookup"})
+    return templates.TemplateResponse("tools/ip_lookup.html", {"request": request, "title": "IP Lookup", "edu_data": EDUCATION_DATA.get("ip_lookup")})
 
 
 @app.get("/asn-lookup")
 async def page_asn_lookup(request: Request):
-    return templates.TemplateResponse("tools/asn_lookup.html", {"request": request, "title": "ASN Lookup"})
+    return templates.TemplateResponse("tools/asn_lookup.html", {"request": request, "title": "ASN Lookup", "edu_data": EDUCATION_DATA.get("asn_lookup")})
 
 
 @app.get("/blacklist-checker")
 async def page_blacklist_checker(request: Request):
-    return templates.TemplateResponse("tools/blacklist_checker.html", {"request": request, "title": "Blacklist Checker"})
+    return templates.TemplateResponse("tools/blacklist_checker.html", {"request": request, "title": "Blacklist Checker", "edu_data": EDUCATION_DATA.get("blacklist_checker")})
 
 
 # Health check (API)

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "partials/education.html" import render_education %}
 {% block title %}DNS Lookup - Cek DNS Record{% endblock %}
 {% block content %}
 <a href="/" class="back-link">← Kembali ke Beranda</a>
@@ -35,6 +36,7 @@
     <div class="results"></div>
 </div>
 
+{{ render_education(edu_data) }}
 {% endblock %}
 {% block scripts %}
 <script>

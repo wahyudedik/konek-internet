@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "partials/education.html" import render_education %}
 {% block title %}CNAME Lookup - Canonical Name Records{% endblock %}
 {% block content %}
 <a href="/" class="back-link">← Kembali ke Beranda</a>
@@ -19,6 +20,8 @@
     </div>
     <div class="results"></div>
 </div>
+
+{{ render_education(edu_data) }}
 {% endblock %}
 {% block scripts %}
 <script>

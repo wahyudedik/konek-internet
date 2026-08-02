@@ -596,3 +596,267 @@ img {
         flex-wrap: wrap;
     }
 }
+
+/* ============ EDUCATION SECTION ============ */
+.education-section {
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 3px solid #00d4ff;
+}
+
+.education-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.education-header h2 {
+    font-size: 1.5rem;
+    color: #1a1a2e;
+    margin: 0;
+}
+
+/* Difficulty Badge */
+.edu-badge {
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.edu-badge-pemula {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.edu-badge-menengah {
+    background: #fff3e0;
+    color: #e65100;
+}
+
+.edu-badge-lanjut {
+    background: #fce4ec;
+    color: #c62828;
+}
+
+/* Education Grid */
+.education-grid {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+/* Education Card (Accordion) */
+.edu-card {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+}
+
+.edu-card:hover {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.edu-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    font-weight: 600;
+    color: #1a1a2e;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+}
+
+.edu-card-header::-webkit-details-marker {
+    display: none;
+}
+
+.edu-card-header::marker {
+    display: none;
+    content: '';
+}
+
+.edu-toggle-icon {
+    font-size: 0.8rem;
+    color: #888;
+    transition: transform 0.2s;
+}
+
+.edu-card[open] .edu-toggle-icon {
+    transform: rotate(180deg);
+}
+
+.edu-card[open] .edu-card-header {
+    border-bottom: 1px solid #e0e0e0;
+    background: white;
+}
+
+.edu-card-body {
+    padding: 20px;
+    background: white;
+    line-height: 1.8;
+    color: #444;
+}
+
+.edu-card-body p {
+    margin-bottom: 12px;
+}
+
+.edu-card-body p:last-child {
+    margin-bottom: 0;
+}
+
+.edu-card-body ul,
+.edu-card-body ol {
+    margin: 10px 0;
+    padding-left: 25px;
+}
+
+.edu-card-body li {
+    margin-bottom: 8px;
+}
+
+.edu-card-body code {
+    background: #e3f2fd;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #1565c0;
+    font-family: 'Fira Code', 'Consolas', monospace;
+}
+
+.edu-card-body strong {
+    color: #1a1a2e;
+}
+
+/* Education Table */
+.edu-table {
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+.edu-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.edu-table th,
+.edu-table td {
+    padding: 10px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.edu-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.edu-table td code {
+    background: #e3f2fd;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85em;
+}
+
+.edu-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Related Tools */
+.edu-related {
+    margin-top: 25px;
+    padding: 20px 25px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%);
+    border-radius: 10px;
+}
+
+.edu-related h3 {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: #1a1a2e;
+}
+
+.edu-related-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.edu-related-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.edu-related-link:hover {
+    background: #0066ff;
+    color: white;
+    border-color: #0066ff;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 102, 255, 0.3);
+}
+
+.edu-related-icon {
+    font-size: 1rem;
+}
+
+/* ============ RESPONSIVE EDUCATION ============ */
+@media (max-width: 768px) {
+    .education-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .education-header h2 {
+        font-size: 1.2rem;
+    }
+
+    .edu-card-header {
+        padding: 12px 15px;
+        font-size: 0.95rem;
+    }
+
+    .edu-card-body {
+        padding: 15px;
+        font-size: 0.9rem;
+    }
+
+    .edu-table th,
+    .edu-table td {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
+
+    .edu-related {
+        padding: 15px;
+    }
+
+    .edu-related-grid {
+        flex-direction: column;
+    }
+
+    .edu-related-link {
+        width: 100%;
+        justify-content: center;
+    }
+}

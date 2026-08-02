@@ -42,7 +42,11 @@ konek-internet/
     │   ├── base.html     # Base layout (navbar, footer, JSON-LD)
     │   ├── index.html    # Homepage (19 tools grid)
     │   ├── 404.html      # Custom 404 page
-    │   └── tools/        # 19 tool pages
+    │   ├── partials/     # Template partials
+    │   │   └── education.html  # Macro edukasi untuk tool pages
+    │   └── tools/        # 19 tool pages (dengan section edukasi)
+    ├── data/             # Data modules
+    │   └── education.py  # Konten edukasi 19 tools
     └── static/           # Static files
         ├── favicon.svg   # SVG favicon
         ├── robots.txt    # SEO robots
@@ -89,13 +93,14 @@ Internet → Cloudflare → AAPanel → Nginx → FastAPI → Redis → Database
 
 ### Fase 1 - MVP (2026) ✅ SELESAI
 - 19 API endpoints aktif
-- 19 halaman frontend
+- 19 halaman frontend dengan section edukasi
 - Redis caching + in-memory fallback
 - Rate limiting (60 req/min per IP)
 - Security headers middleware
 - SEO: JSON-LD, robots.txt, sitemap.xml, canonical URL
 - Health check endpoint
 - Response time display
+- Section edukasi interaktif di semua 19 tool pages
 
 ### Cara Menjalankan
 ```bash

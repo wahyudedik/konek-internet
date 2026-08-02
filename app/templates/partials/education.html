@@ -1,0 +1,45 @@
+{# ============================================================ #}
+{# Education Partial Template - Konektivitas.com #}
+{# Macro untuk render bagian edukasi di setiap tool page #}
+{# ============================================================ #}
+
+{% macro render_education(edu) %}
+{% if edu %}
+<section class="education-section">
+    <div class="education-header">
+        <h2>{{ edu.title }}</h2>
+        {% if edu.difficulty %}
+        <span class="edu-badge edu-badge-{{ edu.difficulty }}">{{ edu.difficulty }}</span>
+        {% endif %}
+    </div>
+
+    <div class="education-grid">
+        {% for section in edu.sections %}
+        <details class="edu-card" {% if loop.first %}open{% endif %}>
+            <summary class="edu-card-header">
+                <span>{{ section.heading }}</span>
+                <span class="edu-toggle-icon">▼</span>
+            </summary>
+            <div class="edu-card-body">
+                {{ section.content | safe }}
+            </div>
+        </details>
+        {% endfor %}
+    </div>
+
+    {% if edu.related_tools %}
+    <div class="edu-related">
+        <h3>🔗 Tool Terkait</h3>
+        <div class="edu-related-grid">
+            {% for tool in edu.related_tools %}
+            <a href="/{{ tool.slug }}" class="edu-related-link">
+                <span class="edu-related-icon">{{ tool.icon }}</span>
+                <span>{{ tool.name }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</section>
+{% endif %}
+{% endmacro %}
