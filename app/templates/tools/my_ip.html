@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% from "partials/education.html" import render_education %}
+{% block title %}My IP Address - Cek IP Address Anda{% endblock %}
+{% block content %}
+<a href="/" class="back-link">← Kembali ke Beranda</a>
+<h1 class="section-title">🌐 My IP Address</h1>
+<p style="color:var(--text-secondary);margin-bottom:20px">Deteksi dan cek detail IP address Anda saat ini termasuk
+    lokasi, ISP, dan ASN.
+</p>
+
+<div class="tool-form">
+    <div class="loading active" id="ipLoading">
+        <div class="spinner"></div>
+        <p>Mendeteksi IP address Anda...</p>
+    </div>
+    <div class="results" id="ipResults"></div>
+</div>
+
+{{ render_education(edu_data) }}
+{% endblock %}
+{% block scripts %}
+<script>
+    (async function () {
+        const results = document.getElementById('ipResults');
+        const loading = document.getElementById('ipLoading');
+
+        try {
+            const response = await fetch('/api/v1/ip/me');
+            const data = await response.json();
+            const elapsed = '0';
+
+            loading.classList.remove('active');
+
+            if (data.error) {
+                results.innerHTML = `
+                <div class="result-header">
+                    <h3>Hasil</h3>
+                    <span class="result-status status-error">Error</span>
+                </div>
+                <div class="result-error">
+                    <p>⚠️ ${data.error}</p>
+                </div>`;
+                return;
+            }
+
+            let html = '<div class="result-header"><h3>IP Address Anda</h3>';
+            html += '<div class="result-meta">';
+            html += '<span class="result-status status-success">Berhasil</span>';
+            html += '</div></div>';
+
+            html += '<table class="result-table">';
+            const fields = [
+                ['IP Address', data.ip],
+                ['Country', data.country],
+                ['Region', data.region],
+                ['City', data.city],
+                ['Timezone', data.timezone],
+                ['ISP', data.isp],
+                ['Organization', data.org],
+                ['AS Number', data.as],
+            ];
+            for (const [label, value] of fields) {
+                if (value) {
+                    html += `<tr><th>${label}</th><td data-label="${label}">${value}</td></tr>`;
+                }
+            }
+            html += '</table>';
+
+            const id = `copy-ip`;
+            jsonDataMap.set(id, data);
+            const jsonStr = JSON.stringify(data, null, 2);
+            html += `<div class="result-actions">
+            <button class="btn-copy" onclick="copyJSON('${id}')">📋 Salin JSON</button>
+        </div>`;
+            html += `<details class="result-details"><summary>Lihat Raw JSON</summary><div class="result-json"><pre>${escapeHtml(jsonStr)}</pre></div></details>`;
+
+            results.innerHTML = html;
+        } catch (error) {
+            loading.classList.remove('active');
+            results.innerHTML = `
+            <div class="result-header">
+                <h3>Error</h3>
+                <span class="result-status status-error">Gagal</span>
+            </div>
+            <div class="result-error">
+                <p>⚠️ Gagal mendeteksi IP: ${error.message}</p>
+            </div>`;
+        }
+    })();
+</script>
+{% endblock %}

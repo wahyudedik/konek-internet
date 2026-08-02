@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from "partials/education.html" import render_education %}
+{% block title %}NS Lookup - Cek Name Server{% endblock %}
+{% block content %}
+<a href="/" class="back-link">← Kembali ke Beranda</a>
+<h1 class="section-title">🗂️ NS Lookup</h1>
+<p style="color:var(--text-secondary);margin-bottom:20px">Lookup name server (NS record) untuk domain guna mengetahui
+    DNS server yang
+    digunakan.</p>
+
+<div class="tool-form">
+    <form id="nsForm">
+        <div class="form-group">
+            <label for="domain">Domain Name</label>
+            <input type="text" id="domain" name="domain" placeholder="contoh: google.com" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Cek Sekarang</button>
+    </form>
+    <div class="loading">
+        <div class="spinner"></div>
+        <p>Sedang mengecek NS records...</p>
+    </div>
+    <div class="results"></div>
+    <div id="historyContainer"></div>
+</div>
+
+{{ render_education(edu_data) }}
+{% endblock %}
+{% block scripts %}
+<script>
+    displayHistory('ns-lookup', 'historyContainer');
+    loadURLState('nsForm');
+    document.getElementById('nsForm').addEventListener('submit', function (e) {
+        const domain = extractDomain(document.getElementById('domain').value);
+        handleToolForm(e, `/dns/${domain}?record_type=NS`);
+    });
+</script>
+{% endblock %}

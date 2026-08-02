@@ -4,14 +4,15 @@
 {% block content %}
 <a href="/" class="back-link">← Kembali ke Beranda</a>
 <h1 class="section-title">🌍 WHOIS Lookup</h1>
-<p style="color:#666;margin-bottom:20px">Informasi lengkap registrasi domain: registrar, tanggal registrasi, expiry,
+<p style="color:var(--text-secondary);margin-bottom:20px">Informasi lengkap registrasi domain: registrar, tanggal
+    registrasi, expiry,
     nameserver.</p>
 
 <div class="tool-form">
     <form id="whoisForm">
         <div class="form-group">
             <label for="domain">Domain</label>
-            <input type="text" id="domain" placeholder="contoh: google.com" required>
+            <input type="text" id="domain" name="domain" placeholder="contoh: google.com" required>
         </div>
         <button type="submit" class="btn btn-primary">Cek Sekarang</button>
     </form>
@@ -20,12 +21,15 @@
         <p>Sedang mengecek WHOIS data...</p>
     </div>
     <div class="results"></div>
+    <div id="historyContainer"></div>
 </div>
 
 {{ render_education(edu_data) }}
 {% endblock %}
 {% block scripts %}
 <script>
+    displayHistory('whois-lookup', 'historyContainer');
+    loadURLState('whoisForm');
     document.getElementById('whoisForm').addEventListener('submit', function (e) {
         handleToolForm(e, `/whois/${extractDomain(document.getElementById('domain').value)}`);
     });

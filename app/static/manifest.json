@@ -1,0 +1,29 @@
+{
+    "name": "Konektivitas.com - Utilitas Internet Indonesia",
+    "short_name": "Konektivitas",
+    "description": "Platform utilitas internet Indonesia gratis, cepat, dan ringan",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#3b82f6",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "/static/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/static/favicon.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ],
+    "categories": [
+        "utilities",
+        "productivity"
+    ],
+    "lang": "id",
+    "dir": "ltr"
+}

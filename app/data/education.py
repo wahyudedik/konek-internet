@@ -941,4 +941,262 @@ EDUCATION_DATA = {
             {"slug": "reverse-dns", "name": "Reverse DNS", "icon": "🔄"}
         ]
     },
+
+    # ============================================================
+    # NEW TOOLS - FASE 2 (5 tools baru)
+    # ============================================================
+
+    "my_ip": {
+        "title": "📚 Belajar: IP Address Anda",
+        "difficulty": "pemula",
+        "sections": [
+            {
+                "heading": "🌐 Apa itu IP Address?",
+                "content": """<p><strong>IP (Internet Protocol) Address</strong> adalah alamat numerik yang ditetapkan ke setiap perangkat yang terhubung ke jaringan internet.</p>
+<p>Pikirkan IP address seperti alamat rumah — ini adalah cara internet mengetahui ke mana mengirim data yang kamu minta.</p>
+<ul>
+<li><strong>IPv4</strong> → Format 4 angka (contoh: <code>192.168.1.1</code>)</li>
+<li><strong>IPv6</strong> → Format panjang hex (contoh: <code>2001:db8::1</code>)</li>
+</ul>"""
+            },
+            {
+                "heading": "📋 Informasi yang Bisa Diketahui dari IP",
+                "content": """<div class="edu-table">
+<table>
+<tr><th>Informasi</th><th>Contoh</th><th>Kegunaan</th></tr>
+<tr><td>Negara/Kota</td><td>Jakarta, Indonesia</td><td>Geo-location</td></tr>
+<tr><td>ISP</td><td>Telkom Indonesia</td><td>Penyedia layanan internet</td></tr>
+<tr><td>ASN</td><td>AS17974</td><td>Organisasi jaringan</td></tr>
+<tr><td>Timezone</td><td>Asia/Jakarta</td><td>Zona waktu</td></tr>
+<tr><td>Organization</td><td>PT Telkom</td><td>Pemilik IP block</td></tr>
+</table>
+</div>"""
+            },
+            {
+                "heading": "💡 Tips & Pengetahuan",
+                "content": """<ul>
+<li><strong>Public IP</strong> → IP yang terlihat di internet (dari ISP)</li>
+<li><strong>Private IP</strong> → IP lokal (192.168.x.x, 10.x.x.x)</li>
+<li><strong>Dynamic IP</strong> → IP berubah-ubah (biasanya home internet)</li>
+<li><strong>Static IP</strong> → IP tetap (biasanya server/VPS)</li>
+<li>Gunakan VPN untuk mengubah IP public kamu</li>
+</ul>"""
+            }
+        ],
+        "related_tools": [
+            {"slug": "ip-lookup", "name": "IP Lookup", "icon": "📍"},
+            {"slug": "reverse-dns", "name": "Reverse DNS", "icon": "🔄"},
+            {"slug": "asn-lookup", "name": "ASN Lookup", "icon": "🏢"},
+            {"slug": "blacklist-checker", "name": "Blacklist Checker", "icon": "🚫"}
+        ]
+    },
+
+    "ua_checker": {
+        "title": "📚 Belajar: User-Agent String",
+        "difficulty": "menengah",
+        "sections": [
+            {
+                "heading": "🖥️ Apa itu User-Agent?",
+                "content": """<p><strong>User-Agent</strong> adalah string teks yang dikirim browser ke website untuk mengidentifikasi diri.</p>
+<p>Setiap kali kamu membuka website, browser mengirim header User-Agent yang berisi informasi tentang:</p>
+<ul>
+<li>Nama dan versi browser</li>
+<li>Sistem operasi</li>
+<li>Jenis device (desktop/mobile/tablet)</li>
+<li>Engine rendering (Blink, Gecko, WebKit)</li>
+</ul>"""
+            },
+            {
+                "heading": "📋 Contoh User-Agent String",
+                "content": """<div class="edu-table">
+<table>
+<tr><th>Browser</th><th>Contoh UA</th></tr>
+<tr><td>Chrome (Windows)</td><td><code>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0</code></td></tr>
+<tr><td>Firefox (macOS)</td><td><code>Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0</code></td></tr>
+<tr><td>Safari (iPhone)</td><td><code>Mozilla/5.0 (iPhone; CPU iPhone OS 17_0) AppleWebKit/605.1.15 Version/17.0 Mobile/15E148 Safari/604.1</code></td></tr>
+<tr><td>Chrome (Android)</td><td><code>Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/120.0.0.0 Mobile</code></td></tr>
+</table>
+</div>"""
+            },
+            {
+                "heading": "🎯 Mengapa User-Agent Penting?",
+                "content": """<ul>
+<li><strong>Analytics</strong> → Website tahu pengunjung pakai device apa</li>
+<li><strong>Compatibility</strong> → Server mengirim konten yang sesuai device</li>
+<li><strong>Security</strong> → Mendeteksi bot atau scraper</li>
+<li><strong>Debugging</strong> → Membantu diagnosa masalah browser</li>
+<li><strong>Scraping Detection</strong> → Bot sering pakai UA palsu</li>
+</ul>"""
+            }
+        ],
+        "related_tools": [
+            {"slug": "header-checker", "name": "Header Checker", "icon": "📋"},
+            {"slug": "http-status", "name": "HTTP Status", "icon": "🌐"},
+            {"slug": "ping-checker", "name": "Ping Checker", "icon": "📡"}
+        ]
+    },
+
+    "email_validator": {
+        "title": "📚 Belajar: Validasi Email",
+        "difficulty": "pemula",
+        "sections": [
+            {
+                "heading": "📧 Apa itu Validasi Email?",
+                "content": """<p><strong>Validasi Email</strong> adalah proses memverifikasi apakah alamat email benar-benar ada dan dapat menerima pesan.</p>
+<p>Validasi meliputi beberapa tahap:</p>
+<ul>
+<li><strong>Cek Format</strong> → Apakah sesuai pola email@domain.com</li>
+<li><strong>Cek MX Record</strong> → Apakah domain punya mail server</li>
+<li><strong>Cek Disposable</strong> → Apakah email temporary/disposable</li>
+<li><strong>SMTP Check</strong> → Apakah mail server benar-benar menerima</li>
+</ul>"""
+            },
+            {
+                "heading": "📋 Komponen Email Address",
+                "content": """<div class="edu-table">
+<table>
+<tr><th>Bagian</th><th>Contoh</th><th>Aturan</th></tr>
+<tr><td>Local Part</td><td>user.name+tag</td><td>Max 64 karakter</td></tr>
+<tr><td>@</td><td>@</td><td>Pemisah wajib</td></tr>
+<tr><td>Domain</td><td>gmail.com</td><td>Harus punya MX record</td></tr>
+</table>
+</div>"""
+            },
+            {
+                "heading": "🚫 Disposable Email",
+                "content": """<ul>
+<li><strong>Disposable Email</strong> → Email sekali pakai yang biasanya berakhir dalam beberapa menit/jam</li>
+<li>Contoh: tempmail.com, mailinator.com, guerrillamail.com</li>
+<li>Banyak digunakan untuk daftar akun tanpa ingin menerima email marketing</li>
+<li>Beberapa website memblokir email disposable untuk mencegah spam</li>
+<li>Skor validasi akan lebih rendah jika menggunakan disposable email</li>
+</ul>"""
+            },
+            {
+                "heading": "💡 Tips",
+                "content": """<ul>
+<li>MX Record harus ada agar email bisa dikirim ke domain</li>
+<li>MX Record dengan priority lebih rendah = server utama</li>
+<li>Gunakan email bisnis (@domain.com) untuk profesionalisme</li>
+<li>Hindari email temporary untuk akun penting</li>
+</ul>"""
+            }
+        ],
+        "related_tools": [
+            {"slug": "mx-lookup", "name": "MX Lookup", "icon": "📧"},
+            {"slug": "spf-checker", "name": "SPF Checker", "icon": "🛡️"},
+            {"slug": "dmarc-checker", "name": "DMARC Checker", "icon": "🔐"},
+            {"slug": "dns-lookup", "name": "DNS Lookup", "icon": "🔍"}
+        ]
+    },
+
+    "ns_lookup": {
+        "title": "📚 Belajar: Name Server (NS Record)",
+        "difficulty": "pemula",
+        "sections": [
+            {
+                "heading": "🗂️ Apa itu Name Server?",
+                "content": """<p><strong>Name Server (NS)</strong> adalah server yang menangani DNS lookup untuk domain.</p>
+<p>Ketika kamu mendaftarkan domain, kamu harus menunjuk minimal 2 name server yang akan mengelola DNS record domain kamu.</p>
+<ul>
+<li><strong>NS1</strong> → Name server utama</li>
+<li><strong>NS2</strong> → Name server backup/sekunder</li>
+</ul>"""
+            },
+            {
+                "heading": "📋 Contoh NS Records",
+                "content": """<div class="edu-table">
+<table>
+<tr><th>Provider</th><th>NS Records</th></tr>
+<tr><td>Cloudflare</td><td><code>ns1.cloudflare.com</code>, <code>ns2.cloudflare.com</code></td></tr>
+<tr><td>Google Domains</td><td><code>ns1.googledomains.com</code>, <code>ns2.googledomains.com</code></td></tr>
+<tr><td>Namesilo</td><td><code>dns1.p01.nsone.net</code>, <code>dns2.p01.nsone.net</code></td></tr>
+<tr><td>Default Registrar</td><td><code>ns1.registrar.com</code>, <code>ns2.registrar.com</code></td></tr>
+</table>
+</div>"""
+            },
+            {
+                "heading": "🎯 Mengapa NS Lookup Penting?",
+                "content": """<ul>
+<li><strong>Verifikasi Setup</strong> → Pastikan NS sudah benar setelah pindah provider</li>
+<li><strong>Troubleshooting</strong> → Jika website down, cek NS dulu</li>
+<li><strong>Keamanan</strong> → Pastikan NS tidak diubah tanpa izin</li>
+<li><strong>Migrasi</strong> → Saat pindah hosting, update NS records</li>
+</ul>"""
+            },
+            {
+                "heading": "💡 Tips",
+                "content": """<ul>
+<li>Selalu gunakan minimal 2 NS untuk redundansi</li>
+<li>NS propagation bisa memakan waktu 24-48 jam</li>
+<li>Jangan pernah menghapus semua NS records sekaligus</li>
+<li>Gunakan DNS hosting terpercaya seperti Cloudflare untuk NS gratis</li>
+</ul>"""
+            }
+        ],
+        "related_tools": [
+            {"slug": "dns-lookup", "name": "DNS Lookup", "icon": "🔍"},
+            {"slug": "dns-propagation", "name": "DNS Propagation", "icon": "🌍"},
+            {"slug": "whois-lookup", "name": "WHOIS Lookup", "icon": "📋"}
+        ]
+    },
+
+    "port_scanner": {
+        "title": "📚 Belajar: Port Scanning",
+        "difficulty": "menengah",
+        "sections": [
+            {
+                "heading": "🔍 Apa itu Port Scanning?",
+                "content": """<p><strong>Port Scanning</strong> adalah teknik untuk menemukan port terbuka pada host/jaringan.</p>
+<p>Setiap layanan internet berjalan di port tertentu. Port scanner membantu mengetahui layanan apa yang aktif di suatu server.</p>
+<ul>
+<li><strong>Port</strong> → Angka 1-65535 yang merepresentasikan layanan</li>
+<li><strong>Open</strong> → Port aktif dan menerima koneksi</li>
+<li><strong>Closed</strong> → Port tidak aktif atau diblokir</li>
+</ul>"""
+            },
+            {
+                "heading": "📋 Port Populer",
+                "content": """<div class="edu-table">
+<table>
+<tr><th>Port</th><th>Layanan</th><th>Keterangan</th></tr>
+<tr><td><code>21</code></td><td>FTP</td><td>File Transfer Protocol</td></tr>
+<tr><td><code>22</code></td><td>SSH</td><td>Secure Shell (remote access)</td></tr>
+<tr><td><code>25</code></td><td>SMTP</td><td>Simple Mail Transfer (email)</td></tr>
+<tr><td><code>53</code></td><td>DNS</td><td>Domain Name System</td></tr>
+<tr><td><code>80</code></td><td>HTTP</td><td>Website tanpa SSL</td></tr>
+<tr><td><code>443</code></td><td>HTTPS</td><td>Website dengan SSL</td></tr>
+<tr><td><code>3306</code></td><td>MySQL</td><td>Database MySQL</td></tr>
+<tr><td><code>5432</code></td><td>PostgreSQL</td><td>Database PostgreSQL</td></tr>
+<tr><td><code>3389</code></td><td>RDP</td><td>Remote Desktop (Windows)</td></tr>
+<tr><td><code>8080</code></td><td>HTTP Alt</td><td>HTTP alternatif/proxy</td></tr>
+</table>
+</div>"""
+            },
+            {
+                "heading": "🎯 Mengapa Port Scan Penting?",
+                "content": """<ul>
+<li><strong>Keamanan</strong> → Pastikan hanya port yang diperlukan yang terbuka</li>
+<li><strong>Audit</strong> → Cek layanan yang berjalan di server</li>
+<li><strong>Troubleshooting</strong> → Kenapa koneksi ke layanan tertentu gagal?</li>
+<li><strong>Compliance</strong> → Banyak standar keamanan mensyaratkan port scan</li>
+</ul>"""
+            },
+            {
+                "heading": "💡 Tips & Best Practices",
+                "content": """<ul>
+<li>Batasi scan hanya port yang diperlukan (max 20 port)</li>
+<li>Timeout 2 detik sudah cukup untuk sebagian besar port</li>
+<li>Hindari scan port yang bukan milik Anda tanpa izin</li>
+<li>Gunakan firewall untuk memblokir port yang tidak digunakan</li>
+<li>Port 22 (SSH) dan 3389 (RDP) yang terbuka = potensi target brute force</li>
+</ul>"""
+            }
+        ],
+        "related_tools": [
+            {"slug": "ip-lookup", "name": "IP Lookup", "icon": "📍"},
+            {"slug": "ping-checker", "name": "Ping Checker", "icon": "📡"},
+            {"slug": "blacklist-checker", "name": "Blacklist Checker", "icon": "🚫"}
+        ]
+    },
 }

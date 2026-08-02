@@ -1,100 +1,66 @@
-from fastapi import APIRouter
-import httpx
+from fastapi import APIRouter, Request, Query
+from fastapi.responses import JSONResponse
+from app.services import website_service, ua_service
+from app.utils.validators import validate_host, validate_url, sanitize_input
 
 router = APIRouter()
+
+
+@router.get("/ua")
+async def ua_detect(request: Request):
+    """User-Agent Checker - Auto-detect dari request"""
+    ua_string = request.headers.get("User-Agent", "Unknown")
+    return await ua_service.parse_ua(ua_string)
+
+
+@router.get("/ua/{encoded_ua:path}")
+async def ua_parse(encoded_ua: str):
+    """User-Agent Checker - Parse UA spesifik"""
+    encoded_ua = sanitize_input(encoded_ua, max_length=1000)
+    if not encoded_ua:
+        return JSONResponse(status_code=400, content={"error": "User-Agent string tidak boleh kosong"})
+    return await ua_service.parse_ua(encoded_ua)
 
 
 @router.get("/ping/{domain}")
 async def ping_checker(domain: str):
     """Ping Checker - Uji konektivitas ke server"""
-    results = {
-        "domain": domain,
-        "reachable": False,
-        "response_time_ms": None,
-        "status_code": None,
-        "error": None
-    }
-    
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.get(f"https://{domain}", timeout=10.0)
-            results["reachable"] = True
-            results["status_code"] = response.status_code
-            results["response_time_ms"] = response.elapsed.total_seconds() * 1000
-    except httpx.TimeoutException:
-        results["error"] = "Timeout"
-    except httpx.ConnectError:
-        results["error"] = "Koneksi gagal"
-    except Exception as e:
-        results["error"] = str(e)
-    
-    return results
+    domain = sanitize_input(domain)
+    valid, error = validate_host(domain)
+    if not valid:
+        return JSONResponse(status_code=400, content={"error": error})
+    return await website_service.ping_host(domain)
 
 
 @router.get("/http-status/{domain}")
 async def http_status(domain: str):
     """HTTP Status Checker - Cek status HTTP response"""
-    results = {
-        "domain": domain,
-        "status_code": None,
-        "status_text": None,
-        "error": None
-    }
-    
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.get(f"https://{domain}", timeout=10.0)
-            results["status_code"] = response.status_code
-            results["status_text"] = response.reason_phrase
-    except Exception as e:
-        results["error"] = str(e)
-    
-    return results
+    domain = sanitize_input(domain)
+    # Auto-prepend https:// jika tidak ada protocol untuk validasi URL
+    url = domain if domain.startswith(('http://', 'https://')) else f'https://{domain}'
+    valid, error = validate_url(url)
+    if not valid:
+        return JSONResponse(status_code=400, content={"error": error})
+    return await website_service.check_http_status(url)
 
 
 @router.get("/redirect/{domain}")
 async def redirect_checker(domain: str):
     """Redirect Checker - Lacak redirect chains"""
-    results = {
-        "domain": domain,
-        "redirects": [],
-        "final_url": None,
-        "error": None
-    }
-    
-    try:
-        async with httpx.AsyncClient(follow_redirects=True) as client:
-            response = await client.get(f"https://{domain}", timeout=10.0)
-            
-            # Catat semua redirect
-            for resp in response.history:
-                results["redirects"].append({
-                    "url": str(resp.url),
-                    "status_code": resp.status_code
-                })
-            
-            results["final_url"] = str(response.url)
-            results["final_status"] = response.status_code
-    except Exception as e:
-        results["error"] = str(e)
-    
-    return results
+    domain = sanitize_input(domain)
+    url = domain if domain.startswith(('http://', 'https://')) else f'https://{domain}'
+    valid, error = validate_url(url)
+    if not valid:
+        return JSONResponse(status_code=400, content={"error": error})
+    return await website_service.check_redirects(url)
 
 
 @router.get("/headers/{domain}")
 async def header_checker(domain: str):
     """Header Checker - Analisis HTTP headers"""
-    results = {
-        "domain": domain,
-        "headers": {},
-        "error": None
-    }
-    
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.get(f"https://{domain}", timeout=10.0)
-            results["headers"] = dict(response.headers)
-    except Exception as e:
-        results["error"] = str(e)
-    
-    return results
+    domain = sanitize_input(domain)
+    url = domain if domain.startswith(('http://', 'https://')) else f'https://{domain}'
+    valid, error = validate_url(url)
+    if not valid:
+        return JSONResponse(status_code=400, content={"error": error})
+    return await website_service.check_headers(url)

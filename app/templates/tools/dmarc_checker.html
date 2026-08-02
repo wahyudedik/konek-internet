@@ -4,13 +4,14 @@
 {% block content %}
 <a href="/" class="back-link">← Kembali ke Beranda</a>
 <h1 class="section-title">🔐 DMARC Checker</h1>
-<p style="color:#666;margin-bottom:20px">Validasi DMARC policies untuk keamanan dan autentikasi email.</p>
+<p style="color:var(--text-secondary);margin-bottom:20px">Validasi DMARC policies untuk keamanan dan autentikasi email.
+</p>
 
 <div class="tool-form">
     <form id="dmarcForm">
         <div class="form-group">
             <label for="domain">Domain</label>
-            <input type="text" id="domain" placeholder="contoh: google.com" required>
+            <input type="text" id="domain" name="domain" placeholder="contoh: google.com" required>
         </div>
         <button type="submit" class="btn btn-primary">Cek Sekarang</button>
     </form>
@@ -19,12 +20,15 @@
         <p>Sedang mengecek DMARC records...</p>
     </div>
     <div class="results"></div>
+    <div id="historyContainer"></div>
 </div>
 
 {{ render_education(edu_data) }}
 {% endblock %}
 {% block scripts %}
 <script>
+    displayHistory('dmarc-checker', 'historyContainer');
+    loadURLState('dmarcForm');
     document.getElementById('dmarcForm').addEventListener('submit', function (e) {
         handleToolForm(e, `/dns/${extractDomain(document.getElementById('domain').value)}/dmarc`);
     });

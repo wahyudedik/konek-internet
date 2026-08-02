@@ -4,13 +4,13 @@
 {% block content %}
 <a href="/" class="back-link">← Kembali ke Beranda</a>
 <h1 class="section-title">🔗 CNAME Lookup</h1>
-<p style="color:#666;margin-bottom:20px">Cek Canonical Name records dan alias domain.</p>
+<p style="color:var(--text-secondary);margin-bottom:20px">Cek Canonical Name records dan alias domain.</p>
 
 <div class="tool-form">
     <form id="cnameForm">
         <div class="form-group">
             <label for="domain">Domain</label>
-            <input type="text" id="domain" placeholder="contoh: www.google.com" required>
+            <input type="text" id="domain" name="domain" placeholder="contoh: www.google.com" required>
         </div>
         <button type="submit" class="btn btn-primary">Cek Sekarang</button>
     </form>
@@ -19,12 +19,15 @@
         <p>Sedang mengecek CNAME records...</p>
     </div>
     <div class="results"></div>
+    <div id="historyContainer"></div>
 </div>
 
 {{ render_education(edu_data) }}
 {% endblock %}
 {% block scripts %}
 <script>
+    displayHistory('cname-lookup', 'historyContainer');
+    loadURLState('cnameForm');
     document.getElementById('cnameForm').addEventListener('submit', function (e) {
         handleToolForm(e, `/dns/${extractDomain(document.getElementById('domain').value)}/cname`);
     });

@@ -4,13 +4,13 @@
 {% block content %}
 <a href="/" class="back-link">← Kembali ke Beranda</a>
 <h1 class="section-title">🔀 Redirect Checker</h1>
-<p style="color:#666;margin-bottom:20px">Lacak rantai redirect dari URL awal ke URL final.</p>
+<p style="color:var(--text-secondary);margin-bottom:20px">Lacak rantai redirect dari URL awal ke URL final.</p>
 
 <div class="tool-form">
     <form id="redirectForm">
         <div class="form-group">
             <label for="domain">Domain / URL</label>
-            <input type="text" id="domain" placeholder="contoh: google.com" required>
+            <input type="text" id="domain" name="domain" placeholder="contoh: google.com" required>
         </div>
         <button type="submit" class="btn btn-primary">Cek Sekarang</button>
     </form>
@@ -19,12 +19,15 @@
         <p>Sedang melacak redirect...</p>
     </div>
     <div class="results"></div>
+    <div id="historyContainer"></div>
 </div>
 
 {{ render_education(edu_data) }}
 {% endblock %}
 {% block scripts %}
 <script>
+    displayHistory('redirect-checker', 'historyContainer');
+    loadURLState('redirectForm');
     document.getElementById('redirectForm').addEventListener('submit', function (e) {
         handleToolForm(e, `/redirect/${extractDomain(document.getElementById('domain').value)}`);
     });

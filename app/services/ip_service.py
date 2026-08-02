@@ -1,6 +1,9 @@
 import httpx
+import logging
 from typing import Dict, Any
 from app.utils.cache import cached
+
+logger = logging.getLogger("konektivitas.ip")
 
 
 @cached(ttl=3600)
@@ -55,6 +58,8 @@ async def lookup_asn(ip_address: str) -> Dict[str, Any]:
 @cached(ttl=3600)
 async def check_blacklist(ip_address: str) -> Dict[str, Any]:
     """Blacklist Checker - Cek apakah IP ada di blacklist"""
+    import asyncio
+    
     results = {
         "ip": ip_address,
         "blacklisted": False,
@@ -70,21 +75,30 @@ async def check_blacklist(ip_address: str) -> Dict[str, Any]:
         "spam.dnsbl.sorbs.net"
     ]
     
-    try:
+    def _check_sync():
+        """Blocking DNS check wrapped for async safety"""
         import dns.resolver
-        
         reversed_ip = ".".join(reversed(ip_address.split(".")))
-        
+        found = []
         for bl_server in blacklist_servers:
             try:
                 query = f"{reversed_ip}.{bl_server}"
-                dns.resolver.resolve(query, "A")
-                results["blacklists"].append(bl_server)
-                results["blacklisted"] = True
+                dns.resolver.resolve(query, "A", lifetime=5)
+                found.append(bl_server)
             except dns.resolver.NXDOMAIN:
+                pass
+            except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN,
+                    dns.resolver.Timeout, dns.exception.DNSException):
                 pass
             except Exception:
                 pass
+        return found
+    
+    try:
+        found = await asyncio.to_thread(_check_sync)
+        if found:
+            results["blacklists"] = found
+            results["blacklisted"] = True
     except Exception as e:
         results["error"] = str(e)
     

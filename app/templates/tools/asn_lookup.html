@@ -4,13 +4,13 @@
 {% block content %}
 <a href="/" class="back-link">← Kembali ke Beranda</a>
 <h1 class="section-title">🔢 ASN Lookup</h1>
-<p style="color:#666;margin-bottom:20px">Cek Autonomous System Number dan organisasi jaringan.</p>
+<p style="color:var(--text-secondary);margin-bottom:20px">Cek Autonomous System Number dan organisasi jaringan.</p>
 
 <div class="tool-form">
     <form id="asnForm">
         <div class="form-group">
             <label for="ip">IP Address</label>
-            <input type="text" id="ip" placeholder="contoh: 8.8.8.8" required>
+            <input type="text" id="ip" name="ip" placeholder="contoh: 8.8.8.8" required>
         </div>
         <button type="submit" class="btn btn-primary">Cek Sekarang</button>
     </form>
@@ -19,12 +19,15 @@
         <p>Sedang mengecek ASN...</p>
     </div>
     <div class="results"></div>
+    <div id="historyContainer"></div>
 </div>
 
 {{ render_education(edu_data) }}
 {% endblock %}
 {% block scripts %}
 <script>
+    displayHistory('asn-lookup', 'historyContainer');
+    loadURLState('asnForm');
     document.getElementById('asnForm').addEventListener('submit', function (e) {
         handleToolForm(e, `/ip/${document.getElementById('ip').value}/asn`);
     });

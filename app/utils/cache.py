@@ -1,11 +1,17 @@
 import json
 import hashlib
+import time
+import logging
 from typing import Optional, Callable
 from functools import wraps
+
+logger = logging.getLogger("konektivitas.cache")
 
 # In-memory cache fallback (ketika Redis tidak tersedia)
 _memory_cache: dict = {}
 _memory_cache_ttl: dict = {}
+_CACHE_CLEANUP_INTERVAL = 300  # Cleanup setiap 5 menit
+_last_cache_cleanup: float = 0.0
 
 
 def _get_redis():
@@ -22,9 +28,34 @@ def _get_redis():
 _redis_client = None
 
 
+def _cleanup_expired_cache():
+    """Periodic cleanup of expired in-memory cache entries"""
+    global _last_cache_cleanup
+    now = time.time()
+    if now - _last_cache_cleanup < _CACHE_CLEANUP_INTERVAL:
+        return
+    _last_cache_cleanup = now
+    
+    before = len(_memory_cache)
+    expired_keys = [
+        k for k, ttl in _memory_cache_ttl.items()
+        if now >= ttl
+    ]
+    for k in expired_keys:
+        _memory_cache.pop(k, None)
+        _memory_cache_ttl.pop(k, None)
+    
+    after = len(_memory_cache)
+    if before != after:
+        logger.debug("Cache cleanup: %d -> %d entries", before, after)
+
+
 def get_cache(key: str) -> Optional[dict]:
     """Get value from cache (Redis or in-memory)"""
     global _redis_client
+    
+    # Periodic cleanup
+    _cleanup_expired_cache()
     
     # Try Redis first
     if _redis_client is None:
@@ -36,10 +67,10 @@ def get_cache(key: str) -> Optional[dict]:
             if data:
                 return json.loads(data)
         except Exception:
+            _redis_client = None  # Reset on error
             pass
     
     # Fallback to in-memory
-    import time
     if key in _memory_cache:
         if time.time() < _memory_cache_ttl.get(key, 0):
             return _memory_cache[key]
@@ -63,10 +94,10 @@ def set_cache(key: str, value: dict, ttl: int = 300):
             _redis_client.setex(key, ttl, json.dumps(value))
             return
         except Exception:
+            _redis_client = None  # Reset on error
             pass
     
     # Fallback to in-memory
-    import time
     _memory_cache[key] = value
     _memory_cache_ttl[key] = time.time() + ttl
 
@@ -99,3 +130,11 @@ def cached(ttl: int = 300):
             return result
         return wrapper
     return decorator
+
+
+def get_cache_stats() -> dict:
+    """Get cache statistics for monitoring"""
+    return {
+        "memory_entries": len(_memory_cache),
+        "redis_connected": _redis_client is not None,
+    }

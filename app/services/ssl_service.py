@@ -1,13 +1,18 @@
 import ssl
 import socket
+import logging
 from typing import Dict, Any
-from datetime import datetime
+from datetime import datetime, timezone
 from app.utils.cache import cached
+
+logger = logging.getLogger("konektivitas.ssl")
 
 
 @cached(ttl=3600)
 async def check_ssl(domain: str) -> Dict[str, Any]:
-    """SSL Checker - Verifikasi sertifikat SSL"""
+    """SSL Checker - Verifikasi sertifikat SSL dengan chain info"""
+    import asyncio
+    
     results = {
         "domain": domain,
         "valid": False,
@@ -16,29 +21,44 @@ async def check_ssl(domain: str) -> Dict[str, Any]:
         "not_before": None,
         "not_after": None,
         "serial_number": None,
+        "subject_alt_names": [],
+        "signature_algorithm": None,
+        "chain": None,
         "error": None
     }
     
-    try:
+    def _ssl_sync():
         context = ssl.create_default_context()
-        
         with socket.create_connection((domain, 443), timeout=10) as sock:
             with context.wrap_socket(sock, server_hostname=domain) as ssock:
                 cert = ssock.getpeercert()
-                
-                results["valid"] = True
-                results["issuer"] = dict(x[0] for x in cert.get("issuer", []))
-                results["subject"] = dict(x[0] for x in cert.get("subject", []))
-                results["serial_number"] = cert.get("serialNumber")
-                
-                not_before = cert.get("notBefore")
-                not_after = cert.get("notAfter")
-                
-                if not_before:
-                    results["not_before"] = not_before
-                if not_after:
-                    results["not_after"] = not_after
-                    
+                # Get DER cert for chain info
+                der_cert = ssock.getpeercert(True)
+                return {
+                    "issuer": dict(x[0] for x in cert.get("issuer", [])),
+                    "subject": dict(x[0] for x in cert.get("subject", [])),
+                    "serial_number": cert.get("serialNumber"),
+                    "not_before": cert.get("notBefore"),
+                    "not_after": cert.get("notAfter"),
+                    "subject_alt_names": _extract_sans(cert),
+                    "has_chain": der_cert is not None,
+                }
+    
+    try:
+        cert_info = await asyncio.to_thread(_ssl_sync)
+        results["valid"] = True
+        results["issuer"] = cert_info["issuer"]
+        results["subject"] = cert_info["subject"]
+        results["serial_number"] = cert_info["serial_number"]
+        results["not_before"] = cert_info["not_before"]
+        results["not_after"] = cert_info["not_after"]
+        results["subject_alt_names"] = cert_info["subject_alt_names"]
+        results["signature_algorithm"] = await asyncio.to_thread(_get_signature_algorithm, domain)
+        
+        # Chain info
+        chain_info = await asyncio.to_thread(_get_chain_info, domain)
+        results["chain"] = chain_info
+        
     except ssl.SSLCertVerificationError as e:
         results["error"] = f"SSL verification gagal: {str(e)}"
     except socket.timeout:
@@ -61,8 +81,8 @@ async def check_ssl_expiry(domain: str) -> Dict[str, Any]:
     if results.get("not_after"):
         try:
             expiry_str = results["not_after"]
-            exp_date = datetime.strptime(expiry_str, "%b %d %H:%M:%S %Y %Z")
-            now = datetime.utcnow()
+            exp_date = datetime.strptime(expiry_str, "%b %d %H:%M:%S %Y %Z").replace(tzinfo=timezone.utc)
+            now = datetime.now(timezone.utc)
             days_left = (exp_date - now).days
             
             results["days_until_expiry"] = days_left
@@ -76,6 +96,8 @@ async def check_ssl_expiry(domain: str) -> Dict[str, Any]:
 
 async def _ssl_raw(domain: str) -> Dict[str, Any]:
     """Internal SSL check tanpa caching"""
+    import asyncio
+    
     results = {
         "domain": domain,
         "valid": False,
@@ -84,23 +106,92 @@ async def _ssl_raw(domain: str) -> Dict[str, Any]:
         "not_before": None,
         "not_after": None,
         "serial_number": None,
+        "subject_alt_names": [],
+        "signature_algorithm": None,
+        "chain": None,
         "error": None
     }
     
-    try:
+    def _ssl_sync():
+        logger.debug("Checking SSL for: %s", domain)
         context = ssl.create_default_context()
         with socket.create_connection((domain, 443), timeout=10) as sock:
             with context.wrap_socket(sock, server_hostname=domain) as ssock:
                 cert = ssock.getpeercert()
-                results["valid"] = True
-                results["issuer"] = dict(x[0] for x in cert.get("issuer", []))
-                results["subject"] = dict(x[0] for x in cert.get("subject", []))
-                results["serial_number"] = cert.get("serialNumber")
-                if cert.get("notBefore"):
-                    results["not_before"] = cert["notBefore"]
-                if cert.get("notAfter"):
-                    results["not_after"] = cert["notAfter"]
+                return {
+                    "issuer": dict(x[0] for x in cert.get("issuer", [])),
+                    "subject": dict(x[0] for x in cert.get("subject", [])),
+                    "serial_number": cert.get("serialNumber"),
+                    "not_before": cert.get("notBefore"),
+                    "not_after": cert.get("notAfter"),
+                    "subject_alt_names": _extract_sans(cert),
+                }
+    
+    try:
+        cert_info = await asyncio.to_thread(_ssl_sync)
+        results["valid"] = True
+        results.update(cert_info)
+        results["signature_algorithm"] = await asyncio.to_thread(_get_signature_algorithm, domain)
+        
+        chain_info = await asyncio.to_thread(_get_chain_info, domain)
+        results["chain"] = chain_info
     except Exception as e:
         results["error"] = str(e)
     
     return results
+
+
+def _extract_sans(cert: dict) -> list:
+    """Extract Subject Alternative Names from certificate"""
+    sans = []
+    for ext in cert.get('subjectAltName', ()):
+        if isinstance(ext, tuple) and len(ext) >= 2:
+            sans.append(ext[1])
+    return sans
+
+
+def _get_signature_algorithm(domain: str) -> str:
+    """Get signature algorithm from SSL certificate"""
+    try:
+        import subprocess
+        result = subprocess.run(
+            ['openssl', 's_client', '-connect', f'{domain}:443', '-servername', domain],
+            input=b'',
+            capture_output=True,
+            timeout=10
+        )
+        cert_text = result.stdout.decode('utf-8', errors='ignore')
+        for line in cert_text.split('\n'):
+            if 'Signature Algorithm:' in line:
+                return line.split('Signature Algorithm:')[1].strip()
+    except Exception:
+        pass
+    
+    # Fallback: try with ssl module
+    try:
+        context = ssl.create_default_context()
+        with socket.create_connection((domain, 443), timeout=5) as sock:
+            with context.wrap_socket(sock, server_hostname=domain) as ssock:
+                cipher = ssock.cipher()
+                if cipher:
+                    return cipher[1] if len(cipher) > 1 else "Unknown"
+    except Exception:
+        pass
+    
+    return None
+
+
+def _get_chain_info(domain: str) -> dict:
+    """Get certificate chain information"""
+    try:
+        context = ssl.create_default_context()
+        with socket.create_connection((domain, 443), timeout=5) as sock:
+            with context.wrap_socket(sock, server_hostname=domain) as ssock:
+                chain = ssock.getpeercert(True)
+                return {
+                    "depth": 1,
+                    "has_chain": chain is not None,
+                    "cipher": ssock.version(),
+                }
+    except Exception:
+        return {"depth": 0, "has_chain": False, "cipher": None}

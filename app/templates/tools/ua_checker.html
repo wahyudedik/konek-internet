@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% from "partials/education.html" import render_education %}
+{% block title %}User-Agent Checker - Deteksi Browser & Device{% endblock %}
+{% block content %}
+<a href="/" class="back-link">← Kembali ke Beranda</a>
+<h1 class="section-title">🖥️ User-Agent Checker</h1>
+<p style="color:var(--text-secondary);margin-bottom:20px">Parse dan analisis User-Agent string untuk mendeteksi browser,
+    OS, dan device.
+</p>
+
+<div class="tool-form">
+    <form id="uaForm">
+        <div class="form-group">
+            <label for="uaInput">User-Agent String</label>
+            <input type="text" id="uaInput" name="ua"
+                placeholder="Paste User-Agent string atau biarkan kosong untuk auto-detect">
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button type="submit" class="btn btn-primary">Parse UA</button>
+            <button type="button" class="btn btn-secondary" onclick="detectCurrentUA()">🔍 Auto Detect</button>
+        </div>
+    </form>
+    <div class="loading">
+        <div class="spinner"></div>
+        <p>Sedang menganalisis User-Agent...</p>
+    </div>
+    <div class="results"></div>
+    <div id="historyContainer"></div>
+</div>
+
+{{ render_education(edu_data) }}
+{% endblock %}
+{% block scripts %}
+<script>
+    displayHistory('ua-checker', 'historyContainer');
+    loadURLState('uaForm');
+    document.getElementById('uaForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const uaInput = document.getElementById('uaInput').value.trim();
+        if (uaInput) {
+            updateURLState({ ua: uaInput });
+            handleToolForm(e, `/ua/${encodeURIComponent(uaInput)}`);
+        } else {
+            fetchUA('/api/v1/ua');
+        }
+    });
+
+    function detectCurrentUA() {
+        document.getElementById('uaInput').value = navigator.userAgent;
+        fetchUA('/api/v1/ua');
+    }
+
+    async function fetchUA(url) {
+        const container = document.querySelector('.tool-form');
+        const loading = container.querySelector('.loading');
+        const results = container.querySelector('.results');
+        const btn = document.querySelector('.btn-primary');
+
+        loading.classList.add('active');
+        results.innerHTML = '';
+        btn.disabled = true;
+        btn.innerHTML = '<span class="btn-spinner"></span> Memproses...';
+
+        const startTime = performance.now();
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+            displayUAResults(results, data, elapsed);
+        } catch (error) {
+            results.innerHTML = `
+            <div class="result-header"><h3>Error</h3>
+            <span class="result-status status-error">Gagal</span></div>
+            <div class="result-error"><p>⚠️ ${error.message}</p></div>`;
+        } finally {
+            loading.classList.remove('active');
+            btn.disabled = false;
+            btn.innerHTML = 'Parse UA';
+        }
+    }
+
+    function displayUAResults(container, data, elapsed) {
+        if (data.error) {
+            container.innerHTML = `
+            <div class="result-header"><h3>Hasil</h3>
+            <span class="result-status status-error">Error</span></div>
+            <div class="result-error"><p>⚠️ ${data.error}</p></div>`;
+            return;
+        }
+
+        let html = '<div class="result-header"><h3>Hasil Analisis</h3>';
+        html += '<div class="result-meta">';
+        html += '<span class="result-status status-success">Berhasil</span>';
+        if (elapsed) html += `<span class="result-time">⚡ ${elapsed}s</span>`;
+        html += '</div></div>';
+
+        html += '<table class="result-table">';
+        html += `<tr><th>Browser</th><td data-label="Browser">${data.browser.name} ${data.browser.version}</td></tr>`;
+        html += `<tr><th>Operating System</th><td data-label="Operating System">${data.os.name} ${data.os.version}</td></tr>`;
+        html += `<tr><th>Device Type</th><td data-label="Device Type">${data.device.type}</td></tr>`;
+        html += `<tr><th>Is Bot</th><td data-label="Is Bot">${data.is_bot ? '🤖 Ya' : '👤 Tidak'}</td></tr>`;
+        html += `<tr><th>Is Mobile</th><td data-label="Is Mobile">${data.is_mobile ? '📱 Ya' : '💻 Tidak'}</td></tr>`;
+        html += `<tr><th>Raw User-Agent</th><td data-label="Raw User-Agent" style="word-break:break-all;font-size:0.85em">${escapeHtml(data.user_agent)}</td></tr>`;
+        html += '</table>';
+
+        const id = `copy-ua`;
+        jsonDataMap.set(id, data);
+        const jsonStr = JSON.stringify(data, null, 2);
+        html += `<div class="result-actions">
+        <button class="btn-copy" onclick="copyJSON('${id}')">📋 Salin JSON</button>
+    </div>`;
+        html += `<details class="result-details"><summary>Lihat Raw JSON</summary><div class="result-json"><pre>${escapeHtml(jsonStr)}</pre></div></details>`;
+
+        container.innerHTML = html;
+    }
+</script>
+{% endblock %}

@@ -4,13 +4,14 @@
 {% block content %}
 <a href="/" class="back-link">← Kembali ke Beranda</a>
 <h1 class="section-title">📍 IP Lookup</h1>
-<p style="color:#666;margin-bottom:20px">Informasi lengkap IP address: lokasi, ISP, timezone, organisasi.</p>
+<p style="color:var(--text-secondary);margin-bottom:20px">Informasi lengkap IP address: lokasi, ISP, timezone,
+    organisasi.</p>
 
 <div class="tool-form">
     <form id="ipForm">
         <div class="form-group">
             <label for="ip">IP Address</label>
-            <input type="text" id="ip" placeholder="contoh: 8.8.8.8" required>
+            <input type="text" id="ip" name="ip" placeholder="contoh: 8.8.8.8" required>
         </div>
         <button type="submit" class="btn btn-primary">Cek Sekarang</button>
     </form>
@@ -19,12 +20,15 @@
         <p>Sedang mengecek IP address...</p>
     </div>
     <div class="results"></div>
+    <div id="historyContainer"></div>
 </div>
 
 {{ render_education(edu_data) }}
 {% endblock %}
 {% block scripts %}
 <script>
+    displayHistory('ip-lookup', 'historyContainer');
+    loadURLState('ipForm');
     document.getElementById('ipForm').addEventListener('submit', function (e) {
         handleToolForm(e, `/ip/${document.getElementById('ip').value}`);
     });

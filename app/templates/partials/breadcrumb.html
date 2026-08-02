@@ -1,0 +1,17 @@
+{% macro render_breadcrumb(category, tool_name, tool_url, category_url=None) %}
+<nav class="breadcrumb" aria-label="Navigasi breadcrumb">
+    <a href="/" class="breadcrumb-item">🏠 Beranda</a>
+    {% if category %}
+    <span class="breadcrumb-sep">›</span>
+    {% if category_url %}
+    <a href="{{ category_url }}" class="breadcrumb-item breadcrumb-link">{{ category }}</a>
+    {% else %}
+    <span class="breadcrumb-item breadcrumb-current">{{ category }}</span>
+    {% endif %}
+    {% endif %}
+    {% if tool_name %}
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-item breadcrumb-current">{{ tool_name }}</span>
+    {% endif %}
+</nav>
+{% endmacro %}

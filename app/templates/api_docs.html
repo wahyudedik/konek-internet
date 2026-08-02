@@ -1,0 +1,347 @@
+{% extends "base.html" %}
+{% block title %}API Documentation - Konektivitas.com{% endblock %}
+{% block description %}Dokumentasi API Konektivitas.com: DNS lookup, WHOIS, SSL checker, IP lookup, dan 24+ endpoints
+gratis dengan rate limit 60 request/menit.{% endblock %}
+{% block content %}
+<section class="hero">
+    <h1>📡 API Konektivitas.com</h1>
+    <p>Akses programatik ke semua tools internet kami. Gratis, cepat, dan mudah digunakan.</p>
+</section>
+
+<!-- Base Info -->
+<section class="api-section">
+    <div class="api-info-grid">
+        <div class="api-info-card">
+            <h4>🔗 Base URL</h4>
+            <code class="api-url">https://konektivitas.com/api/v1</code>
+        </div>
+        <div class="api-info-card">
+            <h4>⚡ Rate Limit</h4>
+            <p>60 requests per menit per IP</p>
+        </div>
+        <div class="api-info-card">
+            <h4>📋 Format</h4>
+            <p>JSON Response</p>
+        </div>
+        <div class="api-info-card">
+            <h4>🆓 Harga</h4>
+            <p>100% Gratis</p>
+        </div>
+    </div>
+</section>
+
+<!-- DNS Endpoints -->
+<section class="api-section">
+    <h2 class="api-category">🔧 DNS Endpoints (9)</h2>
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/dns/{domain}</code>
+        </div>
+        <p>Query DNS records untuk domain. Parameter: <code>record_type</code> (A, AAAA, MX, TXT, CNAME, NS)</p>
+        <details>
+            <summary>Contoh Request & Response</summary>
+            <div class="api-example">
+                <div class="api-example-label">Request:</div>
+                <code>GET /api/v1/dns/google.com?record_type=A</code>
+                <div class="api-example-label" style="margin-top:10px">Response:</div>
+                <pre>{
+    "domain": "google.com",
+    "record_type": "A",
+    "records": ["142.250.4.46", "142.250.4.42"]
+}</pre>
+            </div>
+        </details>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/dns/{domain}/reverse</code>
+        </div>
+        <p>Reverse DNS lookup — temukan hostname dari IP address.</p>
+        <details>
+            <summary>Contoh Request & Response</summary>
+            <div class="api-example">
+                <div class="api-example-label">Request:</div>
+                <code>GET /api/v1/dns/8.8.8.8/reverse</code>
+                <div class="api-example-label" style="margin-top:10px">Response:</div>
+                <pre>{
+    "ip": "8.8.8.8",
+    "hostname": "dns.google"
+}</pre>
+            </div>
+        </details>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/dns/{domain}/mx</code>
+        </div>
+        <p>Cek Mail Exchange records untuk domain.</p>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/dns/{domain}/txt</code>
+        </div>
+        <p>Cek TXT records termasuk SPF, DKIM.</p>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/dns/{domain}/cname</code>
+        </div>
+        <p>Cek CNAME records untuk domain.</p>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/dns/{domain}/spf</code>
+        </div>
+        <p>Validasi SPF record untuk domain.</p>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/dns/{domain}/dmarc</code>
+        </div>
+        <p>Validasi DMARC policy untuk domain.</p>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/dns/{domain}/propagation</code>
+        </div>
+        <p>Cek propagasi DNS dari 7 nameserver global. Parameter: <code>record_type</code></p>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/dns/{domain}?record_type=NS</code>
+        </div>
+        <p>Cek Name Server (NS records) untuk domain.</p>
+    </div>
+</section>
+
+<!-- Domain Endpoints -->
+<section class="api-section">
+    <h2 class="api-category">🌍 Domain Endpoints (2)</h2>
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/whois/{domain}</code>
+        </div>
+        <p>Informasi lengkap registrasi domain: registrar, tanggal, expiry, nameserver.</p>
+        <details>
+            <summary>Contoh Request & Response</summary>
+            <div class="api-example">
+                <div class="api-example-label">Request:</div>
+                <code>GET /api/v1/whois/google.com</code>
+                <div class="api-example-label" style="margin-top:10px">Response:</div>
+                <pre>{
+    "domain": "google.com",
+    "registrar": "MarkMonitor Inc.",
+    "created": "1997-09-15",
+    "expires": "2028-09-14",
+    "nameservers": ["ns1.google.com", "ns2.google.com"]
+}</pre>
+            </div>
+        </details>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/domain/{domain}/expiry</code>
+        </div>
+        <p>Cek sisa waktu aktif domain.</p>
+    </div>
+</section>
+
+<!-- SSL Endpoints -->
+<section class="api-section">
+    <h2 class="api-category">🔒 SSL Endpoints (2)</h2>
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/ssl/{domain}</code>
+        </div>
+        <p>Verifikasi sertifikat SSL: issuer, expiry, validity, serial number.</p>
+        <details>
+            <summary>Contoh Request & Response</summary>
+            <div class="api-example">
+                <div class="api-example-label">Request:</div>
+                <code>GET /api/v1/ssl/google.com</code>
+                <div class="api-example-label" style="margin-top:10px">Response:</div>
+                <pre>{
+    "domain": "google.com",
+    "valid": true,
+    "issuer": "GTS CA 1C3",
+    "not_before": "2024-01-01",
+    "not_after": "2024-03-25",
+    "days_remaining": 82
+}</pre>
+            </div>
+        </details>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/ssl/{domain}/expiry</code>
+        </div>
+        <p>Cek sisa waktu aktif sertifikat SSL.</p>
+    </div>
+</section>
+
+<!-- Website Endpoints -->
+<section class="api-section">
+    <h2 class="api-category">🌐 Website Endpoints (5)</h2>
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/ping/{host}</code>
+        </div>
+        <p>Uji konektivitas dan response time ke host.</p>
+        <details>
+            <summary>Contoh Request & Response</summary>
+            <div class="api-example">
+                <div class="api-example-label">Request:</div>
+                <code>GET /api/v1/ping/google.com</code>
+                <div class="api-example-label" style="margin-top:10px">Response:</div>
+                <pre>{
+    "host": "google.com",
+    "status": "ok",
+    "response_time_ms": 12.5,
+    "ip": "142.250.4.46"
+}</pre>
+            </div>
+        </details>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/http-status/{url}</code>
+        </div>
+        <p>Cek status HTTP response (200, 301, 404, dll).</p>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/redirect/{url}</code>
+        </div>
+        <p>Lacak rantai redirect dari URL awal ke URL final.</p>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/headers/{url}</code>
+        </div>
+        <p>Analisis HTTP headers: Content-Type, Cache-Control, Security headers.</p>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/ua/{user_agent}</code>
+        </div>
+        <p>Parse dan analisis User-Agent string. Bisa juga GET <code>/ua</code> untuk auto-detect.</p>
+    </div>
+</section>
+
+<!-- IP Endpoints -->
+<section class="api-section">
+    <h2 class="api-category">📡 IP Endpoints (6)</h2>
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/ip/me</code>
+        </div>
+        <p>Deteksi IP address Anda saat ini (auto-detect).</p>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/ip/{ip_address}</code>
+        </div>
+        <p>Informasi lengkap IP address: lokasi, ISP, timezone, organisasi.</p>
+        <details>
+            <summary>Contoh Request & Response</summary>
+            <div class="api-example">
+                <div class="api-example-label">Request:</div>
+                <code>GET /api/v1/ip/8.8.8.8</code>
+                <div class="api-example-label" style="margin-top:10px">Response:</div>
+                <pre>{
+    "ip": "8.8.8.8",
+    "country": "United States",
+    "region": "California",
+    "city": "Mountain View",
+    "isp": "Google LLC",
+    "org": "Google LLC",
+    "as": "AS15169"
+}</pre>
+            </div>
+        </details>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/ip/{ip_address}/asn</code>
+        </div>
+        <p>Cek Autonomous System Number dan organisasi jaringan.</p>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/ip/{ip_address}/blacklist</code>
+        </div>
+        <p>Cek apakah IP address ada di blacklist email/abuse.</p>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/email/{email}/validate</code>
+        </div>
+        <p>Validasi email address: format, MX record, disposable detection.</p>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/port/{host}?ports=80,443,22</code>
+        </div>
+        <p>Scan port TCP pada host. Parameter: <code>ports</code> (pisahkan koma).</p>
+    </div>
+</section>
+
+<!-- Error Response -->
+<section class="api-section">
+    <h2 class="api-category">⚠️ Error Response</h2>
+    <div class="api-endpoint">
+        <div class="api-example">
+            <pre>{
+    "error": "Deskripsi error dalam Bahasa Indonesia"
+}</pre>
+            <p style="margin-top:10px;color:#666;font-size:0.9rem">HTTP Status Codes: <code>200</code> (OK),
+                <code>429</code> (Rate Limit), <code>404</code> (Not Found), <code>500</code> (Server Error)
+            </p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

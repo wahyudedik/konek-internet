@@ -1,10 +1,42 @@
 {% extends "base.html" %}
 {% block title %}404 - Halaman Tidak Ditemukan{% endblock %}
 {% block content %}
-<div style="text-align:center;padding:60px 0">
-    <h1 style="font-size:4rem;color:#ccc;margin-bottom:10px">404</h1>
-    <h2 style="margin-bottom:20px">Halaman Tidak Ditemukan</h2>
-    <p style="color:#666;margin-bottom:30px">Halaman yang kamu cari tidak ada atau sudah dipindahkan.</p>
+<section class="error-page">
+    <div class="error-icon">🔍</div>
+    <h1 class="error-code">404</h1>
+    <h2 class="error-title">Halaman Tidak Ditemukan</h2>
+    <p class="error-desc">Halaman yang kamu cari tidak ada atau sudah dipindahkan.</p>
     <a href="/" class="btn btn-primary">← Kembali ke Beranda</a>
-</div>
+</section>
+
+<section class="section">
+    <h2 class="section-title">🔧 Mungkin Kamu Cari</h2>
+    <div class="tools-grid">
+        <a href="/dns-lookup" class="tool-card">
+            <h3>DNS Lookup</h3>
+            <p>Query DNS records untuk domain apapun.</p>
+            <span class="badge badge-dns">DNS</span>
+        </a>
+        <a href="/whois-lookup" class="tool-card">
+            <h3>WHOIS Lookup</h3>
+            <p>Informasi registrasi domain lengkap.</p>
+            <span class="badge badge-domain">Domain</span>
+        </a>
+        <a href="/ssl-checker" class="tool-card">
+            <h3>SSL Checker</h3>
+            <p>Verifikasi sertifikat SSL website.</p>
+            <span class="badge badge-ssl">SSL</span>
+        </a>
+        <a href="/ping-checker" class="tool-card">
+            <h3>Ping Checker</h3>
+            <p>Uji konektivitas ke server.</p>
+            <span class="badge badge-website">Website</span>
+        </a>
+        <a href="/ip-lookup" class="tool-card">
+            <h3>IP Lookup</h3>
+            <p>Informasi lengkap IP address.</p>
+            <span class="badge badge-ip">IP</span>
+        </a>
+    </div>
+</section>
 {% endblock %}

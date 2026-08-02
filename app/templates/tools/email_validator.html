@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% from "partials/education.html" import render_education %}
+{% block title %}Email Validator - Cek Validitas Email{% endblock %}
+{% block content %}
+<a href="/" class="back-link">← Kembali ke Beranda</a>
+<h1 class="section-title">📧 Email Validator</h1>
+<p style="color:var(--text-secondary);margin-bottom:20px">Validasi email address termasuk format, MX record, dan deteksi
+    disposable
+    email.</p>
+
+<div class="tool-form">
+    <form id="emailForm">
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="text" id="email" name="email" placeholder="contoh: user@example.com" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Validasi Email</button>
+    </form>
+    <div class="loading">
+        <div class="spinner"></div>
+        <p>Sedang memvalidasi email...</p>
+    </div>
+    <div class="results"></div>
+    <div id="historyContainer"></div>
+</div>
+
+{{ render_education(edu_data) }}
+{% endblock %}
+{% block scripts %}
+<script>
+    displayHistory('email-validator', 'historyContainer');
+    loadURLState('emailForm');
+    document.getElementById('emailForm').addEventListener('submit', function (e) {
+        const email = document.getElementById('email').value.trim();
+        updateURLState({ email: email });
+        handleToolForm(e, `/email/${encodeURIComponent(email)}/validate`);
+    });
+</script>
+{% endblock %}

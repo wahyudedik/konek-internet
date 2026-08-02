@@ -23,36 +23,47 @@ konek-internet/
     ├── __init__.py
     ├── main.py           # FastAPI app + middleware
     ├── config.py         # Konfigurasi (Pydantic)
-    ├── routers/          # API endpoints (5 router, 19 endpoints)
+    ├── routers/          # API endpoints (5 router, 24+ endpoints)
     │   ├── dns.py        # 8 endpoints: lookup, reverse, mx, txt, cname, spf, dmarc, propagation
     │   ├── domain.py     # 2 endpoints: whois, expiry
     │   ├── ssl.py        # 2 endpoints: ssl check, expiry
-    │   ├── website.py    # 4 endpoints: ping, http-status, redirect, headers
-    │   └── ip.py         # 3 endpoints: ip lookup, asn, blacklist
-    ├── services/         # Business logic (4 services)
+    │   ├── website.py    # 5 endpoints: ping, http-status, redirect, headers, ua
+    │   └── ip.py         # 5 endpoints: ip lookup, asn, blacklist, my-ip, port, email
+    ├── services/         # Business logic (8 services)
     │   ├── dns_service.py    # DNS operations + @cached
     │   ├── whois_service.py  # WHOIS lookup + @cached
     │   ├── ip_service.py     # IP lookup via ip-api.com
-    │   └── ssl_service.py    # SSL verification + @cached
+    │   ├── ssl_service.py    # SSL verification + @cached
+    │   ├── website_service.py  # NEW - HTTP fallback (HTTPS → HTTP)
+    │   ├── ua_service.py       # NEW - User-Agent parser
+    │   ├── email_service.py    # NEW - Email validation
+    │   └── port_service.py     # NEW - Port scanner
     ├── utils/            # Helper functions
     │   ├── cache.py      # Redis + in-memory fallback cache
-    │   └── rate_limit.py # Per-IP rate limiting (60 req/min)
+    │   ├── rate_limit.py # Per-IP rate limiting (60 req/min)
+    │   └── validators.py # Input validation (domain, IP, URL, host)
     ├── models/           # Data models (Pydantic)
     ├── templates/        # Jinja2 HTML templates
     │   ├── base.html     # Base layout (navbar, footer, JSON-LD)
-    │   ├── index.html    # Homepage (19 tools grid)
+    │   ├── index.html    # Homepage (24 tools grid)
     │   ├── 404.html      # Custom 404 page
+    │   ├── about.html          # NEW - About page
+    │   ├── api_docs.html       # NEW - API Documentation page
     │   ├── partials/     # Template partials
-    │   │   └── education.html  # Macro edukasi untuk tool pages
-    │   └── tools/        # 19 tool pages (dengan section edukasi)
+    │   │   ├── education.html  # Macro edukasi untuk tool pages
+    │   │   └── breadcrumb.html # NEW - Breadcrumb navigation
+    │   └── tools/        # 24 tool pages (dengan section edukasi)
     ├── data/             # Data modules
-    │   └── education.py  # Konten edukasi 19 tools
+    │   ├── education.py  # Konten edukasi 24 tools
+    │   └── faq_data.py   # NEW - FAQ JSON-LD (8 entries)
     └── static/           # Static files
         ├── favicon.svg   # SVG favicon
         ├── robots.txt    # SEO robots
         ├── sitemap.xml   # SEO sitemap
-        ├── css/style.css # Responsive CSS
-        └── js/app.js     # Frontend JavaScript
+        ├── manifest.json # NEW - PWA manifest
+        ├── sw.js         # NEW - Service Worker
+        ├── css/style.css # Responsive CSS (65+ variables, dark mode)
+        └── js/app.js     # Frontend JavaScript (URL state, keyboard shortcuts)
 ```
 
 ## Arsitektur Teknis
@@ -92,15 +103,37 @@ Internet → Cloudflare → AAPanel → Nginx → FastAPI → Redis → Database
 ## Status Implementasi
 
 ### Fase 1 - MVP (2026) ✅ SELESAI
-- 19 API endpoints aktif
-- 19 halaman frontend dengan section edukasi
+- 24 API endpoints aktif (+ 2 UA endpoints)
+- 24 halaman frontend + About page + API Docs page
+- 8 service files (dns, whois, ssl, ip, website, ua, email, port)
+- 5 router files (dns, domain, ssl, website, ip)
 - Redis caching + in-memory fallback
 - Rate limiting (60 req/min per IP)
 - Security headers middleware
-- SEO: JSON-LD, robots.txt, sitemap.xml, canonical URL
+- SEO: JSON-LD (FAQPage + BreadcrumbList), robots.txt, sitemap.xml, canonical URL
 - Health check endpoint
-- Response time display
-- Section edukasi interaktif di semua 19 tool pages
+- Response time display (X-Process-Time header)
+- Section edukasi interaktif di semua 24 tool pages
+- Navigation dropdown 5 kategori (DNS, Domain, SSL, Website, IP) — 24 tools
+- Footer grid dengan semua 24 tools terorganisir + About + API Docs
+- Search/filter tools di homepage
+- Back-to-top button
+- Mobile responsive: hamburger nav, dropdown, stacked forms, card layout
+- 404 page dengan tool suggestions
+- Input validation di semua endpoints (validate_domain, validate_ip, validate_url, validate_host)
+- Async non-blocking di semua services (asyncio.to_thread)
+- XSS protection di copyJSON function (JavaScript Map)
+- HTTP fallback (HTTPS → HTTP) di website service
+- Tool History localStorage (10 query terakhir per tool)
+- URL Query State (shareable URLs)
+- Dark Mode Toggle (65+ CSS variables, localStorage, system preference)
+- Keyboard Shortcuts (Ctrl+K search, Escape close)
+- PWA Support (manifest.json + service worker)
+- WHOIS extra fields (registrant, admin/tech contact, updated_date)
+- SSL chain info (SANs, signature algorithm, chain depth)
+- HTTP version detection (HTTP/1.0, 1.1, 2, 3)
+- Breadcrumb links ke category
+- FAQ JSON-LD Schema (8 FAQ entries)
 
 ### Cara Menjalankan
 ```bash
@@ -115,6 +148,8 @@ e:\PROJEKU\konek-internet\.venv\Scripts\python.exe -m uvicorn app.main:app --rel
 # API: http://localhost:8002/api/v1/
 # Docs: http://localhost:8002/docs
 # Health: http://localhost:8002/health
+# About: http://localhost:8002/about
+# API Docs: http://localhost:8002/api-docs
 ```
 
 ## Konvensi Penamaan
@@ -128,6 +163,15 @@ e:\PROJEKU\konek-internet\.venv\Scripts\python.exe -m uvicorn app.main:app --rel
 /txt-lookup          /redirect-checker   /blacklist-checker
 /cname-lookup        /header-checker
 /spf-checker         /dmarc-checker
+# Tambahan FASE 2
+/my-ip
+/ua-checker
+/email-validator
+/ns-lookup
+/port-scanner
+# Tambahan FASE 3
+/about
+/api-docs
 ```
 
 ### API Pattern
@@ -151,6 +195,12 @@ GET /api/v1/headers/{url}
 GET /api/v1/ip/{ip}
 GET /api/v1/ip/{ip}/asn
 GET /api/v1/ip/{ip}/blacklist
+# Tambahan FASE 2
+GET /api/v1/ip/me
+GET /api/v1/ua
+GET /api/v1/ua/{encoded_ua:path}
+GET /api/v1/email/{email}/validate
+GET /api/v1/port/{host}?ports=80,443,22
 ```
 
 ### Security Headers (otomatis ditambahkan)
@@ -166,8 +216,8 @@ Strict-Transport-Security: max-age=31536000 (HTTPS only)
 
 ## Fase Pengembangan
 
-### Fase 1 - MVP (2026)
-- 20+ tools DNS, Domain, SSL, Website, IP
+### Fase 1 - MVP (2026) ✅ SELESAI
+- 24 tools DNS, Domain, SSL, Website, IP
 - Target: 100.000 visitor/bulan
 - API gratis dengan rate limit
 
@@ -207,29 +257,44 @@ Strict-Transport-Security: max-age=31536000 (HTTPS only)
 app/
 ├── main.py           # FastAPI app + middleware (Security, RateLimit)
 ├── config.py         # Pydantic settings
-├── routers/          # API endpoints (5 router, 19 endpoints)
+├── routers/          # API endpoints (5 router, 24+ endpoints)
 │   ├── dns.py        # DNS: lookup, reverse, mx, txt, cname, spf, dmarc, propagation
 │   ├── domain.py     # Domain: whois, expiry
 │   ├── ssl.py        # SSL: check, expiry
-│   ├── website.py    # Website: ping, http-status, redirect, headers
-│   └── ip.py         # IP: lookup, asn, blacklist
+│   ├── website.py    # Website: ping, http-status, redirect, headers, ua
+│   └── ip.py         # IP: lookup, asn, blacklist, my-ip, port, email
 ├── services/         # Business logic (dengan @cached decorator)
 │   ├── dns_service.py
 │   ├── whois_service.py
 │   ├── ip_service.py
-│   └── ssl_service.py
+│   ├── ssl_service.py
+│   ├── website_service.py  # HTTP fallback
+│   ├── ua_service.py       # User-Agent parser
+│   ├── email_service.py    # Email validation
+│   └── port_service.py     # Port scanner
 ├── utils/
 │   ├── cache.py      # Redis + in-memory cache
-│   └── rate_limit.py # Per-IP rate limiting
-├── templates/        # Jinja2 HTML (19 pages)
+│   ├── rate_limit.py # Per-IP rate limiting
+│   └── validators.py # Input validation (domain, IP, URL, host)
+├── templates/        # Jinja2 HTML (24 tool pages + about + api_docs)
 │   ├── base.html     # Base layout + JSON-LD
 │   ├── index.html    # Homepage
 │   ├── 404.html      # Error page
-│   └── tools/        # 19 tool pages
+│   ├── about.html    # About page
+│   ├── api_docs.html # API Documentation
+│   ├── partials/
+│   │   ├── education.html
+│   │   └── breadcrumb.html
+│   └── tools/        # 24 tool pages
+├── data/
+│   ├── education.py  # Konten edukasi 24 tools
+│   └── faq_data.py   # FAQ JSON-LD (8 entries)
 ├── static/
 │   ├── css/style.css
 │   ├── js/app.js     # handleToolForm(), displayResults(), copyJSON()
-│   └── favicon.svg
+│   ├── favicon.svg
+│   ├── manifest.json # PWA
+│   └── sw.js         # Service Worker
 └── models/           # Data models
 ```
 
@@ -248,16 +313,32 @@ app/
 - [x] Redis cache untuk data yang sering diakses (+ in-memory fallback)
 - [x] Graceful error handling
 - [x] X-Process-Time header
+- [x] Async non-blocking (asyncio.to_thread untuk semua blocking operations)
+- [x] HTTP fallback (HTTPS → HTTP)
 
 ### SEO Checklist
 - [x] Meta title & description
 - [x] Open Graph tags
-- [x] Structured data (JSON-LD)
+- [x] Structured data (JSON-LD: BreadcrumbList + FAQPage)
 - [x] Fast loading time
 - [x] Mobile friendly
 - [x] robots.txt
 - [x] sitemap.xml
 - [x] Canonical URL
+- [x] FAQ rich snippets
+
+### Feature Checklist
+- [x] Dark mode toggle (65+ CSS variables)
+- [x] Tool history (localStorage, 10 per tool)
+- [x] URL query state (shareable URLs)
+- [x] Keyboard shortcuts (Ctrl+K, Escape)
+- [x] PWA support (manifest.json + service worker)
+- [x] Mobile card layout (result tables)
+- [x] Breadcrumb navigation (clickable categories)
+- [x] Input validation (all endpoints)
+- [x] WHOIS extra fields (registrant, contacts)
+- [x] SSL chain info (SANs, signature)
+- [x] HTTP version detection (1.0, 1.1, 2, 3)
 
 ## Target Metrics
 

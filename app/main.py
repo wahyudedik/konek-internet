@@ -1,4 +1,6 @@
 import time
+import logging
+from datetime import date
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -10,6 +12,16 @@ from app.config import get_settings
 from app.routers import dns, domain, ssl, website, ip
 from app.utils.rate_limit import check_rate_limit, get_client_ip, get_remaining_requests
 from app.data.education import EDUCATION_DATA
+from app.data.faq_data import FAQ_DATA
+from app.utils.validators import get_tool_meta
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+logger = logging.getLogger("konektivitas")
 
 settings = get_settings()
 
@@ -25,9 +37,10 @@ app = FastAPI(
 # ============ MIDDLEWARE ============
 
 # CORS
+origins = [o.strip() for o in settings.ALLOWED_ORIGINS.split(",") if o.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -38,7 +51,13 @@ app.add_middleware(
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         start_time = time.time()
-        response = await call_next(request)
+        
+        try:
+            response = await call_next(request)
+        except Exception as e:
+            logger.error("Request error: %s %s - %s", request.method, request.url.path, str(e))
+            raise
+        
         process_time = round((time.time() - start_time) * 1000, 2)
         
         # Security headers
@@ -54,6 +73,18 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         # HSTS for production (only when HTTPS)
         if request.url.scheme == "https":
             response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        
+        # Cache-Control for API responses
+        if request.url.path.startswith("/api/"):
+            response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+
+        # Log slow requests (> 1 second)
+        if process_time > 1000:
+            logger.warning("Slow request: %s %s - %dms", request.method, request.url.path, process_time)
+        
+        # Log API requests
+        if request.url.path.startswith("/api/"):
+            logger.info("%s %s %s - %dms %s", request.client.host if request.client else "?", request.method, request.url.path, response.status_code, f"{process_time}ms")
         
         return response
 
@@ -100,6 +131,40 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 # Templates
 templates = Jinja2Templates(directory="app/templates")
 
+
+# Category URL mapping for breadcrumb links
+CATEGORY_MAP = {
+    "DNS": "/?category=dns",
+    "Domain": "/?category=domain",
+    "SSL": "/?category=ssl",
+    "Website": "/?category=website",
+    "IP": "/?category=ip",
+}
+
+
+def template_response(template_name: str, request: Request, **kwargs) -> Response:
+    """Helper to build template response with consistent context (faqs for JSON-LD)"""
+    context = {"request": request, "faqs": FAQ_DATA}
+    context.update(kwargs)
+    return templates.TemplateResponse(template_name, context)
+
+
+def tool_context(request: Request, title: str, tool_key: str, extra: dict = None) -> dict:
+    """Build template context for tool pages with metadata, category_url, and faqs"""
+    meta = get_tool_meta(tool_key)
+    category_url = CATEGORY_MAP.get(meta.get("category", ""), "")
+    ctx = {
+        "request": request,
+        "title": title,
+        "meta": meta,
+        "edu_data": EDUCATION_DATA.get(tool_key, {}),
+        "category_url": category_url,
+        "faqs": FAQ_DATA,
+    }
+    if extra:
+        ctx.update(extra)
+    return ctx
+
 # API routers
 app.include_router(dns.router, prefix="/api/v1", tags=["DNS"])
 app.include_router(domain.router, prefix="/api/v1", tags=["Domain"])
@@ -112,114 +177,150 @@ app.include_router(ip.router, prefix="/api/v1", tags=["IP"])
 
 @app.get("/")
 async def homepage(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request, "title": "Beranda"})
+    return template_response("index.html", request, title="Beranda", meta=None)
+
+
+@app.get("/about")
+async def about_page(request: Request):
+    return template_response("about.html", request, title="Tentang Konektivitas.com", meta=None)
+
+
+@app.get("/api-docs")
+async def api_docs_page(request: Request):
+    return template_response("api_docs.html", request, title="API Documentation - Konektivitas.com", meta=None)
 
 
 @app.get("/dns-lookup")
 async def page_dns_lookup(request: Request):
-    return templates.TemplateResponse("tools/dns_lookup.html", {"request": request, "title": "DNS Lookup", "edu_data": EDUCATION_DATA.get("dns_lookup")})
+    return templates.TemplateResponse("tools/dns_lookup.html", tool_context(request, "DNS Lookup", "dns_lookup"))
 
 
 @app.get("/reverse-dns")
 async def page_reverse_dns(request: Request):
-    return templates.TemplateResponse("tools/reverse_dns.html", {"request": request, "title": "Reverse DNS", "edu_data": EDUCATION_DATA.get("reverse_dns")})
+    return templates.TemplateResponse("tools/reverse_dns.html", tool_context(request, "Reverse DNS", "reverse_dns"))
 
 
 @app.get("/dns-propagation")
 async def page_dns_propagation(request: Request):
-    return templates.TemplateResponse("tools/dns_propagation.html", {"request": request, "title": "DNS Propagation Checker", "edu_data": EDUCATION_DATA.get("dns_propagation")})
+    return templates.TemplateResponse("tools/dns_propagation.html", tool_context(request, "DNS Propagation Checker", "dns_propagation"))
 
 
 @app.get("/mx-lookup")
 async def page_mx_lookup(request: Request):
-    return templates.TemplateResponse("tools/mx_lookup.html", {"request": request, "title": "MX Lookup", "edu_data": EDUCATION_DATA.get("mx_lookup")})
+    return templates.TemplateResponse("tools/mx_lookup.html", tool_context(request, "MX Lookup", "mx_lookup"))
 
 
 @app.get("/txt-lookup")
 async def page_txt_lookup(request: Request):
-    return templates.TemplateResponse("tools/txt_lookup.html", {"request": request, "title": "TXT Lookup", "edu_data": EDUCATION_DATA.get("txt_lookup")})
+    return templates.TemplateResponse("tools/txt_lookup.html", tool_context(request, "TXT Lookup", "txt_lookup"))
 
 
 @app.get("/cname-lookup")
 async def page_cname_lookup(request: Request):
-    return templates.TemplateResponse("tools/cname_lookup.html", {"request": request, "title": "CNAME Lookup", "edu_data": EDUCATION_DATA.get("cname_lookup")})
+    return templates.TemplateResponse("tools/cname_lookup.html", tool_context(request, "CNAME Lookup", "cname_lookup"))
 
 
 @app.get("/spf-checker")
 async def page_spf_checker(request: Request):
-    return templates.TemplateResponse("tools/spf_checker.html", {"request": request, "title": "SPF Checker", "edu_data": EDUCATION_DATA.get("spf_checker")})
+    return templates.TemplateResponse("tools/spf_checker.html", tool_context(request, "SPF Checker", "spf_checker"))
 
 
 @app.get("/dmarc-checker")
 async def page_dmarc_checker(request: Request):
-    return templates.TemplateResponse("tools/dmarc_checker.html", {"request": request, "title": "DMARC Checker", "edu_data": EDUCATION_DATA.get("dmarc_checker")})
+    return templates.TemplateResponse("tools/dmarc_checker.html", tool_context(request, "DMARC Checker", "dmarc_checker"))
 
 
 @app.get("/whois-lookup")
 async def page_whois_lookup(request: Request):
-    return templates.TemplateResponse("tools/whois_lookup.html", {"request": request, "title": "WHOIS Lookup", "edu_data": EDUCATION_DATA.get("whois_lookup")})
+    return templates.TemplateResponse("tools/whois_lookup.html", tool_context(request, "WHOIS Lookup", "whois_lookup"))
 
 
 @app.get("/domain-expiry")
 async def page_domain_expiry(request: Request):
-    return templates.TemplateResponse("tools/domain_expiry.html", {"request": request, "title": "Domain Expiry Checker", "edu_data": EDUCATION_DATA.get("domain_expiry")})
+    return templates.TemplateResponse("tools/domain_expiry.html", tool_context(request, "Domain Expiry Checker", "domain_expiry"))
 
 
 @app.get("/ssl-checker")
 async def page_ssl_checker(request: Request):
-    return templates.TemplateResponse("tools/ssl_checker.html", {"request": request, "title": "SSL Checker", "edu_data": EDUCATION_DATA.get("ssl_checker")})
+    return templates.TemplateResponse("tools/ssl_checker.html", tool_context(request, "SSL Checker", "ssl_checker"))
 
 
 @app.get("/ssl-expiry")
 async def page_ssl_expiry(request: Request):
-    return templates.TemplateResponse("tools/ssl_expiry.html", {"request": request, "title": "SSL Expiry Checker", "edu_data": EDUCATION_DATA.get("ssl_expiry")})
+    return templates.TemplateResponse("tools/ssl_expiry.html", tool_context(request, "SSL Expiry Checker", "ssl_expiry"))
 
 
 @app.get("/ping-checker")
 async def page_ping_checker(request: Request):
-    return templates.TemplateResponse("tools/ping_checker.html", {"request": request, "title": "Ping Checker", "edu_data": EDUCATION_DATA.get("ping_checker")})
+    return templates.TemplateResponse("tools/ping_checker.html", tool_context(request, "Ping Checker", "ping_checker"))
 
 
 @app.get("/http-status")
 async def page_http_status(request: Request):
-    return templates.TemplateResponse("tools/http_status.html", {"request": request, "title": "HTTP Status Checker", "edu_data": EDUCATION_DATA.get("http_status")})
+    return templates.TemplateResponse("tools/http_status.html", tool_context(request, "HTTP Status Checker", "http_status"))
 
 
 @app.get("/redirect-checker")
 async def page_redirect_checker(request: Request):
-    return templates.TemplateResponse("tools/redirect_checker.html", {"request": request, "title": "Redirect Checker", "edu_data": EDUCATION_DATA.get("redirect_checker")})
+    return templates.TemplateResponse("tools/redirect_checker.html", tool_context(request, "Redirect Checker", "redirect_checker"))
 
 
 @app.get("/header-checker")
 async def page_header_checker(request: Request):
-    return templates.TemplateResponse("tools/header_checker.html", {"request": request, "title": "Header Checker", "edu_data": EDUCATION_DATA.get("header_checker")})
+    return templates.TemplateResponse("tools/header_checker.html", tool_context(request, "Header Checker", "header_checker"))
 
 
 @app.get("/ip-lookup")
 async def page_ip_lookup(request: Request):
-    return templates.TemplateResponse("tools/ip_lookup.html", {"request": request, "title": "IP Lookup", "edu_data": EDUCATION_DATA.get("ip_lookup")})
+    return templates.TemplateResponse("tools/ip_lookup.html", tool_context(request, "IP Lookup", "ip_lookup"))
 
 
 @app.get("/asn-lookup")
 async def page_asn_lookup(request: Request):
-    return templates.TemplateResponse("tools/asn_lookup.html", {"request": request, "title": "ASN Lookup", "edu_data": EDUCATION_DATA.get("asn_lookup")})
+    return templates.TemplateResponse("tools/asn_lookup.html", tool_context(request, "ASN Lookup", "asn_lookup"))
 
 
 @app.get("/blacklist-checker")
 async def page_blacklist_checker(request: Request):
-    return templates.TemplateResponse("tools/blacklist_checker.html", {"request": request, "title": "Blacklist Checker", "edu_data": EDUCATION_DATA.get("blacklist_checker")})
+    return templates.TemplateResponse("tools/blacklist_checker.html", tool_context(request, "Blacklist Checker", "blacklist_checker"))
+
+
+@app.get("/my-ip")
+async def page_my_ip(request: Request):
+    return templates.TemplateResponse("tools/my_ip.html", tool_context(request, "My IP Address", "my_ip"))
+
+
+@app.get("/ua-checker")
+async def page_ua_checker(request: Request):
+    return templates.TemplateResponse("tools/ua_checker.html", tool_context(request, "User-Agent Checker", "ua_checker"))
+
+
+@app.get("/email-validator")
+async def page_email_validator(request: Request):
+    return templates.TemplateResponse("tools/email_validator.html", tool_context(request, "Email Validator", "email_validator"))
+
+
+@app.get("/ns-lookup")
+async def page_ns_lookup(request: Request):
+    return templates.TemplateResponse("tools/ns_lookup.html", tool_context(request, "NS Lookup", "ns_lookup"))
+
+
+@app.get("/port-scanner")
+async def page_port_scanner(request: Request):
+    return templates.TemplateResponse("tools/port_scanner.html", tool_context(request, "Port Scanner", "port_scanner"))
 
 
 # Health check (API)
 @app.get("/health")
 async def health():
     import sys
+    from app.utils.cache import get_cache_stats
     return {
         "status": "healthy",
         "app": settings.APP_NAME,
         "version": settings.APP_VERSION,
         "python": sys.version.split()[0],
-        "cache": "in-memory"
+        "cache": get_cache_stats(),
     }
 
 
@@ -250,6 +351,7 @@ async def sitemap_xml():
         ("/cname-lookup", "0.7", "monthly"),
         ("/spf-checker", "0.8", "monthly"),
         ("/dmarc-checker", "0.8", "monthly"),
+        ("/ns-lookup", "0.8", "monthly"),
         ("/whois-lookup", "0.9", "monthly"),
         ("/domain-expiry", "0.8", "monthly"),
         ("/ssl-checker", "0.9", "monthly"),
@@ -258,15 +360,21 @@ async def sitemap_xml():
         ("/http-status", "0.8", "monthly"),
         ("/redirect-checker", "0.8", "monthly"),
         ("/header-checker", "0.7", "monthly"),
+        ("/ua-checker", "0.8", "monthly"),
         ("/ip-lookup", "0.9", "monthly"),
+        ("/my-ip", "0.9", "monthly"),
         ("/asn-lookup", "0.8", "monthly"),
         ("/blacklist-checker", "0.8", "monthly"),
+        ("/email-validator", "0.8", "monthly"),
+        ("/port-scanner", "0.8", "monthly"),
+        ("/about", "0.7", "monthly"),
+        ("/api-docs", "0.7", "monthly"),
     ]
     
     urls_xml = "\n".join([
         f"""  <url>
     <loc>https://konektivitas.com{path}</loc>
-    <lastmod>2026-07-31</lastmod>
+    <lastmod>{date.today().isoformat()}</lastmod>
     <changefreq>{freq}</changefreq>
     <priority>{priority}</priority>
   </url>"""
@@ -285,4 +393,4 @@ async def sitemap_xml():
 async def not_found_handler(request: Request, exc):
     if request.url.path.startswith("/api/"):
         return JSONResponse(status_code=404, content={"error": "Endpoint tidak ditemukan"})
-    return templates.TemplateResponse("404.html", {"request": request, "title": "404 - Tidak Ditemukan"}, status_code=404)
+    return template_response("404.html", request, title="404 - Tidak Ditemukan", meta=None, status_code=404)

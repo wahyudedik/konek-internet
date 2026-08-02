@@ -1,6 +1,10 @@
+import asyncio
 import dns.resolver
+import logging
 from typing import Dict, List, Any, Optional
 from app.utils.cache import cached
+
+logger = logging.getLogger("konektivitas.dns")
 
 
 @cached(ttl=300)
@@ -13,8 +17,11 @@ async def lookup_dns(domain: str, record_type: str = "A") -> Dict[str, Any]:
         "error": None
     }
     
+    def _resolve_sync():
+        return dns.resolver.resolve(domain, record_type)
+    
     try:
-        answers = dns.resolver.resolve(domain, record_type)
+        answers = await asyncio.to_thread(_resolve_sync)
         for rdata in answers:
             results["records"].append(str(rdata))
     except dns.resolver.NXDOMAIN:
@@ -38,11 +45,14 @@ async def reverse_dns(ip_address: str) -> Dict[str, Any]:
         "error": None
     }
     
-    try:
+    def _reverse_sync():
         hostname = dns.reversename.from_address(ip_address)
         answers = dns.resolver.resolve(hostname, "PTR")
-        for rdata in answers:
-            results["domains"].append(str(rdata))
+        return [str(rdata) for rdata in answers]
+    
+    try:
+        domains = await asyncio.to_thread(_reverse_sync)
+        results["domains"] = domains
     except Exception as e:
         results["error"] = str(e)
     
@@ -92,6 +102,8 @@ async def check_dmarc(domain: str) -> Dict[str, Any]:
 
 async def _lookup_dns_raw(domain: str, record_type: str) -> Dict[str, Any]:
     """Internal DNS lookup tanpa caching"""
+    import asyncio
+    
     results = {
         "domain": domain,
         "record_type": record_type,
@@ -99,10 +111,13 @@ async def _lookup_dns_raw(domain: str, record_type: str) -> Dict[str, Any]:
         "error": None
     }
     
-    try:
+    def _resolve_sync():
         answers = dns.resolver.resolve(domain, record_type)
-        for rdata in answers:
-            results["records"].append(str(rdata))
+        return [str(rdata) for rdata in answers]
+    
+    try:
+        records = await asyncio.to_thread(_resolve_sync)
+        results["records"] = records
     except dns.resolver.NXDOMAIN:
         results["error"] = "Domain tidak ditemukan"
     except dns.resolver.NoAnswer:
@@ -115,8 +130,9 @@ async def _lookup_dns_raw(domain: str, record_type: str) -> Dict[str, Any]:
     return results
 
 
+@cached(ttl=60)
 async def propagation_check(domain: str, record_type: str = "A") -> Dict[str, Any]:
-    """DNS Propagation Checker - Cek DNS dari multiple nameserver global"""
+    """DNS Propagation Checker - Cek DNS dari multiple nameserver global (parallel)"""
     nameservers = {
         "Google (8.8.8.8)": "8.8.8.8",
         "Google (8.8.4.4)": "8.8.4.4",
@@ -135,39 +151,52 @@ async def propagation_check(domain: str, record_type: str = "A") -> Dict[str, An
         "error": None
     }
     
-    try:
-        resolver = dns.resolver.Resolver()
-        resolver.timeout = 5
-        resolver.lifetime = 5
-        
-        for name, ns_ip in nameservers.items():
+    semaphore = asyncio.Semaphore(4)
+    
+    def _resolve_with_ns(ns_ip: str):
+        r = dns.resolver.Resolver()
+        r.timeout = 5
+        r.lifetime = 5
+        r.nameservers = [ns_ip]
+        return r.resolve(domain, record_type)
+    
+    async def _resolve_ns(name: str, ns_ip: str) -> tuple:
+        """Resolve single nameserver with semaphore limiting concurrency"""
+        async with semaphore:
             try:
-                resolver.nameservers = [ns_ip]
-                answers = resolver.resolve(domain, record_type)
+                answers = await asyncio.to_thread(_resolve_with_ns, ns_ip)
                 records = [str(r) for r in answers]
-                results["results"][name] = {
+                return name, {
                     "ip": ns_ip,
                     "records": records,
                     "status": "ok"
                 }
             except dns.resolver.NXDOMAIN:
-                results["results"][name] = {
+                return name, {
                     "ip": ns_ip,
                     "records": [],
                     "status": "nxdomain"
                 }
             except dns.resolver.NoAnswer:
-                results["results"][name] = {
+                return name, {
                     "ip": ns_ip,
                     "records": [],
                     "status": "noanswer"
                 }
             except Exception as e:
-                results["results"][name] = {
+                return name, {
                     "ip": ns_ip,
                     "records": [],
                     "status": f"error: {str(e)}"
                 }
+    
+    try:
+        # Query all nameservers in parallel (max 4 concurrent)
+        tasks = [_resolve_ns(name, ns_ip) for name, ns_ip in nameservers.items()]
+        resolved_results = await asyncio.gather(*tasks)
+        
+        for name, result_data in resolved_results:
+            results["results"][name] = result_data
         
         # Collect unique records
         all_records = set()

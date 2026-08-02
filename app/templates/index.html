@@ -5,47 +5,57 @@
     <h1>🌐 Konektivitas.com</h1>
     <p>Infrastruktur Internet Gratis untuk Indonesia. Cek DNS, WHOIS, SSL, IP, dan banyak lagi — cepat, gratis, tanpa
         registrasi.</p>
+    <div class="search-box">
+        <input type="text" id="toolSearch" placeholder="🔍 Cari tools... (contoh: dns, ssl, ping)"
+            oninput="filterTools(this.value)">
+    </div>
 </section>
 
-<section class="section">
+<section class="section" data-category="dns">
     <h2 class="section-title">🔧 DNS Tools</h2>
     <div class="tools-grid">
-        <a href="/dns-lookup" class="tool-card">
+        <a href="/dns-lookup" class="tool-card" data-name="dns lookup query records a aaaa mx txt ns">
             <h3>DNS Lookup</h3>
             <p>Query DNS records (A, AAAA, MX, TXT, NS) untuk domain apapun.</p>
             <span class="badge badge-dns">DNS</span>
         </a>
-        <a href="/dns-propagation" class="tool-card">
+        <a href="/dns-propagation" class="tool-card"
+            data-name="dns propagation checker global nameserver google cloudflare">
             <h3>DNS Propagation Checker</h3>
             <p>Cek propagasi DNS dari 7 nameserver global: Google, Cloudflare, OpenDNS, Quad9.</p>
             <span class="badge badge-dns">DNS</span>
         </a>
-        <a href="/reverse-dns" class="tool-card">
+        <a href="/reverse-dns" class="tool-card" data-name="reverse dns ptr ip hostname">
             <h3>Reverse DNS</h3>
             <p>Lookup IP address untuk menemukan hostname yang terkait.</p>
             <span class="badge badge-dns">DNS</span>
         </a>
-        <a href="/mx-lookup" class="tool-card">
+        <a href="/mx-lookup" class="tool-card" data-name="mx lookup mail exchange email server">
             <h3>MX Lookup</h3>
             <p>Cek Mail Exchange records untuk konfigurasi email.</p>
             <span class="badge badge-dns">DNS</span>
         </a>
-        <a href="/txt-lookup" class="tool-card">
+        <a href="/txt-lookup" class="tool-card" data-name="txt lookup spf dkim domain verification">
             <h3>TXT Lookup</h3>
             <p>Cek TXT records termasuk SPF, DKIM, dan verifikasi domain.</p>
             <span class="badge badge-dns">DNS</span>
         </a>
-        <a href="/cname-lookup" class="tool-card">
+        <a href="/cname-lookup" class="tool-card" data-name="cname lookup canonical name alias cdn">
             <h3>CNAME Lookup</h3>
             <p>Cek Canonical Name records dan alias domain.</p>
             <span class="badge badge-dns">DNS</span>
         </a>
-        <a href="/spf-checker" class="tool-card">
+        <a href="/ns-lookup" class="tool-card" data-name="ns lookup name server dns server ns record">
+            <h3>NS Lookup</h3>
+            <p>Lookup name server (NS record) untuk domain guna mengetahui DNS server yang digunakan.</p>
+            <span class="badge badge-dns">DNS</span>
+        </a>
+        <a href="/spf-checker" class="tool-card" data-name="spf checker sender policy framework email">
             <h3>SPF Checker</h3>
             <p>Validasi Sender Policy Framework records untuk email.</p>
             <span class="badge badge-dns">DNS</span>
         </a>
-        <a href="/dmarc-checker" class="tool-card">
+        <a href="/dmarc-checker" class="tool-card" data-name="dmarc checker policy email security">
             <h3>DMARC Checker</h3>
             <p>Validasi DMARC policies untuk keamanan email.</p>
             <span class="badge badge-dns">DNS</span>
@@ -53,15 +63,15 @@
     </div>
 </section>
 
-<section class="section">
+<section class="section" data-category="domain">
     <h2 class="section-title">🌍 Domain Tools</h2>
     <div class="tools-grid">
-        <a href="/whois-lookup" class="tool-card">
+        <a href="/whois-lookup" class="tool-card" data-name="whois lookup domain registration registrar nameserver">
             <h3>WHOIS Lookup</h3>
             <p>Informasi registrasi domain: registrar, tanggal registrasi, expiry, nameserver.</p>
             <span class="badge badge-domain">Domain</span>
         </a>
-        <a href="/domain-expiry" class="tool-card">
+        <a href="/domain-expiry" class="tool-card" data-name="domain expiry check expiring active">
             <h3>Domain Expiry Checker</h3>
             <p>Cek sisa waktu aktif domain dan dapatkan peringatan sebelum expired.</p>
             <span class="badge badge-domain">Domain</span>
@@ -69,15 +79,15 @@
     </div>
 </section>
 
-<section class="section">
+<section class="section" data-category="ssl">
     <h2 class="section-title">🔒 SSL Tools</h2>
     <div class="tools-grid">
-        <a href="/ssl-checker" class="tool-card">
+        <a href="/ssl-checker" class="tool-card" data-name="ssl checker certificate https tls security">
             <h3>SSL Checker</h3>
             <p>Verifikasi sertifikat SSL: issuer, expiry, validity, dan detail lainnya.</p>
             <span class="badge badge-ssl">SSL</span>
         </a>
-        <a href="/ssl-expiry" class="tool-card">
+        <a href="/ssl-expiry" class="tool-card" data-name="ssl expiry check certificate expiring">
             <h3>SSL Expiry Checker</h3>
             <p>Cek sisa waktu aktif sertifikat SSL sebelum perlu diperbarui.</p>
             <span class="badge badge-ssl">SSL</span>
@@ -85,50 +95,79 @@
     </div>
 </section>
 
-<section class="section">
+<section class="section" data-category="website">
     <h2 class="section-title">🌐 Website Tools</h2>
     <div class="tools-grid">
-        <a href="/ping-checker" class="tool-card">
+        <a href="/ping-checker" class="tool-card" data-name="ping checker connectivity response time latency">
             <h3>Ping Checker</h3>
             <p>Uji konektivitas dan response time ke server website.</p>
             <span class="badge badge-website">Website</span>
         </a>
-        <a href="/http-status" class="tool-card">
+        <a href="/http-status" class="tool-card" data-name="http status checker response code 200 301 404 500">
             <h3>HTTP Status Checker</h3>
             <p>Cek status HTTP response (200, 301, 404, 500, dll).</p>
             <span class="badge badge-website">Website</span>
         </a>
-        <a href="/redirect-checker" class="tool-card">
+        <a href="/redirect-checker" class="tool-card" data-name="redirect checker chain url 301 302">
             <h3>Redirect Checker</h3>
             <p>Lacak rantai redirect dari URL awal ke URL final.</p>
             <span class="badge badge-website">Website</span>
         </a>
-        <a href="/header-checker" class="tool-card">
+        <a href="/header-checker" class="tool-card"
+            data-name="header checker http headers content-type cache-control security">
             <h3>Header Checker</h3>
             <p>Analisis HTTP headers: Content-Type, Cache-Control, Security headers.</p>
+            <span class="badge badge-website">Website</span>
+        </a>
+        <a href="/ua-checker" class="tool-card"
+            data-name="user agent checker browser detector device detection ua parser">
+            <h3>User-Agent Checker</h3>
+            <p>Parse dan analisis User-Agent string untuk mendeteksi browser, OS, dan device.</p>
             <span class="badge badge-website">Website</span>
         </a>
     </div>
 </section>
 
-<section class="section">
+<section class="section" data-category="ip">
     <h2 class="section-title">📡 IP Tools</h2>
     <div class="tools-grid">
-        <a href="/ip-lookup" class="tool-card">
+        <a href="/my-ip" class="tool-card" data-name="my ip address cek ip saya what is my ip">
+            <h3>My IP Address</h3>
+            <p>Deteksi dan cek detail IP address Anda saat ini termasuk lokasi, ISP, dan ASN.</p>
+            <span class="badge badge-ip">IP</span>
+        </a>
+        <a href="/ip-lookup" class="tool-card" data-name="ip lookup address location isp timezone">
             <h3>IP Lookup</h3>
             <p>Informasi lengkap IP address: lokasi, ISP, timezone, organisasi.</p>
             <span class="badge badge-ip">IP</span>
         </a>
-        <a href="/asn-lookup" class="tool-card">
+        <a href="/asn-lookup" class="tool-card" data-name="asn lookup autonomous system number network">
             <h3>ASN Lookup</h3>
             <p>Cek Autonomous System Number dan organisasi jaringan.</p>
             <span class="badge badge-ip">IP</span>
         </a>
-        <a href="/blacklist-checker" class="tool-card">
+        <a href="/blacklist-checker" class="tool-card" data-name="blacklist checker ip abuse spam email">
             <h3>Blacklist Checker</h3>
             <p>Cek apakah IP address ada di blacklist email/abuse.</p>
             <span class="badge badge-ip">IP</span>
         </a>
+        <a href="/email-validator" class="tool-card"
+            data-name="email validator check valid mx disposable email verification">
+            <h3>Email Validator</h3>
+            <p>Validasi email address termasuk format, MX record, dan deteksi disposable email.</p>
+            <span class="badge badge-ip">IP</span>
+        </a>
+        <a href="/port-scanner" class="tool-card" data-name="port scanner open port tcp scan port check">
+            <h3>Port Scanner</h3>
+            <p>Scan port TCP pada host untuk mengetahui port yang terbuka dan layanan yang berjalan.</p>
+            <span class="badge badge-ip">IP</span>
+        </a>
     </div>
 </section>
+
+<!-- No results message -->
+<div class="no-results" id="noResults" style="display:none;">
+    <p>🔍 Tidak ada tools yang cocok dengan pencarian "<span id="searchQuery"></span>".</p>
+    <a href="/" class="btn btn-primary">Lihat Semua Tools</a>
+</div>
 {% endblock %}

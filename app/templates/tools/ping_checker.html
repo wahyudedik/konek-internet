@@ -4,13 +4,13 @@
 {% block content %}
 <a href="/" class="back-link">← Kembali ke Beranda</a>
 <h1 class="section-title">📡 Ping Checker</h1>
-<p style="color:#666;margin-bottom:20px">Uji konektivitas dan response time ke server website.</p>
+<p style="color:var(--text-secondary);margin-bottom:20px">Uji konektivitas dan response time ke server website.</p>
 
 <div class="tool-form">
     <form id="pingForm">
         <div class="form-group">
             <label for="domain">Domain / URL</label>
-            <input type="text" id="domain" placeholder="contoh: google.com" required>
+            <input type="text" id="domain" name="domain" placeholder="contoh: google.com" required>
         </div>
         <button type="submit" class="btn btn-primary">Cek Sekarang</button>
     </form>
@@ -19,12 +19,15 @@
         <p>Sedang melakukan ping...</p>
     </div>
     <div class="results"></div>
+    <div id="historyContainer"></div>
 </div>
 
 {{ render_education(edu_data) }}
 {% endblock %}
 {% block scripts %}
 <script>
+    displayHistory('ping-checker', 'historyContainer');
+    loadURLState('pingForm');
     document.getElementById('pingForm').addEventListener('submit', function (e) {
         handleToolForm(e, `/ping/${extractDomain(document.getElementById('domain').value)}`);
     });

@@ -4,18 +4,19 @@
 {% block content %}
 <a href="/" class="back-link">← Kembali ke Beranda</a>
 <h1 class="section-title">🔍 DNS Lookup</h1>
-<p style="color:#666;margin-bottom:20px">Query DNS records untuk domain apapun. Pilih jenis record yang ingin dicek.</p>
+<p style="color:var(--text-secondary);margin-bottom:20px">Query DNS records untuk domain apapun. Pilih jenis record yang
+    ingin dicek.</p>
 
 <div class="tool-form">
     <form id="dnsForm">
         <div class="form-row">
             <div class="form-group">
                 <label for="domain">Domain</label>
-                <input type="text" id="domain" placeholder="contoh: google.com" required>
+                <input type="text" id="domain" name="domain" placeholder="contoh: google.com" required>
             </div>
             <div class="form-group">
                 <label for="recordType">Record Type</label>
-                <select id="recordType">
+                <select id="recordType" name="record_type">
                     <option value="A">A (IPv4 Address)</option>
                     <option value="AAAA">AAAA (IPv6 Address)</option>
                     <option value="MX">MX (Mail Exchange)</option>
@@ -34,12 +35,15 @@
         <p>Sedang mengecek DNS records...</p>
     </div>
     <div class="results"></div>
+    <div id="historyContainer"></div>
 </div>
 
 {{ render_education(edu_data) }}
 {% endblock %}
 {% block scripts %}
 <script>
+    displayHistory('dns-lookup', 'historyContainer');
+    loadURLState('dnsForm');
     document.getElementById('dnsForm').addEventListener('submit', function (e) {
         const domain = extractDomain(document.getElementById('domain').value);
         const type = document.getElementById('recordType').value;
