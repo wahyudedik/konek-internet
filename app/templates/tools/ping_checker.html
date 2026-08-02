@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}Ping Checker - Uji Konektivitas{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("Website", "Ping Checker", "/ping-checker", "/?category=website") }}
 <h1 class="section-title">📡 Ping Checker</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Uji konektivitas dan response time ke server website.</p>
+<p class="tool-desc">Uji konektivitas dan response time ke server website.</p>
 
 <div class="tool-form">
     <form id="pingForm">

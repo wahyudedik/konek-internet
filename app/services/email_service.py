@@ -180,6 +180,7 @@ async def validate_email(email: str) -> Dict[str, Any]:
     }
 
     # MX lookup
+    mx_records = []
     try:
         mx_records = await asyncio.to_thread(_check_mx_sync, domain)
         result["mx_records"] = mx_records

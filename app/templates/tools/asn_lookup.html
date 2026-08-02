@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}ASN Lookup - Autonomous System Number{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("IP", "ASN Lookup", "/asn-lookup", "/?category=ip") }}
 <h1 class="section-title">🔢 ASN Lookup</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Cek Autonomous System Number dan organisasi jaringan.</p>
+<p class="tool-desc">Cek Autonomous System Number dan organisasi jaringan.</p>
 
 <div class="tool-form">
     <form id="asnForm">

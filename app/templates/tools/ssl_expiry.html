@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}SSL Expiry Checker - Cek Masa Aktif SSL{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("SSL", "SSL Expiry", "/ssl-expiry", "/?category=ssl") }}
 <h1 class="section-title">⏰ SSL Expiry Checker</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Cek sisa waktu aktif sertifikat SSL sebelum perlu diperbarui.
-</p>
+<p class="tool-desc">Cek sisa waktu aktif sertifikat SSL sebelum perlu diperbarui.</p>
 
 <div class="tool-form">
     <form id="sslExpiryForm">

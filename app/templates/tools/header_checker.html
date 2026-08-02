@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}Header Checker - Analisis HTTP Headers{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("Website", "Header Checker", "/header-checker", "/?category=website") }}
 <h1 class="section-title">📋 Header Checker</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Analisis HTTP headers: Content-Type, Cache-Control, Security
-    headers, HTTP version, dan
-    lainnya.</p>
+<p class="tool-desc">Analisis HTTP headers: Content-Type, Cache-Control, Security headers, HTTP version, dan lainnya.
+</p>
 
 <div class="tool-form">
     <form id="headerForm">

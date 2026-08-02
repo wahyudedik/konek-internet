@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}Email Validator - Cek Validitas Email{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("IP", "Email Validator", "/email-validator", "/?category=ip") }}
 <h1 class="section-title">📧 Email Validator</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Validasi email address termasuk format, MX record, dan deteksi
-    disposable
-    email.</p>
+<p class="tool-desc">Validasi email address termasuk format, MX record, dan deteksi disposable email.</p>
 
 <div class="tool-form">
     <form id="emailForm">

@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}User-Agent Checker - Deteksi Browser & Device{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("Website", "UA Checker", "/ua-checker", "/?category=website") }}
 <h1 class="section-title">🖥️ User-Agent Checker</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Parse dan analisis User-Agent string untuk mendeteksi browser,
-    OS, dan device.
-</p>
+<p class="tool-desc">Parse dan analisis User-Agent string untuk mendeteksi browser, OS, dan device.</p>
 
 <div class="tool-form">
     <form id="uaForm">
@@ -15,7 +14,7 @@
             <input type="text" id="uaInput" name="ua"
                 placeholder="Paste User-Agent string atau biarkan kosong untuk auto-detect">
         </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div class="btn-group">
             <button type="submit" class="btn btn-primary">Parse UA</button>
             <button type="button" class="btn btn-secondary" onclick="detectCurrentUA()">🔍 Auto Detect</button>
         </div>
@@ -34,6 +33,13 @@
 <script>
     displayHistory('ua-checker', 'historyContainer');
     loadURLState('uaForm');
+    // Auto-detect User-Agent saat halaman dimuat (jika tidak ada URL state)
+    (function () {
+        var params = new URLSearchParams(window.location.search);
+        if (!params.has('ua')) {
+            detectCurrentUA();
+        }
+    })();
     document.getElementById('uaForm').addEventListener('submit', function (e) {
         e.preventDefault();
         const uaInput = document.getElementById('uaInput').value.trim();
@@ -100,7 +106,7 @@
         html += `<tr><th>Device Type</th><td data-label="Device Type">${data.device.type}</td></tr>`;
         html += `<tr><th>Is Bot</th><td data-label="Is Bot">${data.is_bot ? '🤖 Ya' : '👤 Tidak'}</td></tr>`;
         html += `<tr><th>Is Mobile</th><td data-label="Is Mobile">${data.is_mobile ? '📱 Ya' : '💻 Tidak'}</td></tr>`;
-        html += `<tr><th>Raw User-Agent</th><td data-label="Raw User-Agent" style="word-break:break-all;font-size:0.85em">${escapeHtml(data.user_agent)}</td></tr>`;
+        html += `<tr><th>Raw User-Agent</th><td data-label="Raw User-Agent" class="ua-raw">${escapeHtml(data.user_agent)}</td></tr>`;
         html += '</table>';
 
         const id = `copy-ua`;

@@ -15,13 +15,17 @@ _last_cache_cleanup: float = 0.0
 
 
 def _get_redis():
-    """Try to connect to Redis, return None if unavailable"""
+    """Try to connect to Redis using REDIS_URL from environment, return None if unavailable"""
     try:
         import redis
-        r = redis.Redis(host='localhost', port=6379, db=0, socket_timeout=2)
+        import os
+        redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+        r = redis.from_url(redis_url, socket_timeout=2, decode_responses=False)
         r.ping()
+        logger.info("Redis connected successfully")
         return r
-    except Exception:
+    except Exception as e:
+        logger.warning("Redis unavailable, using in-memory cache: %s", str(e))
         return None
 
 

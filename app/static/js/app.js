@@ -198,7 +198,9 @@ function displayHistory(toolName, containerId) {
     if (history.length === 0) return;
     const container = document.getElementById(containerId);
     if (!container) return;
-    let html = '<div class="history-section"><h4>📋 Riwayat Pencarian</h4><div class="history-list">';
+    let html = '<div class="history-section"><div class="history-header"><h4>📋 Riwayat Pencarian</h4>';
+    html += '<button class="btn-clear-history" onclick="clearHistory(\'' + toolName + '\', \'' + containerId + '\')" title="Hapus semua riwayat">🗑️ Hapus</button>';
+    html += '</div><div class="history-list">';
     history.forEach(function (item) {
         html += '<button class="history-item" onclick="useHistoryItem(\'' +
             toolName + '\', \'' + escapeHtml(item).replace(/'/g, "\\'") + '\')">' +
@@ -206,6 +208,15 @@ function displayHistory(toolName, containerId) {
     });
     html += '</div></div>';
     container.innerHTML = html;
+}
+
+function clearHistory(toolName, containerId) {
+    if (!confirm('Hapus semua riwayat pencarian?')) return;
+    const key = 'konek_history_' + toolName;
+    try { localStorage.removeItem(key); } catch (e) { /* ignore */ }
+    const container = document.getElementById(containerId);
+    if (container) container.innerHTML = '';
+    showToast('🗑️ Riwayat berhasil dihapus');
 }
 
 function useHistoryItem(toolName, query) {
@@ -324,24 +335,36 @@ function displayResults(container, data, endpoint, elapsed) {
     if (elapsed) html += `<span class="result-time">⚡ ${elapsed}s</span>`;
     html += '</div></div>';
 
-    // Build table from data
+    // Build table from data with per-field copy buttons
     html += '<table class="result-table">';
+    let rowIndex = 0;
     for (const [key, value] of Object.entries(data)) {
         if (key === 'error') continue;
         const displayKey = formatKey(key);
         const displayValue = formatValue(value);
         if (displayValue !== '' && displayValue !== 'null' && displayValue !== '[]') {
-            html += `<tr><th>${displayKey}</th><td data-label="${escapeHtml(displayKey)}">${displayValue}</td></tr>`;
+            const fieldId = `field-${copyCounter}-${rowIndex}`;
+            const rawValue = typeof value === 'object' ? JSON.stringify(value) : String(value);
+            jsonDataMap.set(fieldId, rawValue);
+            html += `<tr><th>${displayKey}</th><td data-label="${escapeHtml(displayKey)}">${displayValue}<button class="btn-copy-field" onclick="copyField('${fieldId}')" title="Salin nilai">📋</button></td></tr>`;
+            rowIndex++;
         }
     }
     html += '</table>';
 
-    // Copy JSON button + Raw JSON (store data in Map, not HTML attribute)
+    // Timestamp "Terakhir diperiksa"
+    const now = new Date();
+    const timeStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) + ' ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    html += `<div class="result-timestamp">🕐 Diperiksa: ${timeStr}</div>`;
+
+    // Action buttons: Copy JSON + Share URL
     const id = `copy-${copyCounter++}`;
     jsonDataMap.set(id, data);
     const jsonStr = JSON.stringify(data, null, 2);
+    const shareUrl = window.location.href;
     html += `<div class="result-actions">
         <button class="btn-copy" onclick="copyJSON('${id}')">📋 Salin JSON</button>
+        <button class="btn-share" onclick="copyToClipboard('${shareUrl.replace(/'/g, "\\'")}')">🔗 Share URL</button>
     </div>`;
     html += `<details class="result-details"><summary>Lihat Raw JSON</summary><div class="result-json"><pre>${escapeHtml(jsonStr)}</pre></div></details>`;
 
@@ -383,6 +406,23 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// Copy single field value to clipboard
+function copyField(fieldId) {
+    const text = jsonDataMap.get(fieldId);
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+        showToast('📋 Nilai berhasil disalin!');
+    }).catch(() => {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast('📋 Nilai berhasil disalin!');
+    });
 }
 
 // Copy JSON to clipboard

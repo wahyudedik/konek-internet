@@ -7,7 +7,7 @@
 ### Core Features
 - **24 Tools DNS, Domain, SSL, Website, IP** - Utilitas internet lengkap
 - **24+ API Endpoints** - RESTful API gratis dengan rate limit 60 req/min
-- **19 Tool Pages** - Halaman frontend dengan form interaktif dan hasil real-time
+- **24 Tool Pages** - Halaman frontend dengan form interaktif dan hasil real-time
 - **Redis + In-memory Cache** - Performa optimal dengan fallback cache
 - **Rate Limiting** - Per-IP rate limiting (60 req/menit)
 - **Security Headers** - X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, dll

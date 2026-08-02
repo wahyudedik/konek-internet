@@ -103,6 +103,8 @@ body.dark-mode {
     --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.3);
     --shadow-btn: 0 4px 15px rgba(96, 165, 250, 0.2);
     --shadow-btn-hover: 0 6px 20px rgba(96, 165, 250, 0.3);
+    --toast-bg: #1e293b;
+    --toast-text: #f1f5f9;
     --badge-dns-bg: #172554;
     --badge-dns-text: #60a5fa;
     --badge-domain-bg: #3b0764;
@@ -1014,6 +1016,81 @@ a.breadcrumb-item:hover {
     text-decoration: none;
 }
 
+/* ============ API EXAMPLE LABEL SPACING ============ */
+.api-example code+.api-example-label {
+    margin-top: 10px;
+}
+
+/* ============ TOOL DESCRIPTION ============ */
+.tool-desc {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+/* ============ HEADER ACTIONS ============ */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ============ BUTTON GROUP ============ */
+.btn-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ============ HIDDEN INITIAL ============ */
+.hidden-initial {
+    display: none;
+}
+
+/* ============ RECENTLY QUERY ============ */
+.recently-query {
+    font-size: 0.85em;
+    opacity: 0.7;
+}
+
+/* ============ API NOTE ============ */
+.api-note {
+    margin-top: 10px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* ============ ABOUT MISSION TITLE ============ */
+.about-mission-title {
+    margin-top: 20px;
+}
+
+/* ============ PROPAGATION META ============ */
+.propagation-meta {
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+}
+
+/* ============ PROPAGATION STATUS ============ */
+.propagation-status-ok {
+    color: var(--success-text);
+}
+
+.propagation-status-err {
+    color: var(--error-text);
+}
+
+/* ============ PROPAGATION UNIQUE ============ */
+.propagation-unique {
+    margin-top: 20px;
+}
+
+/* ============ UA RAW ============ */
+.ua-raw {
+    word-break: break-all;
+    font-size: 0.85em;
+}
+
 /* ============ HISTORY SECTION ============ */
 .history-section {
     margin-top: 15px;
@@ -1051,6 +1128,108 @@ a.breadcrumb-item:hover {
     background: var(--accent-color);
     color: white;
     border-color: var(--accent-color);
+}
+
+/* ============ PORT PRESETS ============ */
+.port-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.port-preset-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    padding: 6px 12px;
+    border: 1px solid var(--border-medium);
+    border-radius: 6px;
+    font-size: 0.9em;
+    transition: all 0.2s;
+}
+
+.port-preset-label:hover {
+    border-color: var(--accent-color);
+    background: var(--bg-card);
+}
+
+.port-preset-label:has(input:checked) {
+    border-color: var(--accent-color);
+    background: var(--accent-color);
+    color: white;
+}
+
+.port-preset-label:has(input:checked) input {
+    display: none;
+}
+
+.history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.btn-clear-history {
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-clear-history:hover {
+    background: var(--error-bg);
+    color: var(--error-text);
+    border-color: var(--error-text);
+}
+
+.btn-copy-field {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 2px 6px;
+    margin-left: 8px;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+    vertical-align: middle;
+}
+
+.btn-copy-field:hover {
+    opacity: 1;
+}
+
+.btn-share {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-share:hover {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+}
+
+.result-timestamp {
+    margin-top: 10px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: right;
 }
 
 /* ============ EDUCATION SECTION ============ */

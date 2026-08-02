@@ -78,7 +78,13 @@ async def check_blacklist(ip_address: str) -> Dict[str, Any]:
     def _check_sync():
         """Blocking DNS check wrapped for async safety"""
         import dns.resolver
-        reversed_ip = ".".join(reversed(ip_address.split(".")))
+        
+        # Blacklist DNSBL hanya mendukung IPv4
+        parts = ip_address.split(".")
+        if len(parts) != 4:
+            return []  # IPv6 tidak didukung oleh DNSBL
+        
+        reversed_ip = ".".join(reversed(parts))
         found = []
         for bl_server in blacklist_servers:
             try:
@@ -87,8 +93,8 @@ async def check_blacklist(ip_address: str) -> Dict[str, Any]:
                 found.append(bl_server)
             except dns.resolver.NXDOMAIN:
                 pass
-            except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN,
-                    dns.resolver.Timeout, dns.exception.DNSException):
+            except (dns.resolver.NoAnswer, dns.resolver.Timeout,
+                    dns.exception.DNSException):
                 pass
             except Exception:
                 pass

@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}SSL Checker - Verifikasi Sertifikat SSL{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("SSL", "SSL Checker", "/ssl-checker", "/?category=ssl") }}
 <h1 class="section-title">🔒 SSL Checker</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Verifikasi sertifikat SSL: issuer, expiry, validity, serial
-    number.</p>
+<p class="tool-desc">Verifikasi sertifikat SSL: issuer, expiry, validity, serial number.</p>
 
 <div class="tool-form">
     <form id="sslForm">

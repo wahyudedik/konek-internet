@@ -44,7 +44,7 @@ gratis dengan rate limit 60 request/menit.{% endblock %}
             <div class="api-example">
                 <div class="api-example-label">Request:</div>
                 <code>GET /api/v1/dns/google.com?record_type=A</code>
-                <div class="api-example-label" style="margin-top:10px">Response:</div>
+                <div class="api-example-label">Response:</div>
                 <pre>{
     "domain": "google.com",
     "record_type": "A",
@@ -65,7 +65,7 @@ gratis dengan rate limit 60 request/menit.{% endblock %}
             <div class="api-example">
                 <div class="api-example-label">Request:</div>
                 <code>GET /api/v1/dns/8.8.8.8/reverse</code>
-                <div class="api-example-label" style="margin-top:10px">Response:</div>
+                <div class="api-example-label">Response:</div>
                 <pre>{
     "ip": "8.8.8.8",
     "hostname": "dns.google"
@@ -145,7 +145,7 @@ gratis dengan rate limit 60 request/menit.{% endblock %}
             <div class="api-example">
                 <div class="api-example-label">Request:</div>
                 <code>GET /api/v1/whois/google.com</code>
-                <div class="api-example-label" style="margin-top:10px">Response:</div>
+                <div class="api-example-label">Response:</div>
                 <pre>{
     "domain": "google.com",
     "registrar": "MarkMonitor Inc.",
@@ -180,7 +180,7 @@ gratis dengan rate limit 60 request/menit.{% endblock %}
             <div class="api-example">
                 <div class="api-example-label">Request:</div>
                 <code>GET /api/v1/ssl/google.com</code>
-                <div class="api-example-label" style="margin-top:10px">Response:</div>
+                <div class="api-example-label">Response:</div>
                 <pre>{
     "domain": "google.com",
     "valid": true,
@@ -216,7 +216,7 @@ gratis dengan rate limit 60 request/menit.{% endblock %}
             <div class="api-example">
                 <div class="api-example-label">Request:</div>
                 <code>GET /api/v1/ping/google.com</code>
-                <div class="api-example-label" style="margin-top:10px">Response:</div>
+                <div class="api-example-label">Response:</div>
                 <pre>{
     "host": "google.com",
     "status": "ok",
@@ -282,7 +282,7 @@ gratis dengan rate limit 60 request/menit.{% endblock %}
             <div class="api-example">
                 <div class="api-example-label">Request:</div>
                 <code>GET /api/v1/ip/8.8.8.8</code>
-                <div class="api-example-label" style="margin-top:10px">Response:</div>
+                <div class="api-example-label">Response:</div>
                 <pre>{
     "ip": "8.8.8.8",
     "country": "United States",
@@ -337,7 +337,7 @@ gratis dengan rate limit 60 request/menit.{% endblock %}
             <pre>{
     "error": "Deskripsi error dalam Bahasa Indonesia"
 }</pre>
-            <p style="margin-top:10px;color:#666;font-size:0.9rem">HTTP Status Codes: <code>200</code> (OK),
+            <p class="api-note">HTTP Status Codes: <code>200</code> (OK),
                 <code>429</code> (Rate Limit), <code>404</code> (Not Found), <code>500</code> (Server Error)
             </p>
         </div>

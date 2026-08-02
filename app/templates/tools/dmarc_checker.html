@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}DMARC Checker - Validasi DMARC Policy{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("DNS", "DMARC Checker", "/dmarc-checker", "/?category=dns") }}
 <h1 class="section-title">🔐 DMARC Checker</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Validasi DMARC policies untuk keamanan dan autentikasi email.
-</p>
+<p class="tool-desc">Validasi DMARC policies untuk keamanan dan autentikasi email.</p>
 
 <div class="tool-form">
     <form id="dmarcForm">

@@ -102,8 +102,6 @@ async def check_dmarc(domain: str) -> Dict[str, Any]:
 
 async def _lookup_dns_raw(domain: str, record_type: str) -> Dict[str, Any]:
     """Internal DNS lookup tanpa caching"""
-    import asyncio
-    
     results = {
         "domain": domain,
         "record_type": record_type,

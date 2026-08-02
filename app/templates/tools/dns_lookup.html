@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}DNS Lookup - Cek DNS Record{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("DNS", "DNS Lookup", "/dns-lookup", "/?category=dns") }}
 <h1 class="section-title">🔍 DNS Lookup</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Query DNS records untuk domain apapun. Pilih jenis record yang
-    ingin dicek.</p>
+<p class="tool-desc">Query DNS records untuk domain apapun. Pilih jenis record yang ingin dicek.</p>
 
 <div class="tool-form">
     <form id="dnsForm">

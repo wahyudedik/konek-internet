@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}WHOIS Lookup - Informasi Registrasi Domain{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("Domain", "WHOIS Lookup", "/whois-lookup", "/?category=domain") }}
 <h1 class="section-title">🌍 WHOIS Lookup</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Informasi lengkap registrasi domain: registrar, tanggal
-    registrasi, expiry,
-    nameserver.</p>
+<p class="tool-desc">Informasi lengkap registrasi domain: registrar, tanggal registrasi, expiry, nameserver.</p>
 
 <div class="tool-form">
     <form id="whoisForm">

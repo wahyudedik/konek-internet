@@ -11,32 +11,47 @@
 
 <section class="section">
     <h2 class="section-title">🔧 Mungkin Kamu Cari</h2>
-    <div class="tools-grid">
-        <a href="/dns-lookup" class="tool-card">
-            <h3>DNS Lookup</h3>
-            <p>Query DNS records untuk domain apapun.</p>
-            <span class="badge badge-dns">DNS</span>
-        </a>
-        <a href="/whois-lookup" class="tool-card">
-            <h3>WHOIS Lookup</h3>
-            <p>Informasi registrasi domain lengkap.</p>
-            <span class="badge badge-domain">Domain</span>
-        </a>
-        <a href="/ssl-checker" class="tool-card">
-            <h3>SSL Checker</h3>
-            <p>Verifikasi sertifikat SSL website.</p>
-            <span class="badge badge-ssl">SSL</span>
-        </a>
-        <a href="/ping-checker" class="tool-card">
-            <h3>Ping Checker</h3>
-            <p>Uji konektivitas ke server.</p>
-            <span class="badge badge-website">Website</span>
-        </a>
-        <a href="/ip-lookup" class="tool-card">
-            <h3>IP Lookup</h3>
-            <p>Informasi lengkap IP address.</p>
-            <span class="badge badge-ip">IP</span>
-        </a>
-    </div>
+    <div class="tools-grid" id="suggestedTools"></div>
 </section>
+<script>
+    (function () {
+        var allTools = [
+            { url: '/dns-lookup', name: 'DNS Lookup', desc: 'Query DNS records untuk domain apapun.', badge: 'badge-dns', cat: 'DNS' },
+            { url: '/dns-propagation', name: 'DNS Propagation', desc: 'Cek propagasi DNS dari multiple nameserver.', badge: 'badge-dns', cat: 'DNS' },
+            { url: '/reverse-dns', name: 'Reverse DNS', desc: 'Lookup IP ke domain (PTR record).', badge: 'badge-dns', cat: 'DNS' },
+            { url: '/mx-lookup', name: 'MX Lookup', desc: 'Cek mail exchange records.', badge: 'badge-dns', cat: 'DNS' },
+            { url: '/txt-lookup', name: 'TXT Lookup', desc: 'Cek TXT records (SPF, DKIM, dll).', badge: 'badge-dns', cat: 'DNS' },
+            { url: '/cname-lookup', name: 'CNAME Lookup', desc: 'Cek canonical name records.', badge: 'badge-dns', cat: 'DNS' },
+            { url: '/ns-lookup', name: 'NS Lookup', desc: 'Cek nameserver records.', badge: 'badge-dns', cat: 'DNS' },
+            { url: '/spf-checker', name: 'SPF Checker', desc: 'Validasi SPF records untuk email.', badge: 'badge-dns', cat: 'DNS' },
+            { url: '/dmarc-checker', name: 'DMARC Checker', desc: 'Validasi DMARC policies.', badge: 'badge-dns', cat: 'DNS' },
+            { url: '/whois-lookup', name: 'WHOIS Lookup', desc: 'Informasi registrasi domain lengkap.', badge: 'badge-domain', cat: 'Domain' },
+            { url: '/domain-expiry', name: 'Domain Expiry', desc: 'Cek masa aktif domain.', badge: 'badge-domain', cat: 'Domain' },
+            { url: '/ssl-checker', name: 'SSL Checker', desc: 'Verifikasi sertifikat SSL website.', badge: 'badge-ssl', cat: 'SSL' },
+            { url: '/ssl-expiry', name: 'SSL Expiry', desc: 'Cek masa aktif sertifikat SSL.', badge: 'badge-ssl', cat: 'SSL' },
+            { url: '/ping-checker', name: 'Ping Checker', desc: 'Uji konektivitas ke server.', badge: 'badge-website', cat: 'Website' },
+            { url: '/http-status', name: 'HTTP Status', desc: 'Cek status HTTP response code.', badge: 'badge-website', cat: 'Website' },
+            { url: '/redirect-checker', name: 'Redirect Checker', desc: 'Lacak redirect chains.', badge: 'badge-website', cat: 'Website' },
+            { url: '/header-checker', name: 'Header Checker', desc: 'Analisis HTTP headers.', badge: 'badge-website', cat: 'Website' },
+            { url: '/ua-checker', name: 'UA Checker', desc: 'Parse dan analisis User-Agent.', badge: 'badge-website', cat: 'Website' },
+            { url: '/my-ip', name: 'My IP', desc: 'Lihat IP address kamu.', badge: 'badge-ip', cat: 'IP' },
+            { url: '/ip-lookup', name: 'IP Lookup', desc: 'Informasi lengkap IP address.', badge: 'badge-ip', cat: 'IP' },
+            { url: '/asn-lookup', name: 'ASN Lookup', desc: 'Cek Autonomous System Number.', badge: 'badge-ip', cat: 'IP' },
+            { url: '/blacklist-checker', name: 'Blacklist Checker', desc: 'Cek apakah IP ada di blacklist.', badge: 'badge-ip', cat: 'IP' },
+            { url: '/email-validator', name: 'Email Validator', desc: 'Validasi email address.', badge: 'badge-ip', cat: 'IP' },
+            { url: '/port-scanner', name: 'Port Scanner', desc: 'Scan port TCP pada host.', badge: 'badge-ip', cat: 'IP' }
+        ];
+        // Acak dan ambil 6 tool
+        var shuffled = allTools.sort(function () { return 0.5 - Math.random(); });
+        var picked = shuffled.slice(0, 6);
+        var container = document.getElementById('suggestedTools');
+        if (!container) return;
+        container.innerHTML = picked.map(function (t) {
+            return '<a href="' + t.url + '" class="tool-card">' +
+                '<h3>' + t.name + '</h3>' +
+                '<p>' + t.desc + '</p>' +
+                '<span class="badge ' + t.badge + '">' + t.cat + '</span></a>';
+        }).join('');
+    })();
+</script>
 {% endblock %}

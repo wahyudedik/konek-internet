@@ -7,26 +7,41 @@ from typing import Dict, Any, Optional
 from app.utils.cache import cached
 
 
+# Shared HTTP client for connection pooling
+_http_client: httpx.AsyncClient = None
+
+async def _get_client(**kwargs) -> httpx.AsyncClient:
+    """Get or create shared HTTP client with connection pooling"""
+    global _http_client
+    if _http_client is None or _http_client.is_closed:
+        _http_client = httpx.AsyncClient(
+            verify=False,
+            follow_redirects=True,
+            timeout=10,
+            limits=httpx.Limits(max_connections=20, max_keepalive_connections=10),
+        )
+    return _http_client
+
 async def _fetch_with_fallback(url: str, method: str = "GET", **kwargs):
     """Try HTTPS first, fallback to HTTP"""
     # Normalisasi URL
     if not url.startswith(('http://', 'https://')):
         url = 'https://' + url
 
+    client = await _get_client()
+
     # Coba HTTPS dulu
     https_url = url if url.startswith('https://') else url.replace('http://', 'https://', 1)
     try:
-        async with httpx.AsyncClient(verify=False, follow_redirects=True, timeout=10) as client:
-            response = await client.request(method, https_url, **kwargs)
-            return response, https_url
+        response = await client.request(method, https_url, **kwargs)
+        return response, https_url
     except Exception:
         pass
 
     # Fallback ke HTTP
     http_url = https_url.replace('https://', 'http://', 1)
-    async with httpx.AsyncClient(follow_redirects=True, timeout=10) as client:
-        response = await client.request(method, http_url, **kwargs)
-        return response, http_url
+    response = await client.request(method, http_url, **kwargs)
+    return response, http_url
 
 
 def _ping_sync(host: str) -> Dict[str, Any]:

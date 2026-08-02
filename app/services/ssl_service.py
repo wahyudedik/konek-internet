@@ -188,10 +188,27 @@ def _get_chain_info(domain: str) -> dict:
         with socket.create_connection((domain, 443), timeout=5) as sock:
             with context.wrap_socket(sock, server_hostname=domain) as ssock:
                 chain = ssock.getpeercert(True)
+                cipher_info = ssock.cipher()
+                # Decode DER certificate to get issuer info
+                issuer_info = None
+                try:
+                    import cryptography.x509
+                    cert_der = ssock.getpeercert(binary_form=True)
+                    if cert_der:
+                        cert = cryptography.x509.load_der_x509_certificate(cert_der)
+                        issuer_info = ", ".join(
+                            f"{attr.oid._name}={attr.value}"
+                            for attr in cert.issuer
+                        )
+                except Exception:
+                    pass
+                
                 return {
-                    "depth": 1,
                     "has_chain": chain is not None,
-                    "cipher": ssock.version(),
+                    "cipher": cipher_info[0] if cipher_info else None,
+                    "cipher_version": cipher_info[1] if cipher_info else None,
+                    "cipher_bits": cipher_info[2] if cipher_info else None,
+                    "issuer": issuer_info,
                 }
     except Exception:
-        return {"depth": 0, "has_chain": False, "cipher": None}
+        return {"has_chain": False, "cipher": None, "cipher_version": None, "cipher_bits": None, "issuer": None}

@@ -11,6 +11,11 @@
     </div>
 </section>
 
+<section class="section hidden-initial" id="recentlyUsedSection">
+    <h2 class="section-title">🕐 Digunakan Baru-baru Ini</h2>
+    <div class="tools-grid" id="recentlyUsedGrid"></div>
+</section>
+
 <section class="section" data-category="dns">
     <h2 class="section-title">🔧 DNS Tools</h2>
     <div class="tools-grid">
@@ -166,8 +171,52 @@
 </section>
 
 <!-- No results message -->
-<div class="no-results" id="noResults" style="display:none;">
+<div class="no-results hidden-initial" id="noResults">
     <p>🔍 Tidak ada tools yang cocok dengan pencarian "<span id="searchQuery"></span>".</p>
     <a href="/" class="btn btn-primary">Lihat Semua Tools</a>
 </div>
+{% endblock %}
+{% block scripts %}
+<script>
+    (function () {
+        var toolUrls = {
+            'dns': '/dns-lookup', 'dns-propagation': '/dns-propagation', 'reverse-dns': '/reverse-dns',
+            'mx': '/mx-lookup', 'txt': '/txt-lookup', 'cname': '/cname-lookup',
+            'ns': '/ns-lookup', 'spf': '/spf-checker', 'dmarc': '/dmarc-checker',
+            'whois': '/whois-lookup', 'domain': '/domain-expiry',
+            'ssl': '/ssl-checker', 'ssl-expiry': '/ssl-expiry',
+            'ping': '/ping-checker', 'http': '/http-status', 'redirect': '/redirect-checker',
+            'header': '/header-checker', 'ua': '/ua-checker',
+            'ip': '/ip-lookup', 'my': '/my-ip', 'asn': '/asn-lookup',
+            'blacklist': '/blacklist-checker', 'email': '/email-validator', 'port': '/port-scanner'
+        };
+        var allKeys = [];
+        for (var i = 0; i < localStorage.length; i++) {
+            var k = localStorage.key(i);
+            if (k && k.indexOf('konek_history_') === 0) {
+                allKeys.push(k);
+            }
+        }
+        if (allKeys.length === 0) return;
+        allKeys.sort();
+        var recent = allKeys.slice(-5).reverse();
+        var container = document.getElementById('recentlyUsedGrid');
+        var section = document.getElementById('recentlyUsedSection');
+        if (!container || !section) return;
+        var html = '';
+        recent.forEach(function (key) {
+            var toolSlug = key.replace('konek_history_', '');
+            var url = toolUrls[toolSlug] || ('/' + toolSlug);
+            var history = [];
+            try { history = JSON.parse(localStorage.getItem(key) || '[]'); } catch (e) { }
+            var lastQuery = history.length > 0 ? history[0] : '';
+            html += '<a href="' + url + (lastQuery ? '?q=' + encodeURIComponent(lastQuery) : '') + '" class="tool-card">';
+            html += '<h3>' + toolSlug + '</h3>';
+            if (lastQuery) html += '<p class="recently-query">' + lastQuery + '</p>';
+            html += '</a>';
+        });
+        container.innerHTML = html;
+        section.style.display = html ? '' : 'none';
+    })();
+</script>
 {% endblock %}

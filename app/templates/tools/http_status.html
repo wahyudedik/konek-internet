@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}HTTP Status Checker - Cek Status HTTP{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("Website", "HTTP Status", "/http-status", "/?category=website") }}
 <h1 class="section-title">📊 HTTP Status Checker</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Cek status HTTP response: 200 OK, 301 Redirect, 404 Not Found,
-    500 Error, dll.
-</p>
+<p class="tool-desc">Cek status HTTP response: 200 OK, 301 Redirect, 404 Not Found, 500 Error, dll.</p>
 
 <div class="tool-form">
     <form id="httpForm">

@@ -70,13 +70,13 @@
 </head>
 
 <body>
-    <header class="header">
+    <header class="header" role="banner">
         <div class="container">
-            <a href="/" class="logo">
+            <a href="/" class="logo" aria-label="Konektivitas.com - Beranda">
                 <img src="/static/logo.png" alt="Konektivitas.com" class="logo-img">
                 <span class="logo-text">Konektivitas<span>.com</span></span>
             </a>
-            <nav class="nav" id="mainNav">
+            <nav class="nav" id="mainNav" role="navigation" aria-label="Menu utama">
                 <div class="nav-dropdown">
                     <button class="nav-dropdown-toggle" onclick="toggleDropdown(this)">
                         🔧 DNS <span class="dropdown-arrow">▾</span>
@@ -137,7 +137,7 @@
                     </div>
                 </div>
             </nav>
-            <div style="display:flex;align-items:center;gap:4px">
+            <div class="header-actions">
                 <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()"
                     title="Toggle dark mode">🌙</button>
                 <button class="menu-toggle" id="menuToggle" onclick="toggleMobileNav()">☰</button>
@@ -145,17 +145,13 @@
         </div>
     </header>
 
-    <main class="main">
+    <main class="main" role="main">
         <div class="container">
-            {% if meta %}
-            {% from "partials/breadcrumb.html" import render_breadcrumb %}
-            {{ render_breadcrumb(meta.category, meta.title, request.url.path, category_url) }}
-            {% endif %}
             {% block content %}{% endblock %}
         </div>
     </main>
 
-    <footer class="footer">
+    <footer class="footer" role="contentinfo">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-section">
@@ -233,6 +229,7 @@
 
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
+            document.documentElement.classList.toggle('dark-mode');
             var isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('konek_theme', isDark ? 'dark' : 'light');
             var toggle = document.getElementById('themeToggle');

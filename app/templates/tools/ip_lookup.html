@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}IP Lookup - Informasi IP Address{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("IP", "IP Lookup", "/ip-lookup", "/?category=ip") }}
 <h1 class="section-title">📍 IP Lookup</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Informasi lengkap IP address: lokasi, ISP, timezone,
-    organisasi.</p>
+<p class="tool-desc">Informasi lengkap IP address: lokasi, ISP, timezone, organisasi.</p>
 
 <div class="tool-form">
     <form id="ipForm">

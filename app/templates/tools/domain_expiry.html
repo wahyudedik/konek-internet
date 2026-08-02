@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}Domain Expiry Checker - Cek Masa Aktif Domain{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("Domain", "Domain Expiry", "/domain-expiry", "/?category=domain") }}
 <h1 class="section-title">⏰ Domain Expiry Checker</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Cek sisa waktu aktif domain dan dapatkan peringatan sebelum
-    expired.</p>
+<p class="tool-desc">Cek sisa waktu aktif domain dan dapatkan peringatan sebelum expired.</p>
 
 <div class="tool-form">
     <form id="expiryForm">

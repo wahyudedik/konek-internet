@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}My IP Address - Cek IP Address Anda{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("IP", "My IP Address", "/my-ip", "/?category=ip") }}
 <h1 class="section-title">🌐 My IP Address</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Deteksi dan cek detail IP address Anda saat ini termasuk
-    lokasi, ISP, dan ASN.
-</p>
+<p class="tool-desc">Deteksi dan cek detail IP address Anda saat ini termasuk lokasi, ISP, dan ASN.</p>
 
 <div class="tool-form">
     <div class="loading active" id="ipLoading">

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
 from app.services import dns_service
-from app.utils.validators import validate_domain, sanitize_input
+from app.utils.validators import validate_domain, validate_ip, sanitize_input
 
 router = APIRouter()
 
@@ -18,9 +18,9 @@ async def dns_lookup(domain: str, record_type: str = Query("A", description="Rec
 
 @router.get("/dns/{domain}/reverse")
 async def reverse_dns(domain: str):
-    """Reverse DNS - Lookup IP ke domain"""
+    """Reverse DNS - Lookup IP ke domain (menerima IP address)"""
     domain = sanitize_input(domain)
-    valid, error = validate_domain(domain)
+    valid, error = validate_ip(domain)
     if not valid:
         return JSONResponse(status_code=400, content={"error": error})
     return await dns_service.reverse_dns(domain)

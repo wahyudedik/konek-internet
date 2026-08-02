@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}Blacklist Checker - Cek IP Blacklist{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("IP", "Blacklist Checker", "/blacklist-checker", "/?category=ip") }}
 <h1 class="section-title">🚫 Blacklist Checker</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Cek apakah IP address ada di blacklist email/abuse (Spamhaus,
-    SpamCop, dll).
-</p>
+<p class="tool-desc">Cek apakah IP address ada di blacklist email/abuse (Spamhaus, SpamCop, dll).</p>
 
 <div class="tool-form">
     <form id="blacklistForm">

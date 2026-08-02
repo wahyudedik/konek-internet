@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}DNS Propagation Checker - Cek Propagasi DNS Global{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("DNS", "DNS Propagation", "/dns-propagation", "/?category=dns") }}
 <h1 class="section-title">🌍 DNS Propagation Checker</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Cek propagasi DNS dari 7 nameserver global: Google,
-    Cloudflare, OpenDNS, Quad9,
-    AdGuard.</p>
+<p class="tool-desc">Cek propagasi DNS dari 7 nameserver global: Google, Cloudflare, OpenDNS, Quad9, AdGuard.</p>
 
 <div class="tool-form">
     <form id="propagationForm">
@@ -68,21 +67,21 @@
                 results.innerHTML = `<div class="result-header"><h3>Error</h3><span class="result-status status-error">Gagal</span></div><p>${data.error}</p>`;
             } else {
                 let html = `<div class="result-header"><h3>Propagasi DNS: ${domain}</h3><span class="result-status status-success">Selesai</span></div>`;
-                html += `<p style="color:var(--text-secondary);margin-bottom:15px">Record type: <strong>${type}</strong> | Record unik: <strong>${data.unique_records.length}</strong></p>`;
+                html += `<p class="propagation-meta">Record type: <strong>${type}</strong> | Record unik: <strong>${data.unique_records.length}</strong></p>`;
                 html += '<table class="result-table">';
                 html += '<tr><th>Nameserver</th><th>IP</th><th>Status</th><th>Records</th></tr>';
                 for (const [name, info] of Object.entries(data.results)) {
                     const statusColor = info.status === 'ok' ? 'color:var(--success-text)' : 'color:var(--error-text)';
                     const statusIcon = info.status === 'ok' ? '✅' : '❌';
-                    html += `<tr><td><strong>${name}</strong></td><td>${info.ip}</td><td style="${statusColor}">${statusIcon} ${info.status}</td><td>${info.records.join(', ') || '-'}</td></tr>`;
+                    html += `<tr><td><strong>${name}</strong></td><td>${info.ip}</td><td class="${info.status === 'ok' ? 'propagation-status-ok' : 'propagation-status-err'}">${statusIcon} ${info.status}</td><td>${info.records.join(', ') || '-'}</td></tr>`;
                 }
                 html += '</table>';
 
                 if (data.unique_records.length > 0) {
-                    html += `<div style="margin-top:20px"><h4>Records Unik:</h4><div class="result-json">${data.unique_records.join('\n')}</div></div>`;
+                    html += `<div class="propagation-unique"><h4>Records Unik:</h4><div class="result-json">${data.unique_records.join('\n')}</div></div>`;
                 }
 
-                html += `<details style="margin-top:20px"><summary style="cursor:pointer;color:var(--text-secondary)">Lihat Raw JSON</summary><div class="result-json">${JSON.stringify(data, null, 2)}</div></details>`;
+                html += `<details class="propagation-unique"><summary style="cursor:pointer;color:var(--text-secondary)">Lihat Raw JSON</summary><div class="result-json">${JSON.stringify(data, null, 2)}</div></details>`;
                 results.innerHTML = html;
             }
         } catch (error) {

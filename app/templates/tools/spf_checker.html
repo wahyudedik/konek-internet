@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}SPF Checker - Validasi SPF Records{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("DNS", "SPF Checker", "/spf-checker", "/?category=dns") }}
 <h1 class="section-title">🛡️ SPF Checker</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Validasi Sender Policy Framework records untuk keamanan email.
-</p>
+<p class="tool-desc">Validasi Sender Policy Framework records untuk keamanan email.</p>
 
 <div class="tool-form">
     <form id="spfForm">

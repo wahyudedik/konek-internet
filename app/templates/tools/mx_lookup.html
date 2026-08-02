@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}MX Lookup - Mail Exchange Records{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("DNS", "MX Lookup", "/mx-lookup", "/?category=dns") }}
 <h1 class="section-title">📧 MX Lookup</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Cek Mail Exchange records untuk konfigurasi email domain.</p>
+<p class="tool-desc">Cek Mail Exchange records untuk konfigurasi email domain.</p>
 
 <div class="tool-form">
     <form id="mxForm">

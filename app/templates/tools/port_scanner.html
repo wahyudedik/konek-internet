@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 {% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}Port Scanner - Cek Port Terbuka{% endblock %}
 {% block content %}
-<a href="/" class="back-link">← Kembali ke Beranda</a>
+{{ render_breadcrumb("IP", "Port Scanner", "/port-scanner", "/?category=ip") }}
 <h1 class="section-title">🔍 Port Scanner</h1>
-<p style="color:var(--text-secondary);margin-bottom:20px">Scan port TCP pada host untuk mengetahui port yang terbuka dan
-    layanan yang
-    berjalan.</p>
+<p class="tool-desc">Scan port TCP pada host untuk mengetahui port yang terbuka dan layanan yang berjalan.</p>
 
 <div class="tool-form">
     <form id="portForm">
@@ -16,27 +15,22 @@
         </div>
         <div class="form-group">
             <label>Port Preset</label>
-            <div class="port-presets" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">
-                <label class="port-preset-label"
-                    style="display:flex;align-items:center;gap:4px;cursor:pointer;padding:6px 12px;border:1px solid var(--border-medium);border-radius:6px;font-size:0.9em">
+            <div class="port-presets">
+                <label class="port-preset-label">
                     <input type="radio" name="preset" value="80,443,8080,8443" checked> 🌐 Web
                 </label>
-                <label class="port-preset-label"
-                    style="display:flex;align-items:center;gap:4px;cursor:pointer;padding:6px 12px;border:1px solid var(--border-medium);border-radius:6px;font-size:0.9em">
+                <label class="port-preset-label">
                     <input type="radio" name="preset" value="25,110,143,993,995"> 📧 Mail
                 </label>
-                <label class="port-preset-label"
-                    style="display:flex;align-items:center;gap:4px;cursor:pointer;padding:6px 12px;border:1px solid var(--border-medium);border-radius:6px;font-size:0.9em">
+                <label class="port-preset-label">
                     <input type="radio" name="preset" value="22,23,3389,5900"> 🖥️ Remote
                 </label>
-                <label class="port-preset-label"
-                    style="display:flex;align-items:center;gap:4px;cursor:pointer;padding:6px 12px;border:1px solid var(--border-medium);border-radius:6px;font-size:0.9em">
-                    <input type="radio" name="preset" value="3306,5432,1433,27017,6379"> 🗄️ Database
+                <label class="port-preset-label">
+                    <input type="radio" name="preset" value="3306,5432,1433,27017,6379"> 🗄️ DB
                 </label>
-                <label class="port-preset-label"
-                    style="display:flex;align-items:center;gap:4px;cursor:pointer;padding:6px 12px;border:1px solid var(--border-medium);border-radius:6px;font-size:0.9em">
+                <label class="port-preset-label">
                     <input type="radio" name="preset"
-                        value="21,22,25,53,80,110,143,443,993,995,3306,3389,5432,8080,8443"> 📋 Common
+                        value="21,22,25,53,80,110,143,443,993,995,3306,3389,5432,8080,8443"> 📋 All
                 </label>
             </div>
         </div>
