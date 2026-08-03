@@ -23,21 +23,23 @@ konek-internet/
     ├── __init__.py
     ├── main.py           # FastAPI app + middleware
     ├── config.py         # Konfigurasi (Pydantic)
-    ├── routers/          # API endpoints (5 router, 24+ endpoints)
+    ├── routers/          # API endpoints (6 router, 25+ endpoints)
     │   ├── dns.py        # 8 endpoints: lookup, reverse, mx, txt, cname, spf, dmarc, propagation
     │   ├── domain.py     # 2 endpoints: whois, expiry
     │   ├── ssl.py        # 2 endpoints: ssl check, expiry
     │   ├── website.py    # 5 endpoints: ping, http-status, redirect, headers, ua
-    │   └── ip.py         # 5 endpoints: ip lookup, asn, blacklist, my-ip, port, email
-    ├── services/         # Business logic (8 services)
+    │   ├── ip.py         # 5 endpoints: ip lookup, asn, blacklist, my-ip, port, email
+    │   └── cdn.py        # 1 endpoint: cdn detect
+    ├── services/         # Business logic (9 services)
     │   ├── dns_service.py    # DNS operations + @cached
     │   ├── whois_service.py  # WHOIS lookup + @cached
     │   ├── ip_service.py     # IP lookup via ip-api.com
     │   ├── ssl_service.py    # SSL verification + @cached
-    │   ├── website_service.py  # NEW - HTTP fallback (HTTPS → HTTP)
-    │   ├── ua_service.py       # NEW - User-Agent parser
-    │   ├── email_service.py    # NEW - Email validation
-    │   └── port_service.py     # NEW - Port scanner
+    │   ├── website_service.py  # HTTP fallback (HTTPS → HTTP)
+    │   ├── ua_service.py       # User-Agent parser
+    │   ├── email_service.py    # Email validation + disposable detection
+    │   ├── port_service.py     # Port scanner
+    │   └── cdn_service.py      # CDN detection (CNAME + Headers)
     ├── utils/            # Helper functions
     │   ├── cache.py      # Redis + in-memory fallback cache
     │   ├── rate_limit.py # Per-IP rate limiting (60 req/min)
@@ -45,16 +47,16 @@ konek-internet/
     ├── models/           # Data models (Pydantic)
     ├── templates/        # Jinja2 HTML templates
     │   ├── base.html     # Base layout (navbar, footer, JSON-LD)
-    │   ├── index.html    # Homepage (24 tools grid)
+    │   ├── index.html    # Homepage (25 tools grid)
     │   ├── 404.html      # Custom 404 page
     │   ├── about.html          # NEW - About page
     │   ├── api_docs.html       # NEW - API Documentation page
     │   ├── partials/     # Template partials
     │   │   ├── education.html  # Macro edukasi untuk tool pages
     │   │   └── breadcrumb.html # NEW - Breadcrumb navigation
-    │   └── tools/        # 24 tool pages (dengan section edukasi)
+    │   └── tools/        # 25 tool pages (dengan section edukasi)
     ├── data/             # Data modules
-    │   ├── education.py  # Konten edukasi 24 tools
+    │   ├── education.py  # Konten edukasi 25 tools
     │   └── faq_data.py   # NEW - FAQ JSON-LD (8 entries)
     └── static/           # Static files
         ├── favicon.svg   # SVG favicon
@@ -103,19 +105,19 @@ Internet → Cloudflare → AAPanel → Nginx → FastAPI → Redis → Database
 ## Status Implementasi
 
 ### Fase 1 - MVP (2026) ✅ SELESAI
-- 24 API endpoints aktif (+ 2 UA endpoints)
-- 24 halaman frontend + About page + API Docs page
-- 8 service files (dns, whois, ssl, ip, website, ua, email, port)
-- 5 router files (dns, domain, ssl, website, ip)
+- 25 API endpoints aktif (+ 2 UA endpoints + CDN detect)
+- 25 halaman frontend + About page + API Docs page
+- 9 service files (dns, whois, ssl, ip, website, ua, email, port, cdn)
+- 6 router files (dns, domain, ssl, website, ip, cdn)
 - Redis caching + in-memory fallback
 - Rate limiting (60 req/min per IP)
 - Security headers middleware
 - SEO: JSON-LD (FAQPage + BreadcrumbList), robots.txt, sitemap.xml, canonical URL
 - Health check endpoint
 - Response time display (X-Process-Time header)
-- Section edukasi interaktif di semua 24 tool pages
-- Navigation dropdown 5 kategori (DNS, Domain, SSL, Website, IP) — 24 tools
-- Footer grid dengan semua 24 tools terorganisir + About + API Docs
+- Section edukasi interaktif di semua 25 tool pages
+- Navigation dropdown 5 kategori (DNS, Domain, SSL, Website, IP) — 25 tools
+- Footer grid dengan semua 25 tools terorganisir + About + API Docs
 - Search/filter tools di homepage
 - Back-to-top button
 - Mobile responsive: hamburger nav, dropdown, stacked forms, card layout
@@ -134,6 +136,10 @@ Internet → Cloudflare → AAPanel → Nginx → FastAPI → Redis → Database
 - HTTP version detection (HTTP/1.0, 1.1, 2, 3)
 - Breadcrumb links ke category
 - FAQ JSON-LD Schema (8 FAQ entries)
+- CDN Detection (CNAME + Header analysis) — tool ke-25
+- XSS protection di history items (event delegation)
+- HTTP client reuse di redirect checker
+- Email validator: free email provider detection
 
 ### Cara Menjalankan
 ```bash
@@ -163,13 +169,12 @@ e:\PROJEKU\konek-internet\.venv\Scripts\python.exe -m uvicorn app.main:app --rel
 /txt-lookup          /redirect-checker   /blacklist-checker
 /cname-lookup        /header-checker
 /spf-checker         /dmarc-checker
-# Tambahan FASE 2
 /my-ip
 /ua-checker
 /email-validator
 /ns-lookup
 /port-scanner
-# Tambahan FASE 3
+/cdn-detect
 /about
 /api-docs
 ```
@@ -195,12 +200,12 @@ GET /api/v1/headers/{url}
 GET /api/v1/ip/{ip}
 GET /api/v1/ip/{ip}/asn
 GET /api/v1/ip/{ip}/blacklist
-# Tambahan FASE 2
 GET /api/v1/ip/me
 GET /api/v1/ua
 GET /api/v1/ua/{encoded_ua:path}
 GET /api/v1/email/{email}/validate
 GET /api/v1/port/{host}?ports=80,443,22
+GET /api/v1/cdn/{domain}/detect
 ```
 
 ### Security Headers (otomatis ditambahkan)
@@ -217,7 +222,7 @@ Strict-Transport-Security: max-age=31536000 (HTTPS only)
 ## Fase Pengembangan
 
 ### Fase 1 - MVP (2026) ✅ SELESAI
-- 24 tools DNS, Domain, SSL, Website, IP
+- 25 tools DNS, Domain, SSL, Website, IP (+CDN Detection)
 - Target: 100.000 visitor/bulan
 - API gratis dengan rate limit
 
@@ -257,12 +262,13 @@ Strict-Transport-Security: max-age=31536000 (HTTPS only)
 app/
 ├── main.py           # FastAPI app + middleware (Security, RateLimit)
 ├── config.py         # Pydantic settings
-├── routers/          # API endpoints (5 router, 24+ endpoints)
+├── routers/          # API endpoints (6 router, 25+ endpoints)
 │   ├── dns.py        # DNS: lookup, reverse, mx, txt, cname, spf, dmarc, propagation
 │   ├── domain.py     # Domain: whois, expiry
 │   ├── ssl.py        # SSL: check, expiry
 │   ├── website.py    # Website: ping, http-status, redirect, headers, ua
-│   └── ip.py         # IP: lookup, asn, blacklist, my-ip, port, email
+│   ├── ip.py         # IP: lookup, asn, blacklist, my-ip, port, email
+│   └── cdn.py        # CDN: detect
 ├── services/         # Business logic (dengan @cached decorator)
 │   ├── dns_service.py
 │   ├── whois_service.py
@@ -270,13 +276,14 @@ app/
 │   ├── ssl_service.py
 │   ├── website_service.py  # HTTP fallback
 │   ├── ua_service.py       # User-Agent parser
-│   ├── email_service.py    # Email validation
-│   └── port_service.py     # Port scanner
+│   ├── email_service.py    # Email validation + disposable detection
+│   ├── port_service.py     # Port scanner
+│   └── cdn_service.py      # CDN detection (CNAME + Headers)
 ├── utils/
 │   ├── cache.py      # Redis + in-memory cache
 │   ├── rate_limit.py # Per-IP rate limiting
 │   └── validators.py # Input validation (domain, IP, URL, host)
-├── templates/        # Jinja2 HTML (24 tool pages + about + api_docs)
+├── templates/        # Jinja2 HTML (25 tool pages + about + api_docs)
 │   ├── base.html     # Base layout + JSON-LD
 │   ├── index.html    # Homepage
 │   ├── 404.html      # Error page
@@ -285,9 +292,9 @@ app/
 │   ├── partials/
 │   │   ├── education.html
 │   │   └── breadcrumb.html
-│   └── tools/        # 24 tool pages
+│   └── tools/        # 25 tool pages
 ├── data/
-│   ├── education.py  # Konten edukasi 24 tools
+│   ├── education.py  # Konten edukasi 25 tools
 │   └── faq_data.py   # FAQ JSON-LD (8 entries)
 ├── static/
 │   ├── css/style.css
@@ -339,6 +346,9 @@ app/
 - [x] WHOIS extra fields (registrant, contacts)
 - [x] SSL chain info (SANs, signature)
 - [x] HTTP version detection (1.0, 1.1, 2, 3)
+- [x] CDN Detection (CNAME + Header analysis)
+- [x] XSS protection in history items
+- [x] Email validator: free email detection
 
 ## Target Metrics
 

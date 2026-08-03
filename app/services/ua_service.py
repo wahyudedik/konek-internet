@@ -143,4 +143,5 @@ def _parse_sync(ua_string: str) -> Dict[str, Any]:
 
 async def parse_ua(ua_string: str) -> Dict[str, Any]:
     """Parse User-Agent string async"""
-    return _parse_sync(ua_string)
+    import asyncio
+    return await asyncio.to_thread(_parse_sync, ua_string)

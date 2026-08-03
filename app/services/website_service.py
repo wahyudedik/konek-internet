@@ -140,41 +140,40 @@ async def check_redirects(url: str) -> Dict[str, Any]:
     }
 
     try:
-        # Manual redirect tracking
+        # Manual redirect tracking dengan shared client
         https_url = url if url.startswith('https://') else url.replace('http://', 'https://', 1)
         current_url = https_url
         max_redirects = 10
         redirect_chain = []
 
-        for _ in range(max_redirects):
-            try:
-                async with httpx.AsyncClient(follow_redirects=False, timeout=10) as client:
-                    response = await client.get(current_url)
-            except Exception:
-                # Fallback ke HTTP
-                current_url = current_url.replace('https://', 'http://', 1)
+        async with httpx.AsyncClient(follow_redirects=False, timeout=10) as client:
+            for _ in range(max_redirects):
                 try:
-                    async with httpx.AsyncClient(follow_redirects=False, timeout=10) as client:
+                    response = await client.get(current_url)
+                except Exception:
+                    # Fallback ke HTTP
+                    current_url = current_url.replace('https://', 'http://', 1)
+                    try:
                         response = await client.get(current_url)
-                except Exception as e:
-                    raise e
+                    except Exception as e:
+                        raise e
 
-            if response.status_code in (301, 302, 303, 307, 308):
-                redirect_chain.append({
-                    "url": str(response.url),
-                    "status_code": response.status_code
-                })
-                location = response.headers.get("location", "")
-                if not location:
+                if response.status_code in (301, 302, 303, 307, 308):
+                    redirect_chain.append({
+                        "url": str(response.url),
+                        "status_code": response.status_code
+                    })
+                    location = response.headers.get("location", "")
+                    if not location:
+                        break
+                    # Handle relative redirect
+                    if location.startswith("/"):
+                        from urllib.parse import urlparse
+                        parsed = urlparse(str(response.url))
+                        location = f"{parsed.scheme}://{parsed.netloc}{location}"
+                    current_url = location
+                else:
                     break
-                # Handle relative redirect
-                if location.startswith("/"):
-                    from urllib.parse import urlparse
-                    parsed = urlparse(str(response.url))
-                    location = f"{parsed.scheme}://{parsed.netloc}{location}"
-                current_url = location
-            else:
-                break
 
         results["redirects"] = redirect_chain
         results["final_url"] = current_url

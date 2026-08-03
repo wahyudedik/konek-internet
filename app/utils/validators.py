@@ -295,6 +295,13 @@ TOOL_META = {
         "category": "IP",
         "icon": "🔍",
     },
+    "cdn_detect": {
+        "title": "CDN Detection - Deteksi Provider CDN",
+        "description": "Deteksi apakah website menggunakan CDN dan identifikasi providernya: Cloudflare, CloudFront, Akamai, Fastly.",
+        "keywords": "cdn detection, detect cdn, cdn checker, cloudflare, cloudfront, akamai, fastly, cdn provider",
+        "category": "Website",
+        "icon": "🌐",
+    },
 }
 
 

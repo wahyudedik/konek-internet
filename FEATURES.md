@@ -5,9 +5,9 @@
 ## Fase 1 - MVP (2026) ✅ SELESAI
 
 ### Core Features
-- **24 Tools DNS, Domain, SSL, Website, IP** - Utilitas internet lengkap
-- **24+ API Endpoints** - RESTful API gratis dengan rate limit 60 req/min
-- **24 Tool Pages** - Halaman frontend dengan form interaktif dan hasil real-time
+- **25 Tools DNS, Domain, SSL, Website, IP** - Utilitas internet lengkap (+CDN Detection)
+- **25+ API Endpoints** - RESTful API gratis dengan rate limit 60 req/min
+- **25 Tool Pages** - Halaman frontend dengan form interaktif dan hasil real-time (+CDN Detection)
 - **Redis + In-memory Cache** - Performa optimal dengan fallback cache
 - **Rate Limiting** - Per-IP rate limiting (60 req/menit)
 - **Security Headers** - X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, dll
@@ -56,7 +56,7 @@
 | SSL Checker | `GET /api/v1/ssl/{domain}` | `/ssl-checker` | Cek SSL certificate |
 | SSL Expiry | `GET /api/v1/ssl/{domain}/expiry` | `/ssl-expiry` | Cek expiry SSL certificate |
 
-### Website (5 Tools)
+### Website (6 Tools)
 | Tool | Endpoint | Page | Description |
 |------|----------|------|-------------|
 | Ping Checker | `GET /api/v1/ping/{host}` | `/ping-checker` | Cek host aktif |
@@ -64,6 +64,7 @@
 | Redirect Checker | `GET /api/v1/redirect/{url}` | `/redirect-checker` | Trace redirect chain |
 | Header Checker | `GET /api/v1/headers/{url}` | `/header-checker` | Cek HTTP headers + version |
 | User-Agent Checker | `GET /api/v1/ua` | `/ua-checker` | Deteksi browser & device |
+| CDN Detection | `GET /api/v1/cdn/{domain}/detect` | `/cdn-detect` | Deteksi provider CDN |
 
 ### IP (6 Tools)
 | Tool | Endpoint | Page | Description |
@@ -122,7 +123,7 @@
 ## Roadmap
 
 ### Fase 1 - MVP (2026) ✅ SELESAI
-- 24 tools (19 + 5 baru)
+- 25 tools (19 + 6 baru termasuk CDN Detection)
 - Dark mode, PWA, tool history, URL state
 - FAQ JSON-LD, mobile cards, breadcrumbs
 

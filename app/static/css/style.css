@@ -1455,14 +1455,6 @@ a.breadcrumb-item:hover {
     font-size: 1rem;
 }
 
-/* ============ PORT PRESETS ============ */
-.port-preset-label {
-    background: var(--bg-primary);
-    border-color: var(--border-medium) !important;
-    color: var(--text-dark);
-    transition: background-color 0.3s, color 0.3s;
-}
-
 /* ============ RESPONSIVE ============ */
 @media (max-width: 768px) {
 
@@ -1619,10 +1611,8 @@ a.breadcrumb-item:hover {
     .shortcuts-hint {
         display: none;
     }
-}
 
-/* ============ RESPONSIVE EDUCATION ============ */
-@media (max-width: 768px) {
+    /* Education - Mobile */
     .education-header {
         flex-direction: column;
         align-items: flex-start;
@@ -1922,20 +1912,6 @@ a.breadcrumb-item:hover {
     }
 }
 
-@media (max-width: 480px) {
-    .about-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .about-stats {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .tech-stack-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
 /* ============ API DOCS PAGE ============ */
 .api-section {
     margin-bottom: 40px;
@@ -2078,7 +2054,16 @@ a.breadcrumb-item:hover {
     font-size: 0.9rem;
 }
 
+/* About & API Docs - Mobile */
 @media (max-width: 768px) {
+    .about-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+    }
+
     .api-info-grid {
         grid-template-columns: 1fr 1fr;
     }
@@ -2089,6 +2074,18 @@ a.breadcrumb-item:hover {
 }
 
 @media (max-width: 480px) {
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .tech-stack-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
     .api-info-grid {
         grid-template-columns: 1fr;
     }

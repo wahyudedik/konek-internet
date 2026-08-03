@@ -1199,4 +1199,66 @@ EDUCATION_DATA = {
             {"slug": "blacklist-checker", "name": "Blacklist Checker", "icon": "🚫"}
         ]
     },
+
+    # ============================================================
+    # CDN TOOLS (1 tool)
+    # ============================================================
+
+    "cdn_detect": {
+        "title": "📚 Belajar: Apa itu CDN?",
+        "difficulty": "pemula",
+        "sections": [
+            {
+                "heading": "🌐 Apa itu CDN?",
+                "content": """<p>CDN <strong>(Content Delivery Network)</strong> adalah jaringan server global yang mendistribusikan konten website lebih dekat ke pengguna.</p>
+<p>Bayangkan website Anda di-host di Jakarta, tapi ada pengunjung dari Amerika. Tanpa CDN, data harus menempuh ribuan kilometer. Dengan CDN, konten di-cache di server terdekat.</p>
+<p>CDN membantu:</p>
+<ul>
+<li><strong>Mempercepat</strong> loading website</li>
+<li><strong>Mengurangi beban</strong> server utama</li>
+<li><strong>Perlindungan</strong> dari serangan DDoS</li>
+<li><strong>SSL/TLS</strong> termination</li>
+</ul>"""
+            },
+            {
+                "heading": "🔍 Cara Kerja Deteksi CDN",
+                "content": """<div class="edu-table">
+<table>
+<tr><th>Metode</th><th>Penjelasan</th></tr>
+<tr><td><strong>CNAME Chain</strong></td><td>Mengecek apakah domain mengarah ke server CDN melalui DNS CNAME record</td></tr>
+<tr><td><strong>HTTP Headers</strong></td><td>Mengecek header seperti <code>cf-ray</code> (Cloudflare), <code>x-amz-cf-id</code> (CloudFront)</td></tr>
+</table>
+</div>
+<p>Tool ini menggabungkan kedua metode untuk deteksi yang lebih akurat.</p>"""
+            },
+            {
+                "heading": "🏢 Provider CDN Populer",
+                "content": """<div class="edu-table">
+<table>
+<tr><th>Provider</th><th>CNAME Pattern</th><th>Header Identifier</th></tr>
+<tr><td><strong>Cloudflare</strong></td><td><code>*.cloudflare.com</code></td><td><code>cf-ray</code></td></tr>
+<tr><td><strong>AWS CloudFront</strong></td><td><code>*.cloudfront.net</code></td><td><code>x-amz-cf-id</code></td></tr>
+<tr><td><strong>Akamai</strong></td><td><code>*.akamaiedge.net</code></td><td><code>x-akamai-transformed</code></td></tr>
+<tr><td><strong>Fastly</strong></td><td><code>*.fastly.net</code></td><td><code>x-fastly-request-id</code></td></tr>
+<tr><td><strong>Azure CDN</strong></td><td><code>*.azureedge.net</code></td><td><code>x-azure-ref</code></td></tr>
+<tr><td><strong>StackPath</strong></td><td><code>*.hwcdn.net</code></td><td><code>x-hw</code></td></tr>
+</table>
+</div>"""
+            },
+            {
+                "heading": "💡 Tips & Best Practices",
+                "content": """<ul>
+<li>Jika tidak terdeteksi CDN, website mungkin langsung di-host di server asli (direct hosting)</li>
+<li>Beberapa website menggunakan CDN tapi tanpa CNAME — deteksi via header lebih akurat</li>
+<li>Cloudflare adalah CDN paling populer di Indonesia</li>
+<li>CDN gratis tersedia: Cloudflare Free, CloudFront Free Tier, Fastly Free Tier</li>
+</ul>"""
+            }
+        ],
+        "related_tools": [
+            {"slug": "header-checker", "name": "Header Checker", "icon": "📋"},
+            {"slug": "cname-lookup", "name": "CNAME Lookup", "icon": "🔗"},
+            {"slug": "dns-lookup", "name": "DNS Lookup", "icon": "🔧"}
+        ]
+    },
 }

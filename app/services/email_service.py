@@ -101,6 +101,15 @@ _DISPOSABLE_DOMAINS = {
     "temp-mail.io", "tempmail.pw",
 }
 
+# Free email providers
+_FREE_EMAIL_DOMAINS = {
+    "gmail.com", "yahoo.com", "yahoo.co.id", "outlook.com", "hotmail.com",
+    "live.com", "msn.com", "aol.com", "icloud.com", "mail.com",
+    "protonmail.com", "proton.me", "zoho.com", "yandex.com",
+    "gmx.com", "fastmail.com", "tutanota.com", "tutamail.com",
+    "inbox.com", "lycos.com", "rambler.ru",
+}
+
 
 def validate_email_format(email: str) -> tuple:
     """Validasi format email"""
@@ -174,6 +183,7 @@ async def validate_email(email: str) -> Dict[str, Any]:
         "mx_valid": False,
         "mx_records": [],
         "disposable": _is_disposable(email),
+        "free_email": domain in _FREE_EMAIL_DOMAINS,
         "smtp_valid": False,
         "score": 0,
         "verdict": "",

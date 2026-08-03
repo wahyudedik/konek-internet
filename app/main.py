@@ -9,7 +9,7 @@ from fastapi.responses import JSONResponse, PlainTextResponse, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from app.config import get_settings
-from app.routers import dns, domain, ssl, website, ip
+from app.routers import dns, domain, ssl, website, ip, cdn
 from app.utils.rate_limit import check_rate_limit, get_client_ip, get_remaining_requests
 from app.data.education import EDUCATION_DATA
 from app.data.faq_data import FAQ_DATA
@@ -172,6 +172,7 @@ app.include_router(domain.router, prefix="/api/v1", tags=["Domain"])
 app.include_router(ssl.router, prefix="/api/v1", tags=["SSL"])
 app.include_router(website.router, prefix="/api/v1", tags=["Website"])
 app.include_router(ip.router, prefix="/api/v1", tags=["IP"])
+app.include_router(cdn.router, prefix="/api/v1", tags=["CDN"])
 
 
 # ============ PAGE ROUTES ============
@@ -311,6 +312,11 @@ async def page_port_scanner(request: Request):
     return templates.TemplateResponse("tools/port_scanner.html", tool_context(request, "Port Scanner", "port_scanner"))
 
 
+@app.get("/cdn-detect")
+async def page_cdn_detect(request: Request):
+    return templates.TemplateResponse("tools/cdn_detect.html", tool_context(request, "CDN Detection", "cdn_detect"))
+
+
 # Health check (API)
 @app.get("/health")
 async def health():
@@ -368,6 +374,7 @@ async def sitemap_xml():
         ("/blacklist-checker", "0.8", "monthly"),
         ("/email-validator", "0.8", "monthly"),
         ("/port-scanner", "0.8", "monthly"),
+        ("/cdn-detect", "0.8", "monthly"),
         ("/about", "0.7", "monthly"),
         ("/api-docs", "0.7", "monthly"),
     ]

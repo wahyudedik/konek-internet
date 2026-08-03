@@ -199,15 +199,30 @@ function displayHistory(toolName, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
     let html = '<div class="history-section"><div class="history-header"><h4>📋 Riwayat Pencarian</h4>';
-    html += '<button class="btn-clear-history" onclick="clearHistory(\'' + toolName + '\', \'' + containerId + '\')" title="Hapus semua riwayat">🗑️ Hapus</button>';
+    html += '<button class="btn-clear-history" data-history-tool="' + escapeHtml(toolName) + '" data-history-container="' + escapeHtml(containerId) + '" title="Hapus semua riwayat">🗑️ Hapus</button>';
     html += '</div><div class="history-list">';
-    history.forEach(function (item) {
-        html += '<button class="history-item" onclick="useHistoryItem(\'' +
-            toolName + '\', \'' + escapeHtml(item).replace(/'/g, "\\'") + '\')">' +
+    history.forEach(function (item, idx) {
+        html += '<button class="history-item" data-history-query="' + escapeHtml(item) + '" data-history-idx="' + idx + '">' +
             escapeHtml(item) + '</button>';
     });
     html += '</div></div>';
     container.innerHTML = html;
+
+    // Event delegation for history items (safe from XSS)
+    container.querySelectorAll('.history-item').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var query = this.getAttribute('data-history-query');
+            useHistoryItem(toolName, query);
+        });
+    });
+    // Event delegation for clear button
+    container.querySelectorAll('.btn-clear-history').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var tn = this.getAttribute('data-history-tool');
+            var cid = this.getAttribute('data-history-container');
+            clearHistory(tn, cid);
+        });
+    });
 }
 
 function clearHistory(toolName, containerId) {
