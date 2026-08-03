@@ -1,11 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Tentang Konektivitas.com - Visi, Misi & Tim{% endblock %}
-{% block description %}Kenali lebih dekat Konektivitas.com: platform utilitas internet Indonesia yang menyediakan
-layanan dasar internet gratis, cepat, dan bermanfaat untuk semua.{% endblock %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
+{% block title %}Tentang Konektivitas.com — Visi, Misi & Roadmap{% endblock %}
+{% block description %}Kenali lebih dekat Konektivitas.com: platform infrastruktur internet Indonesia yang membantu
+siapa pun memahami, mengelola, dan mengembangkan aset digital mereka.{% endblock %}
 {% block content %}
+{{ render_breadcrumb("About", "Tentang", "/about") }}
+
 <section class="hero">
     <h1>🌐 Tentang Konektivitas.com</h1>
-    <p>Infrastruktur Internet Gratis untuk Indonesia</p>
+    <p>Memahami. Mengelola. Mengembangkan Internet.</p>
 </section>
 
 <!-- Visi & Misi -->
@@ -13,14 +16,15 @@ layanan dasar internet gratis, cepat, dan bermanfaat untuk semua.{% endblock %}
     <h2 class="about-title">🎯 Visi & Misi</h2>
     <div class="about-card">
         <h3>Visi</h3>
-        <p>Menjadi fondasi infrastruktur internet gratis terbesar di Indonesia, menyediakan utilitas internet yang
-            diandalkan oleh jutaan pengguna setiap hari.</p>
+        <p>Menjadi platform infrastruktur internet terbesar di Indonesia yang membantu siapa pun memahami, mengelola,
+            dan mengembangkan aset digital mereka.</p>
         <h3 class="about-mission-title">Misi</h3>
         <ul>
-            <li>Menyediakan tools internet gratis, cepat, dan mudah diakses oleh siapa saja</li>
-            <li>Membantu developer, sysadmin, dan pengguna biasa dalam memahami internet</li>
-            <li>Membangun ekosistem open-source yang berkontribusi bagi komunitas internet Indonesia</li>
-            <li>Menjadi referensi utama untuk utilitas internet di Indonesia</li>
+            <li>Membuat infrastruktur internet mudah dipahami</li>
+            <li>Membantu pengguna mengelola aset digital dari satu dashboard</li>
+            <li>Memberikan peringatan sebelum masalah terjadi</li>
+            <li>Menyediakan insight untuk menemukan peluang digital baru</li>
+            <li>Menjadi referensi edukasi internet berbahasa Indonesia</li>
         </ul>
     </div>
 </section>
@@ -37,17 +41,65 @@ layanan dasar internet gratis, cepat, dan bermanfaat untuk semua.{% endblock %}
         <div class="about-card about-card-highlight">
             <div class="about-icon">🆓</div>
             <h3>Gratis</h3>
-            <p>Semua tools dapat digunakan secara gratis tanpa registrasi. Tidak ada hidden fee atau paywall.</p>
+            <p>25+ Public Tools dapat digunakan secara gratis tanpa registrasi. Workspace dan BI tersedia untuk yang
+                butuh lebih.</p>
         </div>
         <div class="about-card about-card-highlight">
             <div class="about-icon">🤝</div>
             <h3>Bermanfaat</h3>
-            <p>Dirancang untuk memberikan manfaat nyata bagi banyak orang, dari developer hingga pengguna biasa.</p>
+            <p>Dirancang untuk memberikan manfaat nyata bagi banyak orang — dari pelajar hingga enterprise.</p>
         </div>
         <div class="about-card about-card-highlight">
             <div class="about-icon">🏛️</div>
             <h3>Tahan Lama</h3>
             <p>Dibangun untuk tetap relevan 10 tahun ke depan. Fondasi internet yang akan selalu dibutuhkan.</p>
+        </div>
+    </div>
+</section>
+
+<!-- 3 Produk -->
+<section class="about-section">
+    <h2 class="about-title">🚀 3 Produk Utama</h2>
+    <div class="about-grid">
+        <div class="about-card about-card-highlight">
+            <div class="about-icon">🔧</div>
+            <h3>Public Tools</h3>
+            <p>25+ tools gratis untuk cek DNS, WHOIS, SSL, IP, Website, dan CDN. Target: 100+ tools pada 2031.</p>
+        </div>
+        <div class="about-card about-card-highlight">
+            <div class="about-icon">💼</div>
+            <h3>Workspace</h3>
+            <p>Dashboard terpadu untuk mengelola domain, SSL, DNS, server, dan email. Monitoring & notifikasi otomatis.
+            </p>
+        </div>
+        <div class="about-card about-card-highlight">
+            <div class="about-icon">📊</div>
+            <h3>Business Intelligence</h3>
+            <p>Market analysis, technology detection, dan opportunity finder berbasis data publik untuk pengambilan
+                keputusan bisnis.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Target Pengguna -->
+<section class="about-section">
+    <h2 class="about-title">👥 Siapa yang Kami Bantu?</h2>
+    <div class="about-grid">
+        <div class="about-card">
+            <div class="about-icon">🌐</div>
+            <h3>Public</h3>
+            <p>Pelajar, mahasiswa, freelancer, developer pemula, dan siapa pun yang ingin belajar internet.</p>
+        </div>
+        <div class="about-card">
+            <div class="about-icon">💼</div>
+            <h3>Professional</h3>
+            <p>Developer, DevOps, IT Support, SysAdmin, Agency, dan Startup yang mengelola infrastruktur internet.</p>
+        </div>
+        <div class="about-card">
+            <div class="about-icon">🏢</div>
+            <h3>Business</h3>
+            <p>UMKM, perusahaan, konsultan, marketing, investor, dan business owner yang ingin mengembangkan bisnis
+                digital.</p>
         </div>
     </div>
 </section>
@@ -67,7 +119,7 @@ layanan dasar internet gratis, cepat, dan bermanfaat untuk semua.{% endblock %}
             </div>
             <div class="tech-item">
                 <strong>Web Server</strong>
-                <span>Nginx</span>
+                <span>Nginx + AAPanel</span>
             </div>
             <div class="tech-item">
                 <strong>OS</strong>
@@ -85,6 +137,18 @@ layanan dasar internet gratis, cepat, dan bermanfaat untuk semua.{% endblock %}
     </div>
 </section>
 
+<!-- Pertanyaan Penuntun -->
+<section class="about-section">
+    <h2 class="about-title">🧭 Pertanyaan Penuntun</h2>
+    <div class="about-card">
+        <blockquote class="about-quote" style="margin: 0; font-size: 1.1em;">
+            "Apakah fitur ini membantu pengguna memahami, mengelola, atau mengembangkan aset internetnya?"
+        </blockquote>
+        <p style="margin-top: 1rem; color: var(--text-secondary);">Jika jawabannya "ya", maka fitur itu sejalan dengan
+            arah besar Konektivitas.</p>
+    </div>
+</section>
+
 <!-- Timeline / Roadmap -->
 <section class="about-section">
     <h2 class="about-title">📅 Roadmap 2026–2031</h2>
@@ -92,36 +156,41 @@ layanan dasar internet gratis, cepat, dan bermanfaat untuk semua.{% endblock %}
         <div class="timeline-item">
             <div class="timeline-marker timeline-active"></div>
             <div class="timeline-content">
-                <h4>2026 — Fase 1: MVP ✅</h4>
-                <p>25 tools DNS, Domain, SSL, Website, IP (+ CDN Detection). Target 100.000 visitor/bulan.</p>
+                <h4>2026 — Fase 1: Public Tools MVP ✅</h4>
+                <p>25 tools DNS, Domain, SSL, Website, IP (+ CDN Detection). API gratis. Target 100.000 visitor/bulan.
+                </p>
             </div>
         </div>
         <div class="timeline-item">
             <div class="timeline-marker"></div>
             <div class="timeline-content">
-                <h4>2027 — Fase 2: Developer Platform</h4>
-                <p>API Key & Dashboard, Dynamic DNS, Monitoring services, DNS Hosting.</p>
+                <h4>2027 — Fase 2: Developer Platform & Workspace</h4>
+                <p>User Authentication, Domain/SSL/DNS/Uptime Monitoring, API Key System, Dynamic DNS. Target 500.000
+                    visitor/bulan.</p>
             </div>
         </div>
         <div class="timeline-item">
             <div class="timeline-marker"></div>
             <div class="timeline-content">
-                <h4>2028 — Fase 3: Infrastructure</h4>
-                <p>DNS Anycast, Status Page, Team Dashboard.</p>
+                <h4>2028 — Fase 3: Infrastructure & Mobile</h4>
+                <p>Team Workspace, DNS Hosting, DNS Anycast, Status Page, Mobile App (Android). Target 1 juta
+                    visitor/bulan.</p>
             </div>
         </div>
         <div class="timeline-item">
             <div class="timeline-marker"></div>
             <div class="timeline-content">
-                <h4>2029 — Fase 4: Cloud Platform</h4>
-                <p>GeoIP Database, ASN Database, Enterprise features.</p>
+                <h4>2029 — Fase 4: Business Intelligence</h4>
+                <p>Enterprise features (SSO, Audit Log, SLA), Market Analysis, Technology Detection, Opportunity Finder.
+                    Target 3 juta visitor/bulan.</p>
             </div>
         </div>
         <div class="timeline-item">
             <div class="timeline-marker"></div>
             <div class="timeline-content">
                 <h4>2030–2031 — Fase 5: Internet Platform</h4>
-                <p>Public DNS, Internet Intelligence, Mobile App, Enterprise API.</p>
+                <p>100+ tools, Public DNS (dns.konektivitas.com), Internet Intelligence, Developer Marketplace, Multi
+                    Region. Target 5 juta visitor/bulan.</p>
             </div>
         </div>
     </div>
@@ -132,22 +201,23 @@ layanan dasar internet gratis, cepat, dan bermanfaat untuk semua.{% endblock %}
     <h2 class="about-title">📊 Statistik</h2>
     <div class="about-stats">
         <div class="stat-item">
-            <div class="stat-number">25</div>
-            <div class="stat-label">Tools Aktif</div>
+            <div class="stat-number">25+</div>
+            <div class="stat-label">Public Tools</div>
         </div>
         <div class="stat-item">
             <div class="stat-number">5</div>
             <div class="stat-label">Kategori</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number">100%</div>
-            <div class="stat-label">Gratis</div>
+            <div class="stat-number">3</div>
+            <div class="stat-label">Produk</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number">&lt; 1s</div>
-            <div class="stat-label">Response Time</div>
+            <div class="stat-number">
+                < 1s</div>
+                    <div class="stat-label">Response Time</div>
+            </div>
         </div>
-    </div>
 </section>
 
 <!-- Quote -->

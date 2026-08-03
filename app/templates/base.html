@@ -6,15 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{{ title }} - Konektivitas.com{% endblock %}</title>
     <meta name="description"
-        content="{% block description %}{{ meta.description if meta else 'Infrastruktur Internet Gratis untuk Indonesia - DNS Lookup, WHOIS, SSL Checker, IP Lookup, dan tools internet lainnya' }}{% endblock %}">
+        content="{% block description %}{{ meta.description if meta else 'Platform infrastruktur internet Indonesia yang membantu siapa pun memahami, mengelola, dan mengembangkan aset digital mereka. DNS Lookup, WHOIS, SSL Checker, IP Lookup, dan 25+ tools gratis.' }}{% endblock %}">
     <meta name="keywords"
         content="{% block keywords %}{{ meta.keywords if meta else 'dns lookup, whois lookup, ssl checker, ip lookup, ping, http header, tools internet, indonesia' }}{% endblock %}">
     <meta property="og:title"
         content="{% block og_title %}{{ meta.title if meta else 'Konektivitas.com' }}{% endblock %}">
     <meta property="og:description"
-        content="{% block og_desc %}{{ meta.description if meta else 'Infrastruktur Internet Gratis untuk Indonesia' }}{% endblock %}">
+        content="{% block og_desc %}{{ meta.description if meta else 'Platform infrastruktur internet Indonesia — Memahami. Mengelola. Mengembangkan Internet.' }}{% endblock %}">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:url" content="https://konektivitas.com{{ request.url.path }}">
     <meta property="og:image" content="https://konektivitas.com/static/logo-rm.png">
     <link rel="canonical" href="https://konektivitas.com{{ request.url.path }}">
     <link rel="icon" href="/static/favicon.png" type="image/png">
@@ -28,7 +28,7 @@
         "@type": "WebApplication",
         "name": "Konektivitas.com",
         "url": "https://konektivitas.com",
-        "description": "Infrastruktur Internet Gratis untuk Indonesia - DNS Lookup, WHOIS, SSL Checker, IP Lookup",
+        "description": "Platform infrastruktur internet Indonesia — Memahami. Mengelola. Mengembangkan Internet. DNS Lookup, WHOIS, SSL Checker, IP Lookup",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Web",
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "IDR" },
@@ -197,7 +197,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 Konektivitas.com - Infrastruktur Internet Gratis untuk Indonesia</p>
+                <p>&copy; <span id="footerYear"></span> Konektivitas.com — Memahami. Mengelola.
+                    Mengembangkan Internet.</p>
                 <div class="shortcuts-hint">
                     <span><kbd>Ctrl</kbd>+<kbd>K</kbd> Search</span>
                     <span><kbd>Esc</kbd> Close</span>
@@ -227,6 +228,9 @@
             if (toggle) {
                 toggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
             }
+            // Set dynamic footer year
+            var yearEl = document.getElementById('footerYear');
+            if (yearEl) yearEl.textContent = new Date().getFullYear();
         })();
 
         function toggleTheme() {

@@ -93,6 +93,9 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 app.add_middleware(SecurityHeadersMiddleware)
 
 
+# Track server start time for uptime
+_server_start_time = time.time()
+
 # Rate Limiting Middleware
 class RateLimitMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
@@ -109,7 +112,13 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             if not check_rate_limit(ip):
                 return JSONResponse(
                     status_code=429,
-                    content={"error": "Rate limit exceeded. Coba lagi dalam 1 menit.", "retry_after": 60}
+                    content={"error": "Rate limit exceeded. Coba lagi dalam 1 menit.", "retry_after": 60},
+                    headers={
+                        "X-RateLimit-Limit": "60",
+                        "X-RateLimit-Remaining": "0",
+                        "X-RateLimit-Reset": str(int(time.time()) + 60),
+                        "Retry-After": "60",
+                    }
                 )
         
         response = await call_next(request)
@@ -118,8 +127,9 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         if path.startswith("/api/"):
             ip = get_client_ip(request)
             remaining = get_remaining_requests(ip)
-            response.headers["X-RateLimit-Remaining"] = str(remaining)
             response.headers["X-RateLimit-Limit"] = "60"
+            response.headers["X-RateLimit-Remaining"] = str(remaining)
+            response.headers["X-RateLimit-Reset"] = str(int(time.time()) + 60)
         
         return response
 
@@ -322,12 +332,20 @@ async def page_cdn_detect(request: Request):
 async def health():
     import sys
     from app.utils.cache import get_cache_stats
+    uptime_seconds = int(time.time() - _server_start_time)
+    days = uptime_seconds // 86400
+    hours = (uptime_seconds % 86400) // 3600
+    minutes = (uptime_seconds % 3600) // 60
+    uptime_str = f"{days}d {hours}h {minutes}m" if days > 0 else f"{hours}h {minutes}m" if hours > 0 else f"{minutes}m"
     return {
         "status": "healthy",
         "app": settings.APP_NAME,
         "version": settings.APP_VERSION,
+        "tagline": "Memahami. Mengelola. Mengembangkan Internet.",
         "python": sys.version.split()[0],
+        "uptime": uptime_str,
         "cache": get_cache_stats(),
+        "rate_limit": f"{settings.RATE_LIMIT_PER_MINUTE} req/min",
     }
 
 

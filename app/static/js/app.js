@@ -66,7 +66,6 @@ function filterTools(query) {
 
     // Show/hide sections based on visible cards
     sections.forEach(function (section) {
-        var visibleCards = section.querySelectorAll('.tool-card[style=""], .tool-card:not([style])');
         var hasVisible = false;
         section.querySelectorAll('.tool-card').forEach(function (c) {
             if (c.style.display !== 'none') hasVisible = true;
@@ -246,13 +245,31 @@ function useHistoryItem(toolName, query) {
 }
 
 function extractToolName(endpoint) {
-    // Extract tool name from API endpoint
-    // /dns/google.com → dns
-    // /ssl/example.com → ssl
-    // /whois/example.com → whois
-    // /ip/8.8.8.8 → ip
+    // Extract tool name from API endpoint and map to page-based tool name
+    // Used by saveToHistory() — must match keys used in displayHistory() calls
+    // /dns/google.com → dns-lookup
+    // /ssl/example.com → ssl-checker
+    // /whois/example.com → whois-lookup
+    // /ip/8.8.8.8 → ip-lookup
+    var TOOL_NAME_MAP = {
+        'dns': 'dns-lookup',
+        'whois': 'whois-lookup',
+        'ssl': 'ssl-checker',
+        'ping': 'ping-checker',
+        'ip': 'ip-lookup',
+        'http': 'http-status',
+        'redirect': 'redirect-checker',
+        'headers': 'header-checker',
+        'ua': 'ua-checker',
+        'email': 'email-validator',
+        'port': 'port-scanner',
+        'cdn': 'cdn-detect',
+        'asn': 'asn-lookup',
+        'blacklist': 'blacklist-checker'
+    };
     var parts = endpoint.split('?')[0].split('/').filter(function (p) { return p && p !== 'api' && p !== 'v1'; });
-    return parts[0] || 'unknown';
+    var rawName = parts[0] || 'unknown';
+    return TOOL_NAME_MAP[rawName] || rawName;
 }
 
 // ============ TOOL FORM HANDLER ============
@@ -316,7 +333,7 @@ async function handleToolForm(event, endpoint, transformInput) {
                 <span class="result-status status-error">Gagal</span>
             </div>
             <div class="result-error">
-                <p>⚠️ Gagal mengambil data: ${error.message}</p>
+                <p>⚠️ Gagal mengambil data: ${escapeHtml(error.message)}</p>
                 <p class="result-error-hint">Pastikan koneksi internet aktif dan input sudah benar.</p>
             </div>`;
     } finally {
@@ -372,14 +389,15 @@ function displayResults(container, data, endpoint, elapsed) {
     const timeStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) + ' ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
     html += `<div class="result-timestamp">🕐 Diperiksa: ${timeStr}</div>`;
 
-    // Action buttons: Copy JSON + Share URL
+    // Action buttons: Copy JSON + Copy All + Export + Share
     const id = `copy-${copyCounter++}`;
     jsonDataMap.set(id, data);
     const jsonStr = JSON.stringify(data, null, 2);
-    const shareUrl = window.location.href;
     html += `<div class="result-actions">
         <button class="btn-copy" onclick="copyJSON('${id}')">📋 Salin JSON</button>
-        <button class="btn-share" onclick="copyToClipboard('${shareUrl.replace(/'/g, "\\'")}')">🔗 Share URL</button>
+        <button class="btn-copy" onclick="copyAllResults()">📑 Salin Semua</button>
+        <button class="btn-copy" onclick="exportResultsAsText()">📄 Export TXT</button>
+        <button class="btn-share" onclick="shareTool('${escapeHtml(document.querySelector("h1") ? document.querySelector("h1").textContent.trim() : "Konektivitas.com")}')">🔗 Share</button>
     </div>`;
     html += `<details class="result-details"><summary>Lihat Raw JSON</summary><div class="result-json"><pre>${escapeHtml(jsonStr)}</pre></div></details>`;
 
@@ -497,4 +515,82 @@ function showToast(message) {
     toast.textContent = message;
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// ============ WEB SHARE API ============
+function shareTool(toolName) {
+    var url = window.location.href;
+    var title = toolName + ' - Konektivitas.com';
+    if (navigator.share) {
+        navigator.share({ title: title, url: url }).catch(function () { });
+    } else {
+        copyToClipboard(url);
+    }
+}
+
+// ============ COPY ALL RESULTS ============
+function copyAllResults() {
+    var container = document.querySelector('.results');
+    if (!container) return;
+    var rows = container.querySelectorAll('tr');
+    if (rows.length === 0) {
+        var pre = container.querySelector('pre');
+        if (pre) {
+            copyToClipboard(pre.textContent);
+            return;
+        }
+        showToast('Tidak ada hasil untuk disalin');
+        return;
+    }
+    var lines = [];
+    rows.forEach(function (row) {
+        var th = row.querySelector('th');
+        var td = row.querySelector('td');
+        if (th && td) {
+            lines.push(th.textContent.trim() + ': ' + td.textContent.trim());
+        }
+    });
+    if (lines.length > 0) {
+        copyToClipboard(lines.join('\n'));
+    }
+}
+
+// ============ EXPORT AS TEXT ============
+function exportResultsAsText() {
+    var container = document.querySelector('.results');
+    if (!container) return;
+    var title = document.querySelector('h1') ? document.querySelector('h1').textContent.trim() : 'Konektivitas.com';
+    var lines = [title, '='.repeat(title.length), ''];
+    var rows = container.querySelectorAll('tr');
+    if (rows.length > 0) {
+        rows.forEach(function (row) {
+            var th = row.querySelector('th');
+            var td = row.querySelector('td');
+            if (th && td) {
+                lines.push(th.textContent.trim() + ': ' + td.textContent.trim());
+            }
+        });
+    } else {
+        var pre = container.querySelector('pre');
+        if (pre) {
+            lines.push(pre.textContent);
+        } else {
+            lines.push(container.textContent.trim());
+        }
+    }
+    lines.push('');
+    lines.push('---');
+    lines.push('Generated by Konektivitas.com — Memahami. Mengelola. Mengembangkan Internet.');
+    lines.push(new Date().toISOString());
+    var text = lines.join('\n');
+    var blob = new Blob([text], { type: 'text/plain' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = title.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 50) + '.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('📄 File berhasil didownload!');
 }

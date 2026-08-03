@@ -1,8 +1,10 @@
 {% extends "base.html" %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
 {% block title %}API Documentation - Konektivitas.com{% endblock %}
 {% block description %}Dokumentasi API Konektivitas.com: DNS lookup, WHOIS, SSL checker, IP lookup, dan 25+ endpoints
 gratis dengan rate limit 60 request/menit.{% endblock %}
 {% block content %}
+{{ render_breadcrumb("API", "API Docs", "/api-docs") }}
 <section class="hero">
     <h1>📡 API Konektivitas.com</h1>
     <p>Akses programatik ke semua tools internet kami. Gratis, cepat, dan mudah digunakan.</p>

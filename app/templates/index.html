@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Konektivitas.com - Infrastruktur Internet Gratis untuk Indonesia{% endblock %}
+{% block title %}Konektivitas.com — Memahami. Mengelola. Mengembangkan Internet.{% endblock %}
 {% block content %}
 <section class="hero">
     <h1>🌐 Konektivitas.com</h1>
-    <p>Infrastruktur Internet Gratis untuk Indonesia. Cek DNS, WHOIS, SSL, IP, dan banyak lagi — cepat, gratis, tanpa
+    <p>Platform infrastruktur internet Indonesia. Cek DNS, WHOIS, SSL, IP, dan 25+ tools lainnya — cepat, gratis, tanpa
         registrasi.</p>
     <div class="search-box">
         <input type="text" id="toolSearch" placeholder="🔍 Cari tools... (contoh: dns, ssl, ping)"
@@ -223,6 +223,33 @@
         });
         container.innerHTML = html;
         section.style.display = html ? '' : 'none';
+    })();
+
+    // Category filter via URL parameter (?category=dns, ?category=ssl, etc.)
+    (function () {
+        var params = new URLSearchParams(window.location.search);
+        var category = params.get('category');
+        if (!category) return;
+
+        // Hide all category sections, then show only the matching one
+        var sections = document.querySelectorAll('.section[data-category]');
+        sections.forEach(function (section) {
+            if (section.getAttribute('data-category') === category) {
+                section.style.display = '';
+            } else {
+                section.style.display = 'none';
+            }
+        });
+
+        // Hide "no results" and "recently used" sections when filtering
+        var noResults = document.getElementById('noResults');
+        var recentlyUsed = document.getElementById('recentlyUsedSection');
+        if (noResults) noResults.style.display = 'none';
+        if (recentlyUsed) recentlyUsed.style.display = 'none';
+
+        // Hide search box when filtering by category
+        var searchBox = document.querySelector('.search-box');
+        if (searchBox) searchBox.style.display = 'none';
     })();
 </script>
 {% endblock %}

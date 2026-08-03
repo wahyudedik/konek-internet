@@ -9,7 +9,7 @@ class Settings(BaseModel):
     # App
     APP_NAME: str = os.getenv("APP_NAME", "Konektivitas.com")
     APP_VERSION: str = os.getenv("APP_VERSION", "1.0.0")
-    APP_DESCRIPTION: str = "Infrastruktur Internet Gratis untuk Indonesia"
+    APP_DESCRIPTION: str = "Platform infrastruktur internet Indonesia yang membantu siapa pun memahami, mengelola, dan mengembangkan aset digital mereka."
     DEBUG: bool = os.getenv("DEBUG", "false").lower() == "true"
     
     # Server

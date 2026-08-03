@@ -82,7 +82,7 @@
                 <span class="result-status status-error">Gagal</span>
             </div>
             <div class="result-error">
-                <p>⚠️ Gagal mendeteksi IP: ${error.message}</p>
+                <p>⚠️ Gagal mendeteksi IP: ${escapeHtml(error.message)}</p>
             </div>`;
         }
     })();
