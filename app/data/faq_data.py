@@ -3,7 +3,7 @@
 FAQ_DATA = [
     {
         "question": "Apa itu Konektivitas.com?",
-        "answer": "Konektivitas.com adalah platform utilitas internet Indonesia yang menyediakan layanan dasar internet gratis, cepat, dan ringan. Kami menyediakan 24+ tools untuk cek DNS, WHOIS, SSL, IP address, dan banyak lagi."
+        "answer": "Konektivitas.com adalah platform utilitas internet Indonesia yang menyediakan layanan dasar internet gratis, cepat, dan ringan. Kami menyediakan 25+ tools untuk cek DNS, WHOIS, SSL, IP address, dan banyak lagi."
     },
     {
         "question": "Apakah semua tools gratis?",
@@ -11,7 +11,7 @@ FAQ_DATA = [
     },
     {
         "question": "Apa saja yang bisa dicek di Konektivitas.com?",
-        "answer": "Anda bisa mengecek DNS records (A, AAAA, MX, TXT, CNAME, NS), WHOIS domain, SSL certificate, HTTP status, IP address, port scanner, email validator, dan banyak lagi — total 24 tools dalam 5 kategori."
+        "answer": "Anda bisa mengecek DNS records (A, AAAA, MX, TXT, CNAME, NS), WHOIS domain, SSL certificate, HTTP status, IP address, port scanner, email validator, CDN detection, dan banyak lagi — total 25 tools dalam 5 kategori."
     },
     {
         "question": "Bagaimana cara menggunakan API Konektivitas.com?",

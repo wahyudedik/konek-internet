@@ -1,251 +1,217 @@
-Aku suka arah ini. Menurutku, jangan jadikan Konektivitas.com sebagai "website tools". Jadikan dia sebagai platform utilitas internet Indonesia.
+# Brief Proyek: Konektivitas.com
 
-Brief Proyek
-
-Nama: Konektivitas.com
-
-Tagline:
-
-> Infrastruktur Internet Gratis untuk Indonesia.
-
-
-
-Atau
-
-> Internet Tools & Infrastructure Made in Indonesia.
-
-
-
+> **"Konektivitas.com adalah platform yang menghubungkan manusia dengan infrastruktur internet—membantu siapa pun memahami, mengelola, dan menemukan peluang dari aset digital mereka dalam satu tempat."**
 
 ---
 
-Visi
+## Nama
 
-Menyediakan layanan dasar internet yang cepat, gratis, dan mudah digunakan oleh siapa saja, terutama developer, pelajar, administrator jaringan, UMKM, dan perusahaan.
+**Konektivitas.com**
 
-Bukan membuat media sosial, melainkan membangun fondasi internet.
+## Tagline
 
+**"Memahami. Mengelola. Mengembangkan Internet."**
 
----
+Atau alternatif:
 
-Misi
-
-Gratis digunakan.
-
-Cepat (<1 detik untuk sebagian besar tool).
-
-Ringan sehingga dapat berjalan pada server kecil.
-
-SEO-friendly agar trafik organik terus bertambah.
-
-Sebagian besar layanan berbasis teks/API sehingga hemat resource.
-
-
+> "Satu Platform untuk Semua Aset Internet Anda."
 
 ---
 
-Target Pengguna
+## Visi
 
-Developer
+**Menjadi platform infrastruktur internet terbesar di Indonesia yang membantu siapa pun memahami, mengelola, dan mengembangkan aset digital mereka.**
 
-Sysadmin
+Kami percaya bahwa internet tidak akan berhenti berkembang. Website, domain, email, server, DNS, dan layanan digital akan terus menjadi fondasi bisnis dan kehidupan digital.
 
-Network Engineer
-
-Mahasiswa
-
-Guru TKJ
-
-Perusahaan
-
-ISP kecil
-
-UMKM
-
-
+Karena itu, Konektivitas hadir untuk menjadi pusat kendali seluruh aset internet.
 
 ---
 
-Fase 1 (MVP)
+## Misi
 
-Fokus pada tool yang hampir tidak memakai storage.
-
-DNS
-
-DNS Lookup
-
-Reverse DNS
-
-DNS Propagation Checker
-
-MX Lookup
-
-TXT Lookup
-
-CNAME Lookup
-
-SPF Checker
-
-DMARC Checker
-
-
-Domain
-
-WHOIS Lookup
-
-Domain Expiry Checker
-
-
-SSL
-
-SSL Checker
-
-SSL Expiry Checker
-
-
-Website
-
-Ping
-
-HTTP Status Checker
-
-Redirect Checker
-
-Header Checker
-
-
-IP
-
-IP Lookup
-
-ASN Lookup
-
-GeoIP Indonesia
-
-Blacklist Checker
-
-
-Semua ini sangat ringan.
-
+1. **Membuat infrastruktur internet mudah dipahami.**
+2. **Membantu pengguna mengelola aset digital dari satu dashboard.**
+3. **Memberikan peringatan sebelum masalah terjadi.**
+4. **Menyediakan insight untuk menemukan peluang digital baru.**
+5. **Menjadi referensi edukasi internet berbahasa Indonesia.**
 
 ---
 
-Fase 2
+## Filosofi
 
-Mulai menyediakan layanan.
+Website hanyalah permukaan.
 
-Dynamic DNS
+Di balik sebuah website terdapat:
 
-DNS Hosting
+- Domain
+- DNS
+- Server
+- SSL
+- Email
+- IP
+- Routing
+- Infrastruktur
 
-Monitoring Website
+Sebagian besar orang hanya melihat hasil akhirnya.
 
-Monitoring SSL
+**Konektivitas membantu mereka memahami semua yang ada di baliknya.**
 
-Monitoring Domain Expired
+### Prinsip Pengembangan
 
+1. **Ringan** — Semua tool harus ringan dan cepat (< 1 detik)
+2. **Gratis** — Public tools gratis digunakan
+3. **Bermanfaat** — Berguna untuk banyak orang
+4. **Tahan Lama** — Masih relevan 10 tahun ke depan
 
+### Syarat Setiap Fitur
 
----
+Tambahkan fitur **hanya** jika memenuhi tiga syarat:
 
-Fase 3
-
-API untuk developer.
-
-Contohnya:
-
-GET /api/dns/google.com
-
-GET /api/ip/8.8.8.8
-
-GET /api/whois/google.com
-
-GET /api/ssl/google.com
-
-Free dengan limit.
-
-Premium tanpa limit.
-
+1. Ringan dijalankan (sesuai spesifikasi server)
+2. Berguna untuk banyak orang
+3. Masih relevan 10 tahun ke depan
 
 ---
 
-Monetisasi
+## Target Pengguna
 
-Gratis
+### 🌐 Public — Orang yang ingin belajar
 
-Semua tools
+- Pelajar
+- Mahasiswa
+- Freelancer
+- Developer pemula
+- Orang yang punya ide startup
 
-Ada iklan
+### 💼 Professional — Orang yang mengelola internet
 
+- Developer
+- DevOps
+- IT Support
+- SysAdmin
+- Agency
+- Startup
 
-Premium
+### 🏢 Business — Orang yang ingin mengembangkan bisnis
 
-API
-
-Monitoring
-
-Dynamic DNS
-
-DNS Hosting
-
-Tanpa iklan
-
-
-
----
-
-Arsitektur
-
-Internet
-      │
-Cloudflare
-      │
-Nginx
-      │
-Python (FastAPI)
-      │
-Redis
-      │
-SQLite/PostgreSQL
-
-Tidak perlu Kubernetes.
-
-Tidak perlu Docker di awal.
-
-Tidak perlu microservice.
-
+- UMKM
+- Perusahaan
+- Konsultan
+- Marketing
+- Investor
+- Business Owner
 
 ---
 
-Target Resource
+## Produk
 
-Servermu:
+### 1. Public Tools — Gratis
 
-4 Core
+Traffic dan edukasi.
 
-RAM 6 GB
+- Domain Checker
+- SSL Checker
+- DNS Checker
+- WHOIS
+- HTTP Header
+- Email Checker
+- IP Lookup
+- Edukasi Internet
+- CDN Detection
+- Port Scanner
+- Dan 15+ tools lainnya (25 tools saat ini)
 
-SSD 100 GB
+### 2. Workspace — Berbayar
 
+Dashboard semua aset internet. Produktivitas.
 
-Target:
+- Domain Management
+- SSL Monitoring
+- DNS Monitoring
+- Server Monitoring
+- Email Monitoring
+- Team Workspace
+- Notifikasi
+- Riwayat
+- Laporan
 
-100.000 visitor/bulan
+### 3. Business Intelligence — Enterprise
 
-10.000 API request/hari
+Insight berbasis data publik. Membantu pengambilan keputusan.
 
+Contoh:
 
-Masih sangat realistis jika aplikasinya efisien.
-
+> "Saya ingin membuka bisnis laundry di Surabaya."
+>
+> Konektivitas membantu menunjukkan:
+> - Berapa bisnis yang sudah punya website
+> - Berapa yang belum memiliki domain
+> - Berapa yang belum memakai SSL
+> - Teknologi apa yang umum dipakai
+> - Peluang digital yang masih terbuka
 
 ---
 
-Filosofi
+## Model Bisnis
 
-Aku punya satu filosofi yang menurutku cocok untuk proyek ini:
+### Gratis
+
+- Public tools
+- Edukasi
+- Checker
+
+### Premium
+
+- Workspace
+- Monitoring
+- Team
+- API
+- Notifikasi
+
+### Enterprise
+
+- Business Intelligence
+- Dashboard perusahaan
+- Integrasi
+- Analitik
+
+---
+
+## Nilai yang Dijual
+
+Bukan domain. Bukan hosting. Bukan server.
+
+Tetapi:
+
+- **Kejelasan**
+- **Ketenangan**
+- **Monitoring**
+- **Insight**
+- **Edukasi**
+- **Peluang**
+
+---
+
+## Pertanyaan Penuntun
+
+> **"Bagaimana Konektivitas menjadi tempat pertama yang dibuka seseorang ketika ingin memahami, mengelola, atau mengembangkan aset digitalnya?"**
+
+Setiap fitur yang ditambahkan harus menjawab pertanyaan sederhana:
+
+> **"Apakah fitur ini membantu pengguna memahami, mengelola, atau mengembangkan aset internetnya?"**
+
+Jika jawabannya "ya", maka fitur itu sejalan dengan arah besar Konektivitas.
+
+---
+
+## Referensi
+
+- [BRIEF2.md](BRIEF2.md) — Detail teknis dan arsitektur
+- [ROADMAP.md](ROADMAP.md) — Roadmap pengembangan 5 tahun
+- [FEATURES.md](FEATURES.md) — Daftar lengkap fitur per fase
+- [AGENT.md](AGENT.md) — Panduan untuk AI/agent
+
+---
 
 > "Kami tidak membuat aplikasi yang viral. Kami membangun utilitas yang akan tetap dibutuhkan selama internet masih ada."
-
-
-
-Kalau fondasi ini berhasil, nanti kamu bisa menambah layanan lain tanpa mengubah identitas Konektivitas.com. Orang akan mengenalnya sebagai "Cloudflare kecil dari Indonesia"—bukan karena meniru fiturnya, tetapi karena sama-sama menyediakan utilitas internet yang berguna dan ringan.

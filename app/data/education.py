@@ -1,5 +1,5 @@
 """
-Konten edukasi untuk semua 24 tool pages di Konektivitas.com.
+Konten edukasi untuk semua 25 tool pages di Konektivitas.com.
 Setiap tool memiliki section: apa itu, cara membaca, tips, dan tool terkait.
 """
 

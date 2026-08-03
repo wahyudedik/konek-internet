@@ -308,6 +308,7 @@ def _detect_cdn_from_headers(headers: Dict[str, str]) -> List[Dict[str, Any]]:
     return detected
 
 
+@cached(ttl=300)
 async def detect_cdn(domain: str) -> Dict[str, Any]:
     """Detect CDN provider for a domain using DNS CNAME + HTTP Headers"""
     results = {

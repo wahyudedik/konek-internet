@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}API Documentation - Konektivitas.com{% endblock %}
-{% block description %}Dokumentasi API Konektivitas.com: DNS lookup, WHOIS, SSL checker, IP lookup, dan 24+ endpoints
+{% block description %}Dokumentasi API Konektivitas.com: DNS lookup, WHOIS, SSL checker, IP lookup, dan 25+ endpoints
 gratis dengan rate limit 60 request/menit.{% endblock %}
 {% block content %}
 <section class="hero">
@@ -204,7 +204,7 @@ gratis dengan rate limit 60 request/menit.{% endblock %}
 
 <!-- Website Endpoints -->
 <section class="api-section">
-    <h2 class="api-category">🌐 Website Endpoints (5)</h2>
+    <h2 class="api-category">🌐 Website Endpoints (6)</h2>
     <div class="api-endpoint">
         <div class="api-endpoint-header">
             <span class="api-method get">GET</span>
@@ -257,6 +257,34 @@ gratis dengan rate limit 60 request/menit.{% endblock %}
             <code>/ua/{user_agent}</code>
         </div>
         <p>Parse dan analisis User-Agent string. Bisa juga GET <code>/ua</code> untuk auto-detect.</p>
+    </div>
+</section>
+
+<!-- CDN Endpoints -->
+<section class="api-section">
+    <h2 class="api-category">🌐 CDN Endpoints (1)</h2>
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method get">GET</span>
+            <code>/cdn/{domain}/detect</code>
+        </div>
+        <p>Deteksi apakah domain menggunakan CDN dan identifikasi providernya (Cloudflare, CloudFront, Akamai, Fastly,
+            dll).</p>
+        <details>
+            <summary>Contoh Request & Response</summary>
+            <div class="api-example">
+                <div class="api-example-label">Request:</div>
+                <code>GET /api/v1/cdn/google.com/detect</code>
+                <div class="api-example-label">Response:</div>
+                <pre>{
+    "domain": "google.com",
+    "is_cdn": true,
+    "providers": ["Google Cloud CDN"],
+    "cname_chain": ["ghs.google.com", "ghs.l.google.com"],
+    "headers": {"server": "gws"}
+}</pre>
+            </div>
+        </details>
     </div>
 </section>
 

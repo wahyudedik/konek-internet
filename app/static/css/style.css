@@ -1902,16 +1902,6 @@ a.breadcrumb-item:hover {
     border-left: 4px solid var(--accent-cyan);
 }
 
-@media (max-width: 768px) {
-    .about-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .stat-number {
-        font-size: 2rem;
-    }
-}
-
 /* ============ API DOCS PAGE ============ */
 .api-section {
     margin-bottom: 40px;

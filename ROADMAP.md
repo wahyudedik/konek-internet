@@ -1,276 +1,315 @@
-Aku suka cara berpikirmu. 😄
+# Roadmap Konektivitas.com (2026–2031)
 
-Kalau kita memang ingin bergerak cepat, kita buat target 5 tahun, tapi dengan catatan: fokus, bukan terburu-buru. Infrastruktur internet membutuhkan reputasi. Kalau terlalu banyak fitur tapi kualitasnya rendah, pengguna akan cepat pindah.
-
-Roadmap Konektivitas.com (2026–2031)
-
-🎯 Tahun 1 – Foundation
-
-Target: Menjadi website utilitas internet terbesar berbahasa Indonesia.
-
-Produk
-
-DNS Lookup
-
-WHOIS Lookup
-
-SSL Checker
-
-IP Lookup
-
-Reverse DNS
-
-HTTP Header Checker
-
-Ping Checker
-
-Domain Expiry Checker
-
-MX/SPF/DMARC Checker
-
-API gratis
-
-
-Target
-
-100.000 visitor/bulan
-
-2.000 user
-
-30 tool
-
-SEO mulai kuat
-
-
-Pendapatan
-
-Iklan
-
-Donasi
-
-Premium tanpa iklan
-
-
+> **"Bagaimana Konektivitas menjadi tempat pertama yang dibuka seseorang ketika ingin memahami, mengelola, atau mengembangkan aset digitalnya?"**
 
 ---
 
-🎯 Tahun 2 – Developer Platform
+## 🎯 Tahun 1 — Foundation (2026)
 
-Sekarang developer mulai memakai API kita.
+**Target:** Menjadi platform utilitas internet terbesar berbahasa Indonesia.
 
-Produk
+### Produk: Public Tools (Gratis)
 
-API Key
+**Status: ✅ SELESAI (25 tools)**
 
-API Dashboard
+- ✅ 25 Tools DNS, Domain, SSL, Website, IP
+- ✅ 25+ API Endpoints (RESTful, rate limit 60 req/min)
+- ✅ 25 Tool Pages dengan form interaktif
+- ✅ Redis + in-memory Cache
+- ✅ SEO: JSON-LD, robots.txt, sitemap.xml
+- ✅ Dark Mode, PWA, Tool History, URL State
+- ✅ Mobile Responsive, Keyboard Shortcuts
+- ✅ Section Edukasi interaktif di semua tool pages
+- ✅ CDN Detection (tool ke-25)
 
-Dynamic DNS
+### Target Metrics
 
-Uptime Monitoring
+| Metric | Target | Status |
+|--------|--------|--------|
+| Visitor/bulan | 100.000 | 🔄 |
+| Tools | 25 | ✅ |
+| API request/hari | 10.000 | 🔄 |
+| SEO ranking | Top 3 "dns checker indonesia" | 🔄 |
 
-SSL Monitoring
+### Pendapatan
 
-Domain Monitoring
-
-Telegram Notification
-
-Discord Notification
-
-Webhook
-
-
-Target
-
-500.000 visitor/bulan
-
-10.000 developer
-
-100 pelanggan premium
-
-
+- Iklan
+- Donasi
+- Premium tanpa iklan
 
 ---
 
-🎯 Tahun 3 – Infrastructure
+## 🎯 Tahun 2 — Developer Platform & Workspace MVP (2027)
 
-Mulai menyediakan layanan internet.
+**Target:** Developer mulai memakai API. Workspace MVP launching.
 
-Produk
+### Produk: Public Tools + Workspace (Berbayar)
 
-DNS Hosting
+#### Public Tools (lanjutan)
+- 5 tools tambahan (total 30)
+- Improved SEO & content
+- Multi-language support (ID/EN)
 
-DNS Anycast (bertahap)
+#### Workspace MVP
+- **User Authentication** — Login, register, email verification
+- **Domain Management** — Tambah & monitor domain
+- **SSL Monitoring** — Alert saat SSL expiry < 30 hari
+- **DNS Monitoring** — Deteksi perubahan DNS record
+- **Uptime Monitoring** — Cek uptime setiap 5 menit
+- **Notification Settings** — Email, Telegram, Discord
+- **Dashboard** — Overview semua aset internet
 
-Status Page
+#### API Platform
+- **API Key System** — Daftar & kelola API key
+- **API Dashboard** — Usage stats, rate limit info
+- **Dynamic DNS** — Update DNS record via API
 
-Team Dashboard
+### Target Metrics
 
-Shared Monitoring
+| Metric | Target |
+|--------|--------|
+| Visitor/bulan | 500.000 |
+| Registered users | 10.000 |
+| Developer API key | 1.000 |
+| Premium subscribers | 100 |
+| Domain monitored | 5.000 |
 
+### Pendapatan
 
-Target
-
-1 juta visitor/bulan
-
-1.000 domain menggunakan DNS kita
-
-API stabil
-
-
-
----
-
-🎯 Tahun 4 – Cloud Platform
-
-Masuk ke layanan cloud ringan.
-
-Produk
-
-GeoIP Indonesia
-
-ASN Database
-
-IP Reputation
-
-CDN Analytics
-
-Log Analytics
-
-Network API
-
-
-Enterprise
-
-SLA
-
-Multi User
-
-Audit Log
-
-
+- Iklan
+- Premium (Rp 49.000/bulan)
+- API access
 
 ---
 
-🎯 Tahun 5 – Internet Platform
+## 🎯 Tahun 3 — Infrastructure & Mobile (2028)
 
-Sekarang bukan lagi website.
+**Target:** Mulai menyediakan layanan internet fundamental.
 
-Sudah menjadi platform.
+### Produk: Public Tools + Workspace + Infrastructure
 
-Produk
+#### Public Tools (lanjutan)
+- Total 40+ tools
+- Tool comparison & batch lookup
+- Advanced analytics per tool
 
-Semua layanan sebelumnya ditambah:
+#### Workspace (enhanced)
+- **Team Workspace** — Kolaborasi tim
+- **Shared Monitoring** — Monitor bareng
+- **Laporan PDF** — Export laporan bulanan
+- **Custom Alerts** — Threshold kustom
+- **DNS Hosting** — Kelola DNS dari dashboard
 
-Public DNS
+#### Infrastructure
+- **DNS Hosting** — Hosting DNS gratis & premium
+- **DNS Anycast (bertahap)** — Resolusi DNS cepat global
+- **Status Page** — Status page publik untuk website
+- **SSL Certificate Management** — Auto-renewal integration
 
-Internet Intelligence
+#### Mobile App
+- **Mobile App (Android)** — Dashboard di genggaman
+- **Push Notifications** — Alert langsung ke HP
+- **Quick Check** — Tools tanpa login
 
-Developer Marketplace
+### Target Metrics
 
-Plugin
+| Metric | Target |
+|--------|--------|
+| Visitor/bulan | 1.000.000 |
+| Registered users | 50.000 |
+| Developer API key | 5.000 |
+| Premium subscribers | 1.000 |
+| Domain di DNS hosting | 1.000 |
+| Mobile app installs | 10.000 |
 
-Mobile App
+### Pendapatan
 
-Enterprise API
-
-
-
----
-
-Target Akhir Tahun ke-5
-
-Produk:
-
-✅ 100+ Tools
-
-Pengguna:
-
-5 juta visitor/bulan
-
-
-Developer:
-
-100.000 akun
-
-
-Enterprise:
-
-500 perusahaan
-
-
-API:
-
-10 juta request/hari
-
-
-Pendapatan:
-
-Iklan
-
-Premium
-
-API
-
-Enterprise
-
-DNS Hosting
-
-Monitoring
-
-
+- Iklan
+- Premium (Rp 49.000-99.000/bulan)
+- API access
+- DNS hosting
 
 ---
 
-Teknologi
+## 🎯 Tahun 4 — Business Intelligence (2029)
 
-2026
+**Target:** Masuk ke layanan cloud ringan & data intelligence.
 
-AAPanel
-Nginx
-FastAPI
-Redis
-SQLite
+### Produk: Public Tools + Workspace + BI
 
-2027
+#### Public Tools (lanjutan)
+- Total 50+ tools
+- API v3 dengan fitur baru
+- White-label widget
 
-PostgreSQL
+#### Workspace (enterprise)
+- **Multi User** — Tim besar
+- **Audit Log** — Jejak aktivitas
+- **SLA** — Jaminan uptime
+- **SSO Integration** — Login perusahaan
+- **Custom Branding** — Dashboard custom
 
-2028
+#### Business Intelligence
+- **GeoIP Indonesia Database** — Data geografis IP Indonesia
+- **ASN Database** — Database ASN lengkap
+- **IP Reputation** — Reputasi IP berbasis data
+- **Market Analysis** — Analisis pasar digital per wilayah
+  - Berapa bisnis yang sudah punya website
+  - Berapa yang belum memiliki domain
+  - Berapa yang belum memakai SSL
+  - Teknologi yang umum dipakai
+  - Peluang digital yang masih terbuka
+- **CDN Analytics** — Analisis penggunaan CDN
+- **Network Intelligence** — Insight jaringan
+- **Custom Reports** — Laporan kustom untuk enterprise
 
-Server kedua
+### Target Metrics
 
-2029
+| Metric | Target |
+|--------|--------|
+| Visitor/bulan | 3.000.000 |
+| Registered users | 100.000 |
+| Developer API key | 20.000 |
+| Premium subscribers | 5.000 |
+| Enterprise clients | 50 |
+| API request/hari | 1.000.000 |
 
-Load Balancer
+### Pendapatan
 
-2030
-
-Anycast
-Multi Region
-
+- Iklan
+- Premium (Rp 49.000-99.000/bulan)
+- Enterprise (Rp 500.000-5.000.000/bulan)
+- API access
+- DNS hosting
+- BI reports
 
 ---
 
-Filosofi Perusahaan
+## 🎯 Tahun 5 — Internet Platform (2030-2031)
 
-Aku ingin kita selalu ingat satu kalimat ini:
+**Target:** Menjadi **pusat data infrastruktur internet Indonesia**.
+
+### Produk: Full Platform
+
+#### Public DNS
+- **Public DNS Service** — DNS 1.1.1.1-style untuk Indonesia
+  - `dns.konektivitas.com` — DNS resolver publik
+  - Cepat, aman, privat
+  - DNS-over-HTTPS & DNS-over-TLS
+
+#### Internet Intelligence
+- **Internet Health Dashboard** — Kondisi internet Indonesia real-time
+- **BGP Monitoring** — Monitoring routing internet
+- **IXP Data** — Data Internet Exchange Point
+- **Latency Map** — Peta latensi antar kota
+- **Bandwidth Analytics** — Analisis bandwidth nasional
+
+#### Platform
+- **Developer Marketplace** — Jual/beli tools & integrasi
+- **Plugin System** — Extend Konektivitas
+- **Enterprise API v3** — Custom solutions
+- **Multi Region** — Server di beberapa wilayah
+- **Load Balancer** — High availability
+
+#### Mobile App (enhanced)
+- **iOS App** — iPhone & iPad
+- **Offline Mode** — Tools tanpa internet
+- **Widget** — Quick check dari home screen
+
+### Target Metrics
+
+| Metric | Target |
+|--------|--------|
+| Visitor/bulan | 5.000.000 |
+| Registered users | 500.000 |
+| Developer API key | 100.000 |
+| Premium subscribers | 20.000 |
+| Enterprise clients | 500 |
+| Public DNS users | 1.000.000 |
+| API request/hari | 10.000.000 |
+
+### Pendapatan
+
+- Iklan
+- Premium
+- Enterprise
+- API access
+- DNS hosting
+- BI reports
+- Marketplace commissions
+- Public DNS sponsorships
+
+---
+
+## Evolusi Teknologi
+
+| Tahun | Server | Database | Cache | DNS | Infrastruktur |
+|-------|--------|----------|-------|-----|---------------|
+| 2026 | 1 (4C/6GB) | SQLite → PG | Redis | External | AAPanel + Nginx |
+| 2027 | 1 (upgrade) | PostgreSQL | Redis | External | + Auth system |
+| 2028 | 2 servers | PostgreSQL | Redis | DNS Hosting | + Mobile app |
+| 2029 | LB + 2 servers | PG Primary+Replica | Redis Cluster | DNS Anycast | + BI engine |
+| 2030-31 | Multi Region | PG Multi Region | Redis Cluster | Public DNS | Full platform |
+
+---
+
+## Target Akhir Tahun ke-5 (2031)
+
+### Produk
+
+✅ 100+ Public Tools
+✅ Workspace (Domain, SSL, DNS, Server, Email Monitoring)
+✅ Business Intelligence
+✅ Public DNS
+✅ Mobile App (Android + iOS)
+✅ Enterprise API
+✅ Developer Marketplace
+
+### Pengguna
+
+| Segment | Target |
+|---------|--------|
+| Visitor/bulan | 5.000.000 |
+| Registered users | 500.000 |
+| Developer API key | 100.000 |
+| Premium subscribers | 20.000 |
+| Enterprise clients | 500 |
+| Public DNS users | 1.000.000 |
+
+### Pendapatan
+
+| Sumber | Status |
+|--------|--------|
+| Iklan | ✅ |
+| Premium | ✅ |
+| Enterprise | ✅ |
+| API | ✅ |
+| DNS Hosting | ✅ |
+| Monitoring | ✅ |
+| BI Reports | ✅ |
+| Marketplace | ✅ |
+
+---
+
+## Filosofi Pengembangan
 
 > "Kami tidak menjual server. Kami menyediakan layanan internet yang akan tetap dibutuhkan selama internet ada."
 
+### Aturan Fitur
 
+Tambahkan fitur **hanya** jika memenuhi tiga syarat:
 
-Kalau kita disiplin mengikuti roadmap ini, aku yakin Konektivitas tidak akan menjadi sekadar kumpulan "internet tools". Ia bisa berkembang menjadi platform infrastruktur internet asli Indonesia.
+1. **Ringan** dijalankan (sesuai spesifikasi server)
+2. **Berguna** untuk banyak orang
+3. **Masih relevan** 10 tahun ke depan
 
-Dan satu hal lagi yang menurutku penting: jangan membuat fitur hanya karena sedang tren. Tambahkan fitur hanya jika memenuhi tiga syarat:
+> Kalau setiap fitur lolos tiga syarat itu, produk akan tumbuh lebih lambat, tetapi fondasinya akan jauh lebih kuat.
 
-1. Ringan dijalankan (sesuai spesifikasi server awalmu).
+---
 
+## Referensi
 
-2. Berguna untuk banyak orang.
-
-
-3. Masih relevan 10 tahun ke depan.
-
-
-
-Kalau setiap fitur lolos tiga syarat itu, produk akan tumbuh lebih lambat, tetapi fondasinya akan jauh lebih kuat.
+- [BRIEF.md](BRIEF.md) — Visi, misi, dan filosofi
+- [BRIEF2.md](BRIEF2.md) — Detail teknis dan arsitektur
+- [FEATURES.md](FEATURES.md) — Daftar lengkap fitur per fase
+- [AGENT.md](AGENT.md) — Panduan untuk AI/agent

@@ -4,9 +4,80 @@
 
 ## Overview
 
-**Konektivitas.com** adalah platform utilitas internet Indonesia yang menyediakan layanan dasar internet gratis, cepat, dan ringan. Bukan website tools, tetapi fondasi internet.
+**Konektivitas.com** adalah **platform infrastruktur internet** Indonesia yang membantu siapa pun memahami, mengelola, dan mengembangkan aset digital mereka. Bukan sekadar kumpulan checker tools, tetapi pusat kendali seluruh aset internet.
 
-**Tagline:** Infrastruktur Internet Gratis untuk Indonesia
+> **"Konektivitas.com adalah platform yang menghubungkan manusia dengan infrastruktur internet—membantu siapa pun memahami, mengelola, dan menemukan peluang dari aset digital mereka dalam satu tempat."**
+
+**Tagline:** "Memahami. Mengelola. Mengembangkan Internet."
+
+## Visi
+
+**Menjadi platform infrastruktur internet terbesar di Indonesia yang membantu siapa pun memahami, mengelola, dan mengembangkan aset digital mereka.**
+
+### Misi
+
+1. Membuat infrastruktur internet mudah dipahami.
+2. Membantu pengguna mengelola aset digital dari satu dashboard.
+3. Memberikan peringatan sebelum masalah terjadi.
+4. Menyediakan insight untuk menemukan peluang digital baru.
+5. Menjadi referensi edukasi internet berbahasa Indonesia.
+
+### Filosofi
+
+Website hanyalah permukaan. Di balik website terdapat: Domain, DNS, Server, SSL, Email, IP, Routing, Infrastruktur. Konektivitas membantu mereka memahami semua yang ada di baliknya.
+
+### Pertanyaan Penuntun
+
+> **"Apakah fitur ini membantu pengguna memahami, mengelola, atau mengembangkan aset internetnya?"**
+
+Jika jawabannya "ya", maka fitur itu sejalan dengan arah besar Konektivitas.
+
+---
+
+## 3 Produk Utama
+
+### 1. Public Tools (Gratis)
+
+**Tujuan:** Traffic dan edukasi.
+
+- 25+ tools DNS, Domain, SSL, Website, IP (saat ini)
+- Target: 100+ tools (2031)
+- API gratis dengan rate limit
+- Edukasi internet berbahasa Indonesia
+
+### 2. Workspace (Berbayar)
+
+**Tujuan:** Dashboard semua aset internet. Produktivitas.
+
+- Domain Management
+- SSL, DNS, Server, Email Monitoring
+- Team Workspace
+- Notifikasi (Email, Telegram, Discord)
+- Riwayat & Laporan
+
+### 3. Business Intelligence (Enterprise)
+
+**Tujuan:** Insight berbasis data publik. Pengambilan keputusan.
+
+- Market Analysis (digital landscape per wilayah)
+- Technology Detection trends
+- Opportunity Finder
+- Custom Reports
+
+---
+
+## Target Pengguna
+
+### 🌐 Public — Orang yang ingin belajar
+Pelajar, Mahasiswa, Freelancer, Developer pemula, Ide startup
+
+### 💼 Professional — Orang yang mengelola internet
+Developer, DevOps, IT Support, SysAdmin, Agency, Startup
+
+### 🏢 Business — Orang yang ingin mengembangkan bisnis
+UMKM, Perusahaan, Konsultan, Marketing, Investor, Business Owner
+
+---
 
 ## Struktur Proyek
 
@@ -49,24 +120,26 @@ konek-internet/
     │   ├── base.html     # Base layout (navbar, footer, JSON-LD)
     │   ├── index.html    # Homepage (25 tools grid)
     │   ├── 404.html      # Custom 404 page
-    │   ├── about.html          # NEW - About page
-    │   ├── api_docs.html       # NEW - API Documentation page
+    │   ├── about.html    # About page
+    │   ├── api_docs.html # API Documentation page
     │   ├── partials/     # Template partials
     │   │   ├── education.html  # Macro edukasi untuk tool pages
-    │   │   └── breadcrumb.html # NEW - Breadcrumb navigation
+    │   │   └── breadcrumb.html # Breadcrumb navigation
     │   └── tools/        # 25 tool pages (dengan section edukasi)
     ├── data/             # Data modules
     │   ├── education.py  # Konten edukasi 25 tools
-    │   └── faq_data.py   # NEW - FAQ JSON-LD (8 entries)
+    │   └── faq_data.py   # FAQ JSON-LD (8 entries)
     └── static/           # Static files
         ├── favicon.svg   # SVG favicon
         ├── robots.txt    # SEO robots
         ├── sitemap.xml   # SEO sitemap
-        ├── manifest.json # NEW - PWA manifest
-        ├── sw.js         # NEW - Service Worker
+        ├── manifest.json # PWA manifest
+        ├── sw.js         # Service Worker
         ├── css/style.css # Responsive CSS (65+ variables, dark mode)
         └── js/app.js     # Frontend JavaScript (URL state, keyboard shortcuts)
 ```
+
+---
 
 ## Arsitektur Teknis
 
@@ -87,13 +160,21 @@ Internet → Cloudflare → AAPanel → Nginx → FastAPI → Redis → Database
 - RAM 6 GB
 - SSD 100 GB
 
+---
+
 ## Filosofi Pengembangan
 
 ### Prinsip Utama
-1. **Ringan** - Semua tool harus ringan dan cepat (< 1 detik)
-2. **Gratis** - Semua tools gratis digunakan
-3. **Bermanfaat** - Berguna untuk banyak orang
-4. **Tahan Lama** - Masih relevan 10 tahun ke depan
+1. **Ringan** — Semua tool harus ringan dan cepat (< 1 detik)
+2. **Gratis** — Public tools gratis digunakan
+3. **Bermanfaat** — Berguna untuk banyak orang
+4. **Tahan Lama** — Masih relevan 10 tahun ke depan
+
+### Syarat Setiap Fitur
+Tambahkan fitur **hanya** jika memenuhi tiga syarat:
+1. Ringan dijalankan (sesuai spesifikasi server)
+2. Berguna untuk banyak orang
+3. Masih relevan 10 tahun ke depan
 
 ### Yang TIDAK Perlu
 - Docker (di awal)
@@ -102,44 +183,57 @@ Internet → Cloudflare → AAPanel → Nginx → FastAPI → Redis → Database
 - Elasticsearch
 - RabbitMQ
 
+---
+
 ## Status Implementasi
 
-### Fase 1 - MVP (2026) ✅ SELESAI
+### Fase 1 — Public Tools MVP (2026) ✅ SELESAI
+
+#### Public Tools
 - 25 API endpoints aktif (+ 2 UA endpoints + CDN detect)
 - 25 halaman frontend + About page + API Docs page
 - 9 service files (dns, whois, ssl, ip, website, ua, email, port, cdn)
 - 6 router files (dns, domain, ssl, website, ip, cdn)
+
+#### Core Infrastructure
 - Redis caching + in-memory fallback
 - Rate limiting (60 req/min per IP)
 - Security headers middleware
-- SEO: JSON-LD (FAQPage + BreadcrumbList), robots.txt, sitemap.xml, canonical URL
-- Health check endpoint
-- Response time display (X-Process-Time header)
+- Input validation di semua endpoints (validate_domain, validate_ip, validate_url, validate_host)
+- Async non-blocking di semua services (asyncio.to_thread)
+
+#### SEO
+- JSON-LD (FAQPage + BreadcrumbList)
+- robots.txt, sitemap.xml, canonical URL
+- FAQ rich snippets
+
+#### User Experience
+- Dark Mode Toggle (65+ CSS variables, localStorage, system preference)
+- Mobile responsive: hamburger nav, dropdown, stacked forms, card layout
+- Tool History localStorage (10 query terakhir per tool)
+- URL Query State (shareable URLs)
+- Keyboard Shortcuts (Ctrl+K search, Escape close)
+- PWA Support (manifest.json + service worker)
 - Section edukasi interaktif di semua 25 tool pages
-- Navigation dropdown 5 kategori (DNS, Domain, SSL, Website, IP) — 25 tools
+- Navigation dropdown 5 kategori (DNS, Domain, SSL, Website, IP)
 - Footer grid dengan semua 25 tools terorganisir + About + API Docs
 - Search/filter tools di homepage
 - Back-to-top button
-- Mobile responsive: hamburger nav, dropdown, stacked forms, card layout
 - 404 page dengan tool suggestions
-- Input validation di semua endpoints (validate_domain, validate_ip, validate_url, validate_host)
-- Async non-blocking di semua services (asyncio.to_thread)
-- XSS protection di copyJSON function (JavaScript Map)
-- HTTP fallback (HTTPS → HTTP) di website service
-- Tool History localStorage (10 query terakhir per tool)
-- URL Query State (shareable URLs)
-- Dark Mode Toggle (65+ CSS variables, localStorage, system preference)
-- Keyboard Shortcuts (Ctrl+K search, Escape close)
-- PWA Support (manifest.json + service worker)
+
+#### Advanced Features
 - WHOIS extra fields (registrant, admin/tech contact, updated_date)
 - SSL chain info (SANs, signature algorithm, chain depth)
 - HTTP version detection (HTTP/1.0, 1.1, 2, 3)
-- Breadcrumb links ke category
-- FAQ JSON-LD Schema (8 FAQ entries)
 - CDN Detection (CNAME + Header analysis) — tool ke-25
-- XSS protection di history items (event delegation)
-- HTTP client reuse di redirect checker
 - Email validator: free email provider detection
+- HTTP fallback (HTTPS → HTTP) di website service
+- HTTP client reuse di redirect checker
+- XSS protection di copyJSON function (JavaScript Map)
+- XSS protection di history items (event delegation)
+- Breadcrumb links ke category
+- Health check endpoint
+- Response time display (X-Process-Time header)
 
 ### Cara Menjalankan
 ```bash
@@ -157,6 +251,8 @@ e:\PROJEKU\konek-internet\.venv\Scripts\python.exe -m uvicorn app.main:app --rel
 # About: http://localhost:8002/about
 # API Docs: http://localhost:8002/api-docs
 ```
+
+---
 
 ## Konvensi Penamaan
 
@@ -219,43 +315,61 @@ X-Process-Time: {ms}
 Strict-Transport-Security: max-age=31536000 (HTTPS only)
 ```
 
-## Fase Pengembangan
+---
 
-### Fase 1 - MVP (2026) ✅ SELESAI
-- 25 tools DNS, Domain, SSL, Website, IP (+CDN Detection)
-- Target: 100.000 visitor/bulan
+## Roadmap (Ringkasan)
+
+### Fase 1 — Foundation (2026) ✅ SELESAI
+- 25 Public Tools (DNS, Domain, SSL, Website, IP)
 - API gratis dengan rate limit
+- Target: 100.000 visitor/bulan
 
-### Fase 2 - Developer Platform (2027)
-- Monitoring services
-- API Key & Dashboard
+### Fase 2 — Developer Platform & Workspace MVP (2027)
+- 5 tools tambahan (total 30)
+- User Authentication & Workspace
+- Domain, SSL, DNS, Uptime Monitoring
+- API Key System & Dashboard
 - Dynamic DNS
-- DNS Hosting
+- Target: 500.000 visitor/bulan, 100 premium subscribers
 
-### Fase 3 - Infrastructure (2028)
-- DNS Anycast
+### Fase 3 — Infrastructure & Mobile (2028)
+- Total 40+ tools
+- Team Workspace & Shared Monitoring
+- DNS Hosting & DNS Anycast (bertahap)
 - Status Page
-- Team Dashboard
+- Mobile App (Android)
+- Target: 1 juta visitor/bulan, 1.000 premium subscribers
 
-### Fase 4 - Cloud Platform (2029)
-- GeoIP Database
-- ASN Database
-- Enterprise features
+### Fase 4 — Business Intelligence (2029)
+- Total 50+ tools
+- Enterprise features (SSO, Audit Log, SLA)
+- BI: Market Analysis, Technology Detection, Opportunity Finder
+- GeoIP & ASN Database
+- Load Balancer
+- Target: 3 juta visitor/bulan, 50 enterprise clients
 
-### Fase 5 - Internet Platform (2030-2031)
-- Public DNS
-- Internet Intelligence
-- Mobile App
-- Enterprise API
+### Fase 5 — Internet Platform (2030-2031)
+- 100+ tools
+- Public DNS (dns.konektivitas.com)
+- Internet Intelligence (BGP, IXP, Latency Map)
+- Developer Marketplace
+- Mobile App (Android + iOS)
+- Multi Region
+- Target: 5 juta visitor/bulan, 500 enterprise, 10 juta API request/hari
+
+Detail lengkap di [ROADMAP.md](ROADMAP.md).
+
+---
 
 ## Panduan untuk AI/Agent
 
 ### Saat Mengerjakan Fitur
-1. Baca FEATURES.md untuk memahami konteks fitur
-2. Pastikan fitur memenuhi 3 syarat: ringan, bermanfaat, tahan lama
-3. Ikuti konvensi penamaan yang sudah ada
-4. Pastikan response time < 1 detik
-5. Test dengan data sampel sebelum commit
+1. Baca [FEATURES.md](FEATURES.md) untuk memahami konteks fitur
+2. Pastikan fitur memenuhi 3 syarat: **ringan**, **bermanfaat**, **tahan lama**
+3. Tanyakan: "Apakah fitur ini membantu pengguna **memahami**, **mengelola**, atau **mengembangkan** aset internetnya?"
+4. Ikuti konvensi penamaan yang sudah ada
+5. Pastikan response time < 1 detik
+6. Test dengan data sampel sebelum commit
 
 ### Struktur Code yang Diharapkan
 ```
@@ -350,39 +464,102 @@ app/
 - [x] XSS protection in history items
 - [x] Email validator: free email detection
 
+---
+
 ## Target Metrics
 
-### Year 1 (2026)
-- 100.000 visitor/bulan
-- 2.000 user
-- 30 tools
-- 10.000 API request/hari
+### Year 1 (2026) — Foundation ✅ SELESAI
 
-### Year 5 (2031)
-- 5 juta visitor/bulan
-- 100.000 developer
-- 500 enterprise
-- 10 juta API request/hari
+| Metric | Target | Status |
+|--------|--------|--------|
+| Visitor/bulan | 100.000 | 🔄 |
+| Tools | 25 | ✅ |
+| API request/hari | 10.000 | 🔄 |
+
+### Year 2 (2027) — Developer Platform & Workspace
+
+| Metric | Target |
+|--------|--------|
+| Visitor/bulan | 500.000 |
+| Registered users | 10.000 |
+| Premium subscribers | 100 |
+| Domain monitored | 5.000 |
+
+### Year 3 (2028) — Infrastructure & Mobile
+
+| Metric | Target |
+|--------|--------|
+| Visitor/bulan | 1.000.000 |
+| Registered users | 50.000 |
+| Premium subscribers | 1.000 |
+| Mobile app installs | 10.000 |
+
+### Year 4 (2029) — Business Intelligence
+
+| Metric | Target |
+|--------|--------|
+| Visitor/bulan | 3.000.000 |
+| Registered users | 100.000 |
+| Enterprise clients | 50 |
+| API request/hari | 1.000.000 |
+
+### Year 5 (2030-2031) — Internet Platform
+
+| Metric | Target |
+|--------|--------|
+| Visitor/bulan | 5.000.000 |
+| Registered users | 500.000 |
+| Premium subscribers | 20.000 |
+| Enterprise clients | 500 |
+| Public DNS users | 1.000.000 |
+| API request/hari | 10.000.000 |
+
+---
 
 ## Monetisasi
 
 ### Gratis
-- Semua tools
-- Ada iklan
+- Public tools (25+ → 100+ tools)
+- Edukasi internet
+- API dengan rate limit
 
-### Premium
-- API access
-- Monitoring services
-- Dynamic DNS
+### Premium (Rp 49.000-99.000/bulan)
+- Workspace (Domain, SSL, DNS, Server, Email Monitoring)
+- Team Workspace
+- Notification (Email, Telegram, Discord)
+- Laporan & Export
 - DNS Hosting
 - Tanpa iklan
 
+### Enterprise (Rp 500.000-5.000.000/bulan)
+- Business Intelligence
+- Dashboard perusahaan
+- Integrasi & Analitik
+- SSO, Audit Log, SLA
+- Custom Reports
+- Priority Support
+
+---
+
+## Nilai yang Dijual
+
+Bukan domain. Bukan hosting. Bukan server.
+
+Tetapi:
+- **Kejelasan** — Memahami infrastruktur internet
+- **Ketenangan** — Monitoring & peringatan dini
+- **Insight** — Data untuk pengambilan keputusan
+- **Edukasi** — Belajar internet dalam bahasa Indonesia
+- **Peluang** — Menemukan peluang digital baru
+
+---
+
 ## Referensi Penting
 
-- [BRIEF.md](BRIEF.md) - Visi, misi, dan target proyek
-- [BRIEF2.md](BRIEF2.md) - Detail teknis dan arsitektur
-- [ROADMAP.md](ROADMAP.md) - Roadmap pengembangan 5 tahun
-- [FEATURES.md](FEATURES.md) - Daftar lengkap fitur per fase
+- [BRIEF.md](BRIEF.md) — Visi, misi, dan filosofi
+- [BRIEF2.md](BRIEF2.md) — Detail teknis dan arsitektur
+- [ROADMAP.md](ROADMAP.md) — Roadmap pengembangan 5 tahun
+- [FEATURES.md](FEATURES.md) — Daftar lengkap fitur per fase
 
 ---
 
