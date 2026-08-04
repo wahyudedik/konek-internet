@@ -302,6 +302,20 @@ TOOL_META = {
         "category": "Website",
         "icon": "🌐",
     },
+    "batch_lookup": {
+        "title": "Batch Lookup - Cek Multiple Domain",
+        "description": "Cek multiple domain sekaligus: DNS, SSL, atau WHOIS dalam satu tabel ringkas",
+        "keywords": "batch lookup, multiple domain check, bulk dns, bulk ssl, bulk whois, cek banyak domain",
+        "category": "Domain",
+        "icon": "📋",
+    },
+    "compare": {
+        "title": "Tool Comparison - Bandingkan Dua Domain",
+        "description": "Bandingkan dua domain secara berdampingan: DNS, SSL, atau WHOIS untuk melihat perbedaan",
+        "keywords": "compare domain, comparison tool, bandingkan domain, side by side, domain comparison",
+        "category": "Domain",
+        "icon": "⚔️",
+    },
 }
 
 

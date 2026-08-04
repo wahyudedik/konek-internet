@@ -1,12 +1,12 @@
 # Fitur Konektivitas.com
 
-> Daftar lengkap fitur per fase implementasi, terstruktur berdasarkan 3 produk utama.
+> Daftar lengkap fitur per fase implementasi, terstruktur berdasarkan 3 pilar produk: **Learn**, **Manage**, **Discover**.
 
 ---
 
-## Produk 1: Public Tools (Gratis)
+## Pilar 1: Learn — Memahami Internet
 
-> **Tujuan:** Traffic dan edukasi. Tools gratis untuk siapa saja.
+> **Implementasi:** Public Tools (gratis). Tujuan: edukasi, traffic, dan SEO.
 
 ### Fase 1 — MVP (2026) ✅ SELESAI
 
@@ -157,9 +157,9 @@
 
 ---
 
-## Produk 2: Workspace (Berbayar)
+## Pilar 2: Manage — Mengelola Aset Internet
 
-> **Tujuan:** Dashboard semua aset internet. Produktivitas.
+> **Implementasi:** Workspace (Pro & Team). Tujuan: monitoring, kolaborasi, dan produktivitas.
 
 ### Fase 2 — Workspace MVP (2027)
 
@@ -274,9 +274,9 @@
 
 ---
 
-## Produk 3: Business Intelligence (Enterprise)
+## Pilar 3: Discover — Menemukan Peluang
 
-> **Tujuan:** Insight berbasis data publik. Membantu pengambilan keputusan.
+> **Implementasi:** Business Intelligence (Enterprise). Tujuan: insight berbasis data publik dan pengambilan keputusan.
 
 ### Fase 4 — BI MVP (2029)
 

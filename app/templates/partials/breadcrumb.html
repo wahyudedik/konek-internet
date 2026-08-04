@@ -14,4 +14,7 @@
     <span class="breadcrumb-item breadcrumb-current">{{ tool_name }}</span>
     {% endif %}
 </nav>
+{% if category and category_url %}
+<a href="{{ category_url }}" class="back-to-category">← Kembali ke {{ category }}</a>
+{% endif %}
 {% endmacro %}

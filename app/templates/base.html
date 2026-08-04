@@ -70,6 +70,13 @@
 </head>
 
 <body>
+    <noscript>
+        <div
+            style="background:#fff3cd;color:#856404;padding:12px 20px;text-align:center;border-bottom:1px solid #ffc107;">
+            ⚠️ JavaScript tidak aktif. Beberapa fitur mungkin tidak berfungsi. Aktifkan JavaScript untuk pengalaman
+            terbaik.
+        </div>
+    </noscript>
     <header class="header" role="banner">
         <div class="container">
             <a href="/" class="logo" aria-label="Konektivitas.com - Beranda">
@@ -100,6 +107,8 @@
                     <div class="nav-dropdown-menu">
                         <a href="/whois-lookup">WHOIS Lookup</a>
                         <a href="/domain-expiry">Domain Expiry</a>
+                        <a href="/batch-lookup">Batch Lookup</a>
+                        <a href="/compare">Tool Comparison</a>
                     </div>
                 </div>
                 <div class="nav-dropdown">
@@ -139,9 +148,10 @@
                 </div>
             </nav>
             <div class="header-actions">
-                <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()"
-                    title="Toggle dark mode">🌙</button>
-                <button class="menu-toggle" id="menuToggle" onclick="toggleMobileNav()">☰</button>
+                <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle dark mode"
+                    aria-label="Toggle dark mode">🌙</button>
+                <button class="menu-toggle" id="menuToggle" onclick="toggleMobileNav()"
+                    aria-label="Toggle menu navigasi" aria-expanded="false">☰</button>
             </div>
         </div>
     </header>
@@ -171,6 +181,8 @@
                     <h4>🌍 Domain Tools</h4>
                     <a href="/whois-lookup">WHOIS Lookup</a>
                     <a href="/domain-expiry">Domain Expiry</a>
+                    <a href="/batch-lookup">Batch Lookup</a>
+                    <a href="/compare">Tool Comparison</a>
                 </div>
                 <div class="footer-section">
                     <h4>🔒 SSL Tools</h4>
@@ -218,9 +230,26 @@
     <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
         aria-label="Kembali ke atas">↑</button>
 
+    <!-- Keyboard Shortcuts Modal -->
+    <div class="shortcuts-overlay" id="shortcutsOverlay" onclick="closeShortcutsModal()">
+        <div class="shortcuts-modal" onclick="event.stopPropagation()">
+            <h3>⌨️ Keyboard Shortcuts</h3>
+            <ul class="shortcut-list">
+                <li><span>Cari tools</span> <span class="shortcut-key"><kbd>Ctrl</kbd> + <kbd>K</kbd></span></li>
+                <li><span>Tutup modal / dropdown</span> <span class="shortcut-key"><kbd>Esc</kbd></span></li>
+                <li><span>Toggle dark mode</span> <span class="shortcut-key"><kbd>Ctrl</kbd> + <kbd>D</kbd></span></li>
+                <li><span>Kembali ke atas</span> <span class="shortcut-key"><kbd>Home</kbd></span></li>
+                <li><span>Daftar shortcuts</span> <span class="shortcut-key"><kbd>?</kbd></span></li>
+            </ul>
+            <p style="margin-top:16px;font-size:0.8rem;color:var(--text-secondary);text-align:center;">Tekan
+                <kbd>Esc</kbd> atau klik di luar untuk menutup
+            </p>
+        </div>
+    </div>
+
     <script src="/static/js/app.js?v=2026.08"></script>
 
-    <!-- Theme Toggle (after app.js) -->
+    <!-- Theme Toggle + Active Nav (after app.js) -->
     <script>
         // Update toggle icon after page load
         (function () {
@@ -231,6 +260,33 @@
             // Set dynamic footer year
             var yearEl = document.getElementById('footerYear');
             if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+            // Active page indicator in navigation
+            var currentPath = window.location.pathname;
+            if (currentPath && currentPath !== '/') {
+                var navLinks = document.querySelectorAll('.nav-dropdown-menu a');
+                navLinks.forEach(function (link) {
+                    if (link.getAttribute('href') === currentPath) {
+                        link.classList.add('nav-active');
+                        // Also open the parent dropdown
+                        var dropdown = link.closest('.nav-dropdown');
+                        if (dropdown) {
+                            var menu = dropdown.querySelector('.nav-dropdown-menu');
+                            if (menu) menu.classList.add('active');
+                        }
+                    }
+                });
+            }
+
+            // Update aria-expanded for mobile menu toggle
+            var menuToggle = document.getElementById('menuToggle');
+            var mainNav = document.getElementById('mainNav');
+            if (menuToggle && mainNav) {
+                var observer = new MutationObserver(function () {
+                    menuToggle.setAttribute('aria-expanded', mainNav.classList.contains('active'));
+                });
+                observer.observe(mainNav, { attributes: true, attributeFilter: ['class'] });
+            }
         })();
 
         function toggleTheme() {

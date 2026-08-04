@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
+{% block title %}Batch Lookup - Cek Multiple Domain{% endblock %}
+{% block content %}
+{{ render_breadcrumb("Domain", "Batch Lookup", "/batch-lookup", "/?category=domain") }}
+<h1 class="section-title">📋 Batch Lookup</h1>
+<p class="tool-desc">Cek multiple domain sekaligus. Masukkan hingga 10 domain, pilih jenis pengecekan, dan dapatkan
+    hasilnya dalam satu tabel.</p>
+
+<div class="tool-form">
+    <form id="batchForm">
+        <div class="form-group">
+            <label for="domains">Domain List (satu domain per baris, maks 10)</label>
+            <textarea id="domains" name="domains" rows="6" placeholder="google.com&#10;github.com&#10;stackoverflow.com"
+                required
+                style="width:100%;padding:10px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-secondary);color:var(--text-primary);font-family:monospace;resize:vertical;"></textarea>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="checkType">Jenis Pengecekan</label>
+                <select id="checkType" name="check_type"
+                    style="padding:10px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-secondary);color:var(--text-primary);width:100%;">
+                    <option value="dns">DNS Lookup</option>
+                    <option value="ssl">SSL Certificate</option>
+                    <option value="whois">WHOIS Lookup</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Cek Semua</button>
+            </div>
+        </div>
+    </form>
+    <div class="loading" role="status" aria-live="polite">
+        <div class="spinner"></div>
+        <p id="batchLoadingText">Sedang mengecek domain...</p>
+    </div>
+    <div class="results" aria-live="polite"></div>
+</div>
+
+{{ render_education(edu_data) }}
+{% endblock %}
+{% block scripts %}
+<script>
+    document.getElementById('batchForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var domainsText = document.getElementById('domains').value.trim();
+        var checkType = document.getElementById('checkType').value;
+        var domains = domainsText.split('\n').map(function (d) { return d.trim(); }).filter(function (d) { return d.length > 0; });
+
+        if (domains.length === 0) {
+            showToast('⚠️ Masukkan minimal satu domain');
+            return;
+        }
+        if (domains.length > 10) {
+            showToast('⚠️ Maksimal 10 domain per batch');
+            return;
+        }
+
+        var loadingText = document.getElementById('batchLoadingText');
+        loadingText.textContent = 'Sedang mengecek ' + domains.length + ' domain (' + checkType.toUpperCase() + ')...';
+
+        var form = e.target;
+        var loading = form.querySelector('.loading');
+        var results = form.querySelector('.results');
+        loading.classList.add('active');
+        results.innerHTML = '';
+
+        try {
+            var startTime = performance.now();
+            var response = await fetch('/api/v1/batch', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ domains: domains, check_type: checkType })
+            });
+            var data = await response.json();
+            var elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+            loading.classList.remove('active');
+
+            if (data.error) {
+                results.innerHTML = '<div class="result-header"><h3>Error</h3><span class="result-status status-error">Gagal</span></div><div class="result-error"><p>⚠️ ' + escapeHtml(data.error) + '</p></div>';
+                return;
+            }
+
+            var html = '<div class="result-header"><h3>Hasil Batch ' + escapeHtml(checkType.toUpperCase()) + '</h3>';
+            html += '<div class="result-meta">';
+            html += '<span class="result-status status-success">' + data.total + ' domain dicek</span>';
+            html += '<span class="result-time">⚡ ' + elapsed + 's</span>';
+            html += '</div></div>';
+
+            // Summary table
+            html += '<table class="result-table">';
+            html += '<tr><th>Domain</th><th>Status</th><th>Detail</th></tr>';
+            data.results.forEach(function (r) {
+                var statusBadge = r.status === 'ok'
+                    ? '<span style="color:#22c55e;">✅ Berhasil</span>'
+                    : '<span style="color:#ef4444;">❌ Gagal</span>';
+                var detail = '';
+                if (r.status === 'ok' && r.data) {
+                    if (checkType === 'dns') {
+                        var records = r.data.records || [];
+                        detail = records.length + ' records';
+                        if (r.data.domain) detail = r.data.domain + ' — ' + detail;
+                    } else if (checkType === 'ssl') {
+                        detail = r.data.valid ? 'Valid ✓' : 'Tidak valid';
+                        if (r.data.issuer) detail += ' — ' + r.data.issuer;
+                    } else {
+                        detail = r.data.registrar || r.data.expiry_date || 'Data tersedia';
+                    }
+                } else {
+                    detail = escapeHtml(r.error || 'Unknown error');
+                }
+                html += '<tr><td><code>' + escapeHtml(r.domain) + '</code></td><td>' + statusBadge + '</td><td>' + detail + '</td></tr>';
+            });
+            html += '</table>';
+
+            // JSON details
+            var jsonId = 'batch-json';
+            jsonDataMap.set(jsonId, data);
+            html += '<div class="result-actions">';
+            html += '<button class="btn-copy" onclick="copyJSON(\'' + jsonId + '\')">📋 Salin JSON</button>';
+            html += '<button class="btn-copy" onclick="exportResultsAsCSV()">📊 Export CSV</button>';
+            html += '</div>';
+            html += '<details class="result-details"><summary>Lihat Raw JSON</summary><div class="result-json"><pre>' + escapeHtml(JSON.stringify(data, null, 2)) + '</pre></div></details>';
+
+            results.innerHTML = html;
+        } catch (error) {
+            loading.classList.remove('active');
+            results.innerHTML = '<div class="result-header"><h3>Error</h3><span class="result-status status-error">Gagal</span></div><div class="result-error"><p>⚠️ Gagal: ' + escapeHtml(error.message) + '</p></div>';
+        }
+    });
+</script>
+{% endblock %}

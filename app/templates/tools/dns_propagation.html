@@ -12,7 +12,7 @@
         <div class="form-row">
             <div class="form-group">
                 <label for="domain">Domain</label>
-                <input type="text" id="domain" name="domain" placeholder="contoh: google.com" required>
+                <input type="text" id="domain" name="domain" autocomplete="url" placeholder="contoh: google.com" required>
             </div>
             <div class="form-group">
                 <label for="recordType">Record Type</label>
@@ -30,11 +30,11 @@
             </div>
         </div>
     </form>
-    <div class="loading">
+    <div class="loading" role="status" aria-live="polite">
         <div class="spinner"></div>
         <p>Sedang mengecek propagasi DNS ke 7 nameserver...</p>
     </div>
-    <div class="results"></div>
+    <div class="results" aria-live="polite"></div>
     <div id="historyContainer"></div>
 </div>
 
@@ -64,24 +64,27 @@
             const data = await response.json();
 
             if (data.error) {
-                results.innerHTML = `<div class="result-header"><h3>Error</h3><span class="result-status status-error">Gagal</span></div><p>${data.error}</p>`;
+                results.innerHTML = `<div class="result-header"><h3>Error</h3><span class="result-status status-error">Gagal</span></div><div class="result-error"><p>⚠️ ${escapeHtml(data.error)}</p></div>`;
             } else {
-                let html = `<div class="result-header"><h3>Propagasi DNS: ${domain}</h3><span class="result-status status-success">Selesai</span></div>`;
-                html += `<p class="propagation-meta">Record type: <strong>${type}</strong> | Record unik: <strong>${data.unique_records.length}</strong></p>`;
+                let html = `<div class="result-header"><h3>Propagasi DNS: ${escapeHtml(domain)}</h3><span class="result-status status-success">Selesai</span></div>`;
+                html += `<p class="propagation-meta">Record type: <strong>${escapeHtml(type)}</strong> | Record unik: <strong>${data.unique_records.length}</strong></p>`;
                 html += '<table class="result-table">';
                 html += '<tr><th>Nameserver</th><th>IP</th><th>Status</th><th>Records</th></tr>';
                 for (const [name, info] of Object.entries(data.results)) {
-                    const statusColor = info.status === 'ok' ? 'color:var(--success-text)' : 'color:var(--error-text)';
                     const statusIcon = info.status === 'ok' ? '✅' : '❌';
-                    html += `<tr><td><strong>${name}</strong></td><td>${info.ip}</td><td class="${info.status === 'ok' ? 'propagation-status-ok' : 'propagation-status-err'}">${statusIcon} ${info.status}</td><td>${info.records.join(', ') || '-'}</td></tr>`;
+                    const records = (info.records && info.records.length > 0) ? escapeHtml(info.records.join(', ')) : '-';
+                    html += `<tr><td><strong>${escapeHtml(name)}</strong></td><td data-label="IP">${escapeHtml(info.ip || '')}</td><td data-label="Status" class="${info.status === 'ok' ? 'propagation-status-ok' : 'propagation-status-err'}">${statusIcon} ${escapeHtml(info.status || '')}</td><td data-label="Records">${records}</td></tr>`;
                 }
                 html += '</table>';
 
                 if (data.unique_records.length > 0) {
-                    html += `<div class="propagation-unique"><h4>Records Unik:</h4><div class="result-json">${data.unique_records.join('\n')}</div></div>`;
+                    html += `<div class="propagation-unique"><h4>Records Unik:</h4><div class="result-json"><pre>${escapeHtml(data.unique_records.join('\n'))}</pre></div></div>`;
                 }
 
-                html += `<details class="propagation-unique"><summary style="cursor:pointer;color:var(--text-secondary)">Lihat Raw JSON</summary><div class="result-json">${JSON.stringify(data, null, 2)}</div></details>`;
+                const jsonId = 'copy-propagation-' + Date.now();
+                jsonDataMap.set(jsonId, data);
+                html += `<div class="result-actions"><button class="btn-copy" onclick="copyJSON('${jsonId}')">📋 Salin JSON</button></div>`;
+                html += `<details class="result-details"><summary>Lihat Raw JSON</summary><div class="result-json"><pre>${escapeHtml(JSON.stringify(data, null, 2))}</pre></div></details>`;
                 results.innerHTML = html;
             }
         } catch (error) {

@@ -11,15 +11,15 @@
     <form id="blacklistForm">
         <div class="form-group">
             <label for="ip">IP Address</label>
-            <input type="text" id="ip" name="ip" placeholder="contoh: 8.8.8.8" required>
+            <input type="text" id="ip" name="ip" autocomplete="off" placeholder="contoh: 8.8.8.8" required>
         </div>
         <button type="submit" class="btn btn-primary">Cek Sekarang</button>
     </form>
-    <div class="loading">
+    <div class="loading" role="status" aria-live="polite">
         <div class="spinner"></div>
         <p>Sedang mengecek blacklist...</p>
     </div>
-    <div class="results"></div>
+    <div class="results" aria-live="polite"></div>
     <div id="historyContainer"></div>
 </div>
 

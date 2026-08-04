@@ -136,6 +136,13 @@ function loadURLState(formId) {
 
 // ============ KEYBOARD SHORTCUTS ============
 document.addEventListener('keydown', function (e) {
+    // Don't trigger shortcuts when typing in input/textarea/select
+    var tag = e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
+        // Allow Escape even in inputs
+        if (e.key !== 'Escape') return;
+    }
+
     // Ctrl+K or Cmd+K: Focus search
     if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
@@ -144,10 +151,24 @@ document.addEventListener('keydown', function (e) {
             searchInput.focus();
             showToast('🔍 Search focused');
         }
+        return;
     }
 
-    // Escape: Close dropdowns/menus
+    // Ctrl+D or Cmd+D: Toggle dark mode
+    if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+        e.preventDefault();
+        if (typeof toggleTheme === 'function') toggleTheme();
+        return;
+    }
+
+    // Escape: Close dropdowns/menus/modal
     if (e.key === 'Escape') {
+        // Close shortcuts modal first
+        var overlay = document.getElementById('shortcutsOverlay');
+        if (overlay && overlay.classList.contains('active')) {
+            closeShortcutsModal();
+            return;
+        }
         // Close all dropdowns
         document.querySelectorAll('.nav-dropdown-menu.active').forEach(function (d) {
             d.classList.remove('active');
@@ -159,8 +180,38 @@ document.addEventListener('keydown', function (e) {
             var toggle = document.getElementById('menuToggle');
             if (toggle) toggle.textContent = '☰';
         }
+        return;
+    }
+
+    // ?: Show keyboard shortcuts modal (only when not in input)
+    if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+        e.preventDefault();
+        openShortcutsModal();
+        return;
+    }
+
+    // Home: Scroll to top
+    if (e.key === 'Home' && !e.ctrlKey) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 });
+
+// ============ SHORTCUTS MODAL ============
+function openShortcutsModal() {
+    var overlay = document.getElementById('shortcutsOverlay');
+    if (overlay) {
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+    }
+}
+
+function closeShortcutsModal() {
+    var overlay = document.getElementById('shortcutsOverlay');
+    if (overlay) {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+    }
+}
 
 // ============ TOOL HISTORY ============
 function saveToHistory(toolName, query) {
@@ -265,10 +316,32 @@ function extractToolName(endpoint) {
         'port': 'port-scanner',
         'cdn': 'cdn-detect',
         'asn': 'asn-lookup',
-        'blacklist': 'blacklist-checker'
+        'blacklist': 'blacklist-checker',
+        'batch': 'batch-lookup',
+        'compare': 'compare'
     };
+    // Handle nested endpoints like /dns/google.com/reverse → reverse-dns
     var parts = endpoint.split('?')[0].split('/').filter(function (p) { return p && p !== 'api' && p !== 'v1'; });
     var rawName = parts[0] || 'unknown';
+    var subPath = parts[1] || '';
+    // Check for sub-path mappings first
+    var SUB_PATH_MAP = {
+        'reverse': 'reverse-dns',
+        'mx': 'mx-lookup',
+        'txt': 'txt-lookup',
+        'cname': 'cname-lookup',
+        'spf': 'spf-checker',
+        'dmarc': 'dmarc-checker',
+        'propagation': 'dns-propagation',
+        'expiry': rawName === 'ssl' ? 'ssl-expiry' : 'domain-expiry',
+        'asn': 'asn-lookup',
+        'blacklist': 'blacklist-checker',
+        'me': 'my-ip',
+        'validate': 'email-validator'
+    };
+    if (subPath && SUB_PATH_MAP[subPath]) {
+        return SUB_PATH_MAP[subPath];
+    }
     return TOOL_NAME_MAP[rawName] || rawName;
 }
 
@@ -396,6 +469,7 @@ function displayResults(container, data, endpoint, elapsed) {
     html += `<div class="result-actions">
         <button class="btn-copy" onclick="copyJSON('${id}')">📋 Salin JSON</button>
         <button class="btn-copy" onclick="copyAllResults()">📑 Salin Semua</button>
+        <button class="btn-copy" onclick="exportResultsAsCSV()">📊 Export CSV</button>
         <button class="btn-copy" onclick="exportResultsAsText()">📄 Export TXT</button>
         <button class="btn-share" onclick="shareTool('${escapeHtml(document.querySelector("h1") ? document.querySelector("h1").textContent.trim() : "Konektivitas.com")}')">🔗 Share</button>
     </div>`;
@@ -593,4 +667,42 @@ function exportResultsAsText() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     showToast('📄 File berhasil didownload!');
+}
+
+// ============ EXPORT AS CSV ============
+function exportResultsAsCSV() {
+    var container = document.querySelector('.results');
+    if (!container) return;
+    var title = document.querySelector('h1') ? document.querySelector('h1').textContent.trim() : 'Konektivitas.com';
+    var rows = container.querySelectorAll('tr');
+    var csvLines = [];
+    // BOM for proper UTF-8 encoding in Excel
+    csvLines.push('\uFEFF"Field","Value"');
+    if (rows.length > 0) {
+        rows.forEach(function (row) {
+            var th = row.querySelector('th');
+            var td = row.querySelector('td');
+            if (th && td) {
+                var field = th.textContent.trim().replace(/"/g, '""');
+                // Get only text content, strip copy button emoji
+                var value = td.textContent.trim().replace(/📋/g, '').replace(/"/g, '""').trim();
+                csvLines.push('"' + field + '","' + value + '"');
+            }
+        });
+    }
+    if (csvLines.length <= 1) {
+        showToast('⚠️ Tidak ada data tabel untuk di-export');
+        return;
+    }
+    var csv = csvLines.join('\n');
+    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = title.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 50) + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('📊 CSV berhasil didownload!');
 }

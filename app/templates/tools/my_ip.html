@@ -8,11 +8,11 @@
 <p class="tool-desc">Deteksi dan cek detail IP address Anda saat ini termasuk lokasi, ISP, dan ASN.</p>
 
 <div class="tool-form">
-    <div class="loading active" id="ipLoading">
+    <div class="loading active" id="ipLoading" role="status" aria-live="polite">
         <div class="spinner"></div>
         <p>Mendeteksi IP address Anda...</p>
     </div>
-    <div class="results" id="ipResults"></div>
+    <div class="results" id="ipResults" aria-live="polite"></div>
 </div>
 
 {{ render_education(edu_data) }}

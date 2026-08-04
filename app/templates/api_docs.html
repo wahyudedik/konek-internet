@@ -4,7 +4,7 @@
 {% block description %}Dokumentasi API Konektivitas.com: DNS lookup, WHOIS, SSL checker, IP lookup, dan 25+ endpoints
 gratis dengan rate limit 60 request/menit.{% endblock %}
 {% block content %}
-{{ render_breadcrumb("API", "API Docs", "/api-docs") }}
+{{ render_breadcrumb(None, "API Docs", "/api-docs") }}
 <section class="hero">
     <h1>📡 API Konektivitas.com</h1>
     <p>Akses programatik ke semua tools internet kami. Gratis, cepat, dan mudah digunakan.</p>
@@ -356,6 +356,62 @@ gratis dengan rate limit 60 request/menit.{% endblock %}
             <code>/port/{host}?ports=80,443,22</code>
         </div>
         <p>Scan port TCP pada host. Parameter: <code>ports</code> (pisahkan koma).</p>
+    </div>
+</section>
+
+<!-- Batch & Compare Endpoints -->
+<section class="api-section">
+    <h2 class="api-category">📋 Batch & Compare Endpoints (2)</h2>
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method post">POST</span>
+            <code>/batch</code>
+        </div>
+        <p>Cek multiple domain sekaligus (maks 10). Body:
+            <code>{"domains": [...], "check_type": "dns|ssl|whois"}</code>.</p>
+        <details>
+            <summary>Contoh Request & Response</summary>
+            <div class="api-example">
+                <div class="api-example-label">Request:</div>
+                <code>POST /api/v1/batch</code><br>
+                <code>Content-Type: application/json</code><br>
+                <code>{"domains": ["google.com", "github.com"], "check_type": "dns"}</code>
+                <div class="api-example-label">Response:</div>
+                <pre>{
+    "check_type": "dns",
+    "results": [
+        {"domain": "google.com", "status": "ok", "data": {...}},
+        {"domain": "github.com", "status": "ok", "data": {...}}
+    ],
+    "summary": {"total": 2, "success": 2, "failed": 0}
+}</pre>
+            </div>
+        </details>
+    </div>
+
+    <div class="api-endpoint">
+        <div class="api-endpoint-header">
+            <span class="api-method post">POST</span>
+            <code>/compare</code>
+        </div>
+        <p>Bandingkan dua domain secara berdampingan. Body:
+            <code>{"domain1": "...", "domain2": "...", "check_type": "dns|ssl|whois"}</code>.</p>
+        <details>
+            <summary>Contoh Request & Response</summary>
+            <div class="api-example">
+                <div class="api-example-label">Request:</div>
+                <code>POST /api/v1/compare</code><br>
+                <code>Content-Type: application/json</code><br>
+                <code>{"domain1": "google.com", "domain2": "github.com", "check_type": "dns"}</code>
+                <div class="api-example-label">Response:</div>
+                <pre>{
+    "check_type": "dns",
+    "domain1": {"domain": "google.com", "data": {...}},
+    "domain2": {"domain": "github.com", "data": {...}},
+    "differences": ["records", "nameservers"]
+}</pre>
+            </div>
+        </details>
     </div>
 </section>
 

@@ -11,15 +11,15 @@
     <form id="emailForm">
         <div class="form-group">
             <label for="email">Email Address</label>
-            <input type="text" id="email" name="email" placeholder="contoh: user@example.com" required>
+            <input type="text" id="email" name="email" autocomplete="email" placeholder="contoh: user@example.com" required>
         </div>
         <button type="submit" class="btn btn-primary">Validasi Email</button>
     </form>
-    <div class="loading">
+    <div class="loading" role="status" aria-live="polite">
         <div class="spinner"></div>
         <p>Sedang memvalidasi email...</p>
     </div>
-    <div class="results"></div>
+    <div class="results" aria-live="polite"></div>
     <div id="historyContainer"></div>
 </div>
 

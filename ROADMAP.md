@@ -35,7 +35,7 @@
 
 - Iklan
 - Donasi
-- Premium tanpa iklan
+- Pro tanpa iklan
 
 ---
 
@@ -71,13 +71,13 @@
 | Visitor/bulan | 500.000 |
 | Registered users | 10.000 |
 | Developer API key | 1.000 |
-| Premium subscribers | 100 |
+| Pro subscribers | 100 |
 | Domain monitored | 5.000 |
 
 ### Pendapatan
 
 - Iklan
-- Premium (Rp 49.000/bulan)
+- Pro (Rp 49.000/bulan)
 - API access
 
 ---
@@ -118,14 +118,15 @@
 | Visitor/bulan | 1.000.000 |
 | Registered users | 50.000 |
 | Developer API key | 5.000 |
-| Premium subscribers | 1.000 |
+| Pro subscribers | 1.000 |
 | Domain di DNS hosting | 1.000 |
 | Mobile app installs | 10.000 |
 
 ### Pendapatan
 
 - Iklan
-- Premium (Rp 49.000-99.000/bulan)
+- Pro (Rp 49.000/bulan)
+- Team (Rp 99.000-199.000/bulan)
 - API access
 - DNS hosting
 
@@ -170,14 +171,15 @@
 | Visitor/bulan | 3.000.000 |
 | Registered users | 100.000 |
 | Developer API key | 20.000 |
-| Premium subscribers | 5.000 |
+| Pro subscribers | 5.000 |
 | Enterprise clients | 50 |
 | API request/hari | 1.000.000 |
 
 ### Pendapatan
 
 - Iklan
-- Premium (Rp 49.000-99.000/bulan)
+- Pro (Rp 49.000/bulan)
+- Team (Rp 99.000-199.000/bulan)
 - Enterprise (Rp 500.000-5.000.000/bulan)
 - API access
 - DNS hosting
@@ -223,7 +225,7 @@
 | Visitor/bulan | 5.000.000 |
 | Registered users | 500.000 |
 | Developer API key | 100.000 |
-| Premium subscribers | 20.000 |
+| Pro subscribers | 20.000 |
 | Enterprise clients | 500 |
 | Public DNS users | 1.000.000 |
 | API request/hari | 10.000.000 |
@@ -231,7 +233,8 @@
 ### Pendapatan
 
 - Iklan
-- Premium
+- Pro
+- Team
 - Enterprise
 - API access
 - DNS hosting
@@ -272,7 +275,8 @@
 | Visitor/bulan | 5.000.000 |
 | Registered users | 500.000 |
 | Developer API key | 100.000 |
-| Premium subscribers | 20.000 |
+| Pro subscribers | 20.000 |
+| Team subscribers | 5.000 |
 | Enterprise clients | 500 |
 | Public DNS users | 1.000.000 |
 
@@ -281,7 +285,8 @@
 | Sumber | Status |
 |--------|--------|
 | Iklan | ✅ |
-| Premium | ✅ |
+| Pro | ✅ |
+| Team | ✅ |
 | Enterprise | ✅ |
 | API | ✅ |
 | DNS Hosting | ✅ |
@@ -293,17 +298,23 @@
 
 ## Filosofi Pengembangan
 
-> "Kami tidak menjual server. Kami menyediakan layanan internet yang akan tetap dibutuhkan selama internet ada."
+> "Kami tidak membuat aplikasi yang viral. Kami membangun utilitas yang akan tetap dibutuhkan selama internet masih ada."
 
-### Aturan Fitur
+### Framework Keputusan Fitur
 
-Tambahkan fitur **hanya** jika memenuhi tiga syarat:
+Gunakan **dua framework** saat memutuskan fitur baru:
+
+**Framework 1 — Arah Produk (3 Pertanyaan Pilar):**
+
+Apakah fitur ini membantu pengguna memahami internet *(Learn)*, mengelola aset internetnya *(Manage)*, atau menemukan peluang *(Discover)*? Kalau tidak menjawab salah satunya, tolak.
+
+**Framework 2 — Kelayakan Teknis (3 Syarat):**
 
 1. **Ringan** dijalankan (sesuai spesifikasi server)
 2. **Berguna** untuk banyak orang
 3. **Masih relevan** 10 tahun ke depan
 
-> Kalau setiap fitur lolos tiga syarat itu, produk akan tumbuh lebih lambat, tetapi fondasinya akan jauh lebih kuat.
+> Fitur harus lolos **kedua** framework sebelum diimplementasikan. Kalau lolos, produk akan tumbuh lebih lambat tetapi fondasinya jauh lebih kuat.
 
 ---
 

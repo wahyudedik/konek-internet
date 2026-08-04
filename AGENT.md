@@ -4,7 +4,11 @@
 
 ## Overview
 
-**Konektivitas.com** adalah **platform infrastruktur internet** Indonesia yang membantu siapa pun memahami, mengelola, dan mengembangkan aset digital mereka. Bukan sekadar kumpulan checker tools, tetapi pusat kendali seluruh aset internet.
+Internet menjadi fondasi hampir semua layanan digital. Website, aplikasi mobile, AI, IoT, sistem perusahaan, hingga perangkat pintar bergantung pada infrastruktur internet untuk beroperasi.
+
+Namun, mengelola infrastruktur tersebut masih tersebar di banyak layanan dan sering kali rumit.
+
+**Konektivitas hadir untuk menyederhanakan cara orang memahami, mengelola, dan mengembangkan aset internet mereka.**
 
 > **"Konektivitas.com adalah platform yang menghubungkan manusia dengan infrastruktur internet—membantu siapa pun memahami, mengelola, dan menemukan peluang dari aset digital mereka dalam satu tempat."**
 
@@ -12,69 +16,98 @@
 
 ## Visi
 
-**Menjadi platform infrastruktur internet terbesar di Indonesia yang membantu siapa pun memahami, mengelola, dan mengembangkan aset digital mereka.**
+**Menjadi platform infrastruktur internet terdepan di Indonesia yang membantu individu dan bisnis memahami, mengelola, dan mengembangkan aset digital mereka.**
 
 ### Misi
 
-1. Membuat infrastruktur internet mudah dipahami.
-2. Membantu pengguna mengelola aset digital dari satu dashboard.
-3. Memberikan peringatan sebelum masalah terjadi.
-4. Menyediakan insight untuk menemukan peluang digital baru.
-5. Menjadi referensi edukasi internet berbahasa Indonesia.
+1. Menyederhanakan pengelolaan infrastruktur internet.
+2. Menyediakan monitoring yang mudah dipahami.
+3. Memberikan edukasi internet dalam bahasa Indonesia.
+4. Membantu pengguna mengambil keputusan berdasarkan data.
+5. Menjadi pusat kendali aset internet.
+
+### Value Proposition
+
+Daripada membuka banyak layanan berbeda, pengguna cukup membuka Konektivitas untuk mendapatkan gambaran menyeluruh tentang aset internet mereka.
 
 ### Filosofi
 
-Website hanyalah permukaan. Di balik website terdapat: Domain, DNS, Server, SSL, Email, IP, Routing, Infrastruktur. Konektivitas membantu mereka memahami semua yang ada di baliknya.
+Kebanyakan orang hanya melihat website. Konektivitas membantu melihat seluruh infrastruktur yang membuat website tersebut dapat berjalan.
+
+### Positioning
+
+**Bukan:**
+
+- Domain Registrar
+- Hosting Provider
+- Cloud Provider
+
+**Tetapi:** Platform Infrastruktur Internet.
 
 ### Pertanyaan Penuntun
 
-> **"Apakah fitur ini membantu pengguna memahami, mengelola, atau mengembangkan aset internetnya?"**
+Setiap fitur baru harus menjawab setidaknya satu dari tiga pertanyaan berikut:
 
-Jika jawabannya "ya", maka fitur itu sejalan dengan arah besar Konektivitas.
+1. **"Apakah fitur ini membantu pengguna memahami internet?"** *(Learn)*
+2. **"Apakah fitur ini membantu pengguna mengelola aset internetnya?"** *(Manage)*
+3. **"Apakah fitur ini membantu pengguna menemukan peluang atau mengambil keputusan?"** *(Discover)*
+
+Kalau jawabannya "ya", berarti fitur tersebut sejalan dengan visi Konektivitas. Kalau tidak, lebih baik ditunda agar produk tetap fokus dan identitasnya tidak melebar ke mana-mana.
 
 ---
 
-## 3 Produk Utama
+## 3 Pilar Produk
 
-### 1. Public Tools (Gratis)
+### 1. Learn — Membantu orang memahami internet
 
-**Tujuan:** Traffic dan edukasi.
+**Implementasi:** Public Tools (gratis)
 
+- Edukasi DNS, SSL, Email, Server, HTTP
+- Visualisasi cara kerja internet
+- Dokumentasi lengkap
 - 25+ tools DNS, Domain, SSL, Website, IP (saat ini)
 - Target: 100+ tools (2031)
 - API gratis dengan rate limit
-- Edukasi internet berbahasa Indonesia
 
-### 2. Workspace (Berbayar)
+**Target Pengguna:** Pelajar, Mahasiswa, Guru, Developer pemula
 
-**Tujuan:** Dashboard semua aset internet. Produktivitas.
+### 2. Manage — Mengelola aset internet
+
+**Implementasi:** Workspace (Pro & Team)
 
 - Domain Management
 - SSL, DNS, Server, Email Monitoring
-- Team Workspace
+- Team Workspace & Kolaborasi
 - Notifikasi (Email, Telegram, Discord)
 - Riwayat & Laporan
 
-### 3. Business Intelligence (Enterprise)
+**Target Pengguna:** Developer, IT Support, SysAdmin, Agency, Startup
 
-**Tujuan:** Insight berbasis data publik. Pengambilan keputusan.
+### 3. Discover — Menemukan peluang
 
-- Market Analysis (digital landscape per wilayah)
-- Technology Detection trends
-- Opportunity Finder
+**Implementasi:** Business Intelligence (Enterprise)
+
+- Business Discovery & Industry Insight
+- Technology Insight & Digital Opportunity
+- Analisis aset digital berbasis data publik
 - Custom Reports
+
+**Target Pengguna:** Business Owner, Konsultan, Freelancer, Marketing
 
 ---
 
 ## Target Pengguna
 
-### 🌐 Public — Orang yang ingin belajar
+### 🌐 Public — Belajar, Mengecek, Mencari referensi
+
 Pelajar, Mahasiswa, Freelancer, Developer pemula, Ide startup
 
-### 💼 Professional — Orang yang mengelola internet
+### 💼 Professional — Monitoring, Workspace, Manajemen aset
+
 Developer, DevOps, IT Support, SysAdmin, Agency, Startup
 
-### 🏢 Business — Orang yang ingin mengembangkan bisnis
+### 🏢 Business — Insight, Peluang, Analisis
+
 UMKM, Perusahaan, Konsultan, Marketing, Investor, Business Owner
 
 ---
@@ -170,11 +203,21 @@ Internet → Cloudflare → AAPanel → Nginx → FastAPI → Redis → Database
 3. **Bermanfaat** — Berguna untuk banyak orang
 4. **Tahan Lama** — Masih relevan 10 tahun ke depan
 
-### Syarat Setiap Fitur
-Tambahkan fitur **hanya** jika memenuhi tiga syarat:
+### Framework Keputusan Fitur
+
+Gunakan **dua framework** saat memutuskan fitur baru:
+
+**Framework 1 — Arah Produk (3 Pertanyaan Pilar):**
+
+Apakah fitur ini membantu pengguna memahami internet *(Learn)*, mengelola aset internetnya *(Manage)*, atau menemukan peluang *(Discover)*? Kalau tidak menjawab salah satunya, tolak.
+
+**Framework 2 — Kelayakan Teknis (3 Syarat):**
+
 1. Ringan dijalankan (sesuai spesifikasi server)
 2. Berguna untuk banyak orang
 3. Masih relevan 10 tahun ke depan
+
+> Fitur harus lolos **kedua** framework sebelum diimplementasikan.
 
 ### Yang TIDAK Perlu
 - Docker (di awal)
@@ -365,11 +408,12 @@ Detail lengkap di [ROADMAP.md](ROADMAP.md).
 
 ### Saat Mengerjakan Fitur
 1. Baca [FEATURES.md](FEATURES.md) untuk memahami konteks fitur
-2. Pastikan fitur memenuhi 3 syarat: **ringan**, **bermanfaat**, **tahan lama**
-3. Tanyakan: "Apakah fitur ini membantu pengguna **memahami**, **mengelola**, atau **mengembangkan** aset internetnya?"
-4. Ikuti konvensi penamaan yang sudah ada
-5. Pastikan response time < 1 detik
-6. Test dengan data sampel sebelum commit
+2. Gunakan **Framework Keputusan Fitur** (lihat section Filosofi Pengembangan)
+3. Tanyakan: "Apakah fitur ini membantu pengguna **memahami** *(Learn)*, **mengelola** *(Manage)*, atau **menemukan peluang** *(Discover)*?"
+4. Pastikan fitur memenuhi 3 syarat: **ringan**, **bermanfaat**, **tahan lama**
+5. Ikuti konvensi penamaan yang sudah ada
+6. Pastikan response time < 1 detik
+7. Test dengan data sampel sebelum commit
 
 ### Struktur Code yang Diharapkan
 ```
@@ -482,7 +526,7 @@ app/
 |--------|--------|
 | Visitor/bulan | 500.000 |
 | Registered users | 10.000 |
-| Premium subscribers | 100 |
+| Pro subscribers | 100 |
 | Domain monitored | 5.000 |
 
 ### Year 3 (2028) — Infrastructure & Mobile
@@ -491,7 +535,7 @@ app/
 |--------|--------|
 | Visitor/bulan | 1.000.000 |
 | Registered users | 50.000 |
-| Premium subscribers | 1.000 |
+| Pro subscribers | 1.000 |
 | Mobile app installs | 10.000 |
 
 ### Year 4 (2029) — Business Intelligence
@@ -509,7 +553,7 @@ app/
 |--------|--------|
 | Visitor/bulan | 5.000.000 |
 | Registered users | 500.000 |
-| Premium subscribers | 20.000 |
+| Pro subscribers | 20.000 |
 | Enterprise clients | 500 |
 | Public DNS users | 1.000.000 |
 | API request/hari | 10.000.000 |
@@ -518,18 +562,24 @@ app/
 
 ## Monetisasi
 
-### Gratis
+### Free
 - Public tools (25+ → 100+ tools)
 - Edukasi internet
 - API dengan rate limit
 
-### Premium (Rp 49.000-99.000/bulan)
+### Pro (Rp 49.000/bulan)
 - Workspace (Domain, SSL, DNS, Server, Email Monitoring)
-- Team Workspace
 - Notification (Email, Telegram, Discord)
 - Laporan & Export
-- DNS Hosting
 - Tanpa iklan
+
+### Team (Rp 99.000-199.000/bulan)
+- Semua fitur Pro
+- Team Workspace & Kolaborasi
+- Shared Monitoring
+- DNS Hosting
+- Multi-user access
+- Role & Permission
 
 ### Enterprise (Rp 500.000-5.000.000/bulan)
 - Business Intelligence
@@ -545,12 +595,15 @@ app/
 
 Bukan domain. Bukan hosting. Bukan server.
 
-Tetapi:
+Yang dijual adalah:
+
 - **Kejelasan** — Memahami infrastruktur internet
-- **Ketenangan** — Monitoring & peringatan dini
-- **Insight** — Data untuk pengambilan keputusan
+- **Monitoring** — Peringatan dini sebelum masalah terjadi
 - **Edukasi** — Belajar internet dalam bahasa Indonesia
-- **Peluang** — Menemukan peluang digital baru
+- **Insight** — Data untuk pengambilan keputusan
+- **Efisiensi** — Satu tempat untuk semua aset internet
+- **Produktivitas** — Mengelola aset internet lebih cepat
+- **Kepercayaan** — Platform yang bisa diandalkan
 
 ---
 

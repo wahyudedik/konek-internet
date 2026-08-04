@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
+{% block title %}Compare - Bandingkan 2 Domain{% endblock %}
+{% block content %}
+{{ render_breadcrumb("Domain", "Compare Domains", "/compare", "/?category=domain") }}
+<h1 class="section-title">⚖️ Compare Domains</h1>
+<p class="tool-desc">Bandingkan 2 domain side-by-side: DNS records, SSL certificate, atau WHOIS data. Cocok untuk
+    migrasi atau analisis kompetitor.</p>
+
+<div class="tool-form">
+    <form id="compareForm">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="domain1">Domain 1</label>
+                <input type="text" id="domain1" name="domain1" autocomplete="url" placeholder="contoh: google.com"
+                    required>
+            </div>
+            <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:4px;">
+                <span style="font-size:1.5rem;color:var(--text-secondary);">⚔️</span>
+            </div>
+            <div class="form-group">
+                <label for="domain2">Domain 2</label>
+                <input type="text" id="domain2" name="domain2" autocomplete="url" placeholder="contoh: bing.com"
+                    required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="checkType">Jenis Perbandingan</label>
+                <select id="checkType" name="check_type"
+                    style="padding:10px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-secondary);color:var(--text-primary);width:100%;">
+                    <option value="dns">DNS Records</option>
+                    <option value="ssl">SSL Certificate</option>
+                    <option value="whois">WHOIS Data</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Bandingkan</button>
+            </div>
+        </div>
+    </form>
+    <div class="loading" role="status" aria-live="polite">
+        <div class="spinner"></div>
+        <p>Sedang membandingkan domain...</p>
+    </div>
+    <div class="results" aria-live="polite"></div>
+</div>
+
+{{ render_education(edu_data) }}
+{% endblock %}
+{% block scripts %}
+<script>
+    document.getElementById('compareForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var d1 = document.getElementById('domain1').value.trim();
+        var d2 = document.getElementById('domain2').value.trim();
+        var checkType = document.getElementById('checkType').value;
+
+        if (!d1 || !d2) {
+            showToast('⚠️ Isi kedua domain');
+            return;
+        }
+
+        var form = e.target;
+        var loading = form.querySelector('.loading');
+        var results = form.querySelector('.results');
+        loading.classList.add('active');
+        results.innerHTML = '';
+
+        try {
+            var startTime = performance.now();
+            var response = await fetch('/api/v1/compare', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ domain1: d1, domain2: d2, check_type: checkType })
+            });
+            var data = await response.json();
+            var elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+            loading.classList.remove('active');
+
+            if (data.error) {
+                results.innerHTML = '<div class="result-header"><h3>Error</h3><span class="result-status status-error">Gagal</span></div><div class="result-error"><p>⚠️ ' + escapeHtml(data.error) + '</p></div>';
+                return;
+            }
+
+            var html = '<div class="result-header"><h3>Perbandingan ' + escapeHtml(checkType.toUpperCase()) + '</h3>';
+            html += '<div class="result-meta">';
+            html += '<span class="result-status status-success">Selesai</span>';
+            html += '<span class="result-time">⚡ ' + elapsed + 's</span>';
+            html += '</div></div>';
+
+            // Side-by-side comparison table
+            html += '<table class="result-table">';
+            html += '<tr><th style="width:25%;">Field</th><th style="width:37.5%;color:var(--accent-cyan);">' + escapeHtml(data.domain1) + '</th><th style="width:37.5%;color:var(--accent-orange);">' + escapeHtml(data.domain2) + '</th></tr>';
+
+            // Collect all unique keys from both data objects
+            var allKeys = new Set();
+            if (data.data1) Object.keys(data.data1).forEach(function (k) { if (k !== 'error') allKeys.add(k); });
+            if (data.data2) Object.keys(data.data2).forEach(function (k) { if (k !== 'error') allKeys.add(k); });
+
+            allKeys.forEach(function (key) {
+                var displayKey = key.replace(/_/g, ' ').replace(/\b\w/g, function (l) { return l.toUpperCase(); });
+                var v1 = data.data1 && data.data1[key] != null ? formatValue(data.data1[key]) : '—';
+                var v2 = data.data2 && data.data2[key] != null ? formatValue(data.data2[key]) : '—';
+                if (v1 === 'null' || v1 === '[]') v1 = '—';
+                if (v2 === 'null' || v2 === '[]') v2 = '—';
+                // Highlight differences
+                var style1 = '';
+                var style2 = '';
+                if (v1 !== v2 && v1 !== '—' && v2 !== '—') {
+                    style1 = 'background:rgba(0,212,255,0.08);';
+                    style2 = 'background:rgba(255,165,0,0.08);';
+                }
+                html += '<tr><td><strong>' + escapeHtml(displayKey) + '</strong></td>';
+                html += '<td data-label="' + escapeHtml(data.domain1) + '" style="' + style1 + '">' + v1 + '</td>';
+                html += '<td data-label="' + escapeHtml(data.domain2) + '" style="' + style2 + '">' + v2 + '</td></tr>';
+            });
+
+            if (allKeys.size === 0) {
+                html += '<tr><td colspan="3" style="text-align:center;color:var(--text-secondary);">Tidak ada data untuk dibandingkan</td></tr>';
+            }
+
+            html += '</table>';
+
+            // JSON details
+            var jsonId = 'compare-json';
+            jsonDataMap.set(jsonId, data);
+            html += '<div class="result-actions">';
+            html += '<button class="btn-copy" onclick="copyJSON(\'' + jsonId + '\')">📋 Salin JSON</button>';
+            html += '<button class="btn-copy" onclick="exportResultsAsCSV()">📊 Export CSV</button>';
+            html += '</div>';
+            html += '<details class="result-details"><summary>Lihat Raw JSON</summary><div class="result-json"><pre>' + escapeHtml(JSON.stringify(data, null, 2)) + '</pre></div></details>';
+
+            results.innerHTML = html;
+        } catch (error) {
+            loading.classList.remove('active');
+            results.innerHTML = '<div class="result-header"><h3>Error</h3><span class="result-status status-error">Gagal</span></div><div class="result-error"><p>⚠️ Gagal: ' + escapeHtml(error.message) + '</p></div>';
+        }
+    });
+</script>
+{% endblock %}

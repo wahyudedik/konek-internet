@@ -9,7 +9,7 @@ from fastapi.responses import JSONResponse, PlainTextResponse, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from app.config import get_settings
-from app.routers import dns, domain, ssl, website, ip, cdn
+from app.routers import dns, domain, ssl, website, ip, cdn, batch, compare
 from app.utils.rate_limit import check_rate_limit, get_client_ip, get_remaining_requests
 from app.data.education import EDUCATION_DATA
 from app.data.faq_data import FAQ_DATA
@@ -78,6 +78,10 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         # Cache-Control for API responses
         if request.url.path.startswith("/api/"):
             response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        
+        # Cache-Control for static assets
+        if request.url.path.startswith("/static/"):
+            response.headers["Cache-Control"] = "public, max-age=86400, stale-while-revalidate=604800"
 
         # Log slow requests (> 1 second)
         if process_time > 1000:
@@ -183,6 +187,8 @@ app.include_router(ssl.router, prefix="/api/v1", tags=["SSL"])
 app.include_router(website.router, prefix="/api/v1", tags=["Website"])
 app.include_router(ip.router, prefix="/api/v1", tags=["IP"])
 app.include_router(cdn.router, prefix="/api/v1", tags=["CDN"])
+app.include_router(batch.router, prefix="/api/v1", tags=["Batch"])
+app.include_router(compare.router, prefix="/api/v1", tags=["Compare"])
 
 
 # ============ PAGE ROUTES ============
@@ -325,6 +331,16 @@ async def page_port_scanner(request: Request):
 @app.get("/cdn-detect")
 async def page_cdn_detect(request: Request):
     return templates.TemplateResponse("tools/cdn_detect.html", tool_context(request, "CDN Detection", "cdn_detect"))
+
+
+@app.get("/batch-lookup")
+async def page_batch_lookup(request: Request):
+    return templates.TemplateResponse("tools/batch_lookup.html", tool_context(request, "Batch Lookup", "batch_lookup"))
+
+
+@app.get("/compare")
+async def page_compare(request: Request):
+    return templates.TemplateResponse("tools/compare.html", tool_context(request, "Tool Comparison", "compare"))
 
 
 # Health check (API)

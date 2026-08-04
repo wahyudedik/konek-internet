@@ -11,15 +11,15 @@
     <form id="cdnForm">
         <div class="form-group">
             <label for="domain">Domain</label>
-            <input type="text" id="domain" name="domain" placeholder="contoh: google.com" required>
+            <input type="text" id="domain" name="domain" autocomplete="url" placeholder="contoh: google.com" required>
         </div>
         <button type="submit" class="btn btn-primary">Cek Sekarang</button>
     </form>
-    <div class="loading">
+    <div class="loading" role="status" aria-live="polite">
         <div class="spinner"></div>
         <p>Sedang mendeteksi CDN...</p>
     </div>
-    <div class="results"></div>
+    <div class="results" aria-live="polite"></div>
     <div id="historyContainer"></div>
 </div>
 

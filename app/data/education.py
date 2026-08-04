@@ -1261,4 +1261,82 @@ EDUCATION_DATA = {
             {"slug": "dns-lookup", "name": "DNS Lookup", "icon": "🔧"}
         ]
     },
+
+    # ============================================================
+    # BATCH TOOLS
+    # ============================================================
+
+    "batch_lookup": {
+        "title": "📚 Belajar: Batch Lookup",
+        "difficulty": "menengah",
+        "sections": [
+            {
+                "heading": "📋 Apa itu Batch Lookup?",
+                "content": """<p><strong>Batch Lookup</strong> adalah fitur yang memungkinkan Anda mengecek multiple domain sekaligus dalam satu waktu.</p>
+<p>Daripada mengecek satu per satu, Anda bisa memasukkan hingga 10 domain sekaligus dan mendapatkan hasilnya dalam satu tabel ringkas.</p>"""
+            },
+            {
+                "heading": "🎯 Jenis Pengecekan",
+                "content": """<div class="edu-table">
+<table>
+<tr><th>Jenis</th><th>Yang Dicek</th><th>Cocok Untuk</th></tr>
+<tr><td><code>DNS</code></td><td>DNS records (A, MX, TXT, dll)</td><td>Cek resolusi DNS multiple domain</td></tr>
+<tr><td><code>SSL</code></td><td>Sertifikat SSL validity & issuer</td><td>Audit SSL certificate</td></tr>
+<tr><td><code>WHOIS</code></td><td>Informasi registrasi domain</td><td>Cek registrar & expiry date</td></tr>
+</table>
+</div>"""
+            },
+            {
+                "heading": "💡 Tips Penggunaan",
+                "content": """<ul>
+<li>Masukkan satu domain per baris di textarea</li>
+<li>Maksimal 10 domain per batch untuk menjaga performa</li>
+<li>Hasil bisa di-export ke CSV untuk laporan</li>
+<li>Cocok untuk audit SSL domain klien atau monitoring DNS</li>
+</ul>"""
+            }
+        ],
+        "related_tools": [
+            {"slug": "dns-lookup", "name": "DNS Lookup", "icon": "🔧"},
+            {"slug": "ssl-checker", "name": "SSL Checker", "icon": "🔒"},
+            {"slug": "whois-lookup", "name": "WHOIS Lookup", "icon": "🌍"}
+        ]
+    },
+    "compare": {
+        "title": "📚 Belajar: Tool Comparison",
+        "difficulty": "menengah",
+        "sections": [
+            {
+                "heading": "⚔️ Apa itu Tool Comparison?",
+                "content": """<p><strong>Tool Comparison</strong> adalah fitur yang memungkinkan Anda membandingkan dua domain secara berdampingan dalam satu tampilan.</p>
+<p>Daripada mengecek domain satu per satu, Anda bisa langsung melihat perbedaan antara dua domain — cocok untuk membandingkan kompetitor, migrasi domain, atau audit keamanan.</p>"""
+            },
+            {
+                "heading": "🎯 Jenis Perbandingan",
+                "content": """<div class="edu-table">
+<table>
+<tr><th>Jenis</th><th>Yang Dibandingkan</th><th>Cocok Untuk</th></tr>
+<tr><td><code>DNS</code></td><td>DNS records (A, MX, TXT, NS, dll)</td><td>Membandingkan konfigurasi DNS</td></tr>
+<tr><td><code>SSL</code></td><td>Sertifikat SSL: validity, issuer, expiry</td><td>Audit keamanan TLS</td></tr>
+<tr><td><code>WHOIS</code></td><td>Informasi registrasi: registrar, expiry, nameserver</td><td>Perbandingan registrasi domain</td></tr>
+</table>
+</div>"""
+            },
+            {
+                "heading": "💡 Tips Penggunaan",
+                "content": """<ul>
+<li>Masukkan domain tanpa <code>https://</code> atau <code>www</code> — cukup <code>example.com</code></li>
+<li>Perbedaan akan di-highlight secara otomatis untuk memudahkan analisis</li>
+<li>Cocok untuk membandingkan domain kompetitor atau sebelum sesudah migrasi</li>
+<li>Hasil bisa di-export ke CSV untuk laporan perbandingan</li>
+</ul>"""
+            }
+        ],
+        "related_tools": [
+            {"slug": "dns-lookup", "name": "DNS Lookup", "icon": "🔧"},
+            {"slug": "ssl-checker", "name": "SSL Checker", "icon": "🔒"},
+            {"slug": "whois-lookup", "name": "WHOIS Lookup", "icon": "🌍"},
+            {"slug": "batch-lookup", "name": "Batch Lookup", "icon": "📋"}
+        ]
+    },
 }
