@@ -297,6 +297,28 @@
             var toggle = document.getElementById('themeToggle');
             if (toggle) toggle.textContent = isDark ? '☀️' : '🌙';
         }
+
+        // Dark mode system preference sync
+        // Only auto-sync if user hasn't manually chosen a theme
+        (function () {
+            var mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            if (!mediaQuery) return;
+
+            mediaQuery.addEventListener('change', function (e) {
+                var savedTheme = localStorage.getItem('konek_theme');
+                if (savedTheme) return; // User has manual preference, don't override
+
+                if (e.matches) {
+                    document.documentElement.classList.add('dark-mode');
+                    document.body.classList.add('dark-mode');
+                } else {
+                    document.documentElement.classList.remove('dark-mode');
+                    document.body.classList.remove('dark-mode');
+                }
+                var toggle = document.getElementById('themeToggle');
+                if (toggle) toggle.textContent = e.matches ? '☀️' : '🌙';
+            });
+        })();
     </script>
 
     {% block scripts %}{% endblock %}

@@ -213,6 +213,42 @@ function closeShortcutsModal() {
     }
 }
 
+// ============ TOOL CARD KEYBOARD NAVIGATION ============
+// Arrow keys to navigate between tool cards on homepage
+document.addEventListener('keydown', function (e) {
+    // Only activate when a tool card is focused (not in input/textarea)
+    var tag = e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    if (!e.target.classList.contains('tool-card')) return;
+
+    var cards = Array.from(document.querySelectorAll('.tool-card'));
+    if (cards.length === 0) return;
+
+    var currentIndex = cards.indexOf(e.target);
+    if (currentIndex === -1) return;
+
+    var nextIndex = -1;
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        nextIndex = (currentIndex + 1) % cards.length;
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        nextIndex = (currentIndex - 1 + cards.length) % cards.length;
+    } else if (e.key === 'Home') {
+        e.preventDefault();
+        nextIndex = 0;
+    } else if (e.key === 'End') {
+        e.preventDefault();
+        nextIndex = cards.length - 1;
+    }
+
+    if (nextIndex >= 0 && nextIndex < cards.length) {
+        cards[nextIndex].focus();
+        cards[nextIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+});
+
 // ============ TOOL HISTORY ============
 function saveToHistory(toolName, query) {
     if (!toolName || !query) return;
@@ -429,7 +465,7 @@ function displayResults(container, data, endpoint, elapsed) {
                 <span class="result-status status-error">Error</span>
             </div>
             <div class="result-error">
-                <p>⚠️ ${data.error}</p>
+                <p>⚠️ ${escapeHtml(String(data.error))}</p>
             </div>`;
         return;
     }

@@ -5,9 +5,9 @@
     <h1>🌐 Konektivitas.com</h1>
     <p>Platform infrastruktur internet Indonesia. Cek DNS, WHOIS, SSL, IP, dan 25+ tools lainnya — cepat, gratis, tanpa
         registrasi.</p>
-    <div class="search-box">
+    <div class="search-box" role="search" aria-label="Cari tools">
         <input type="text" id="toolSearch" placeholder="🔍 Cari tools... (contoh: dns, ssl, ping)"
-            oninput="filterTools(this.value)">
+            oninput="filterTools(this.value)" aria-label="Ketik nama tool untuk mencari">
     </div>
 </section>
 
@@ -260,6 +260,25 @@
         // Hide search box when filtering by category
         var searchBox = document.querySelector('.search-box');
         if (searchBox) searchBox.style.display = 'none';
+    })();
+
+    // Tool page preloading on hover for faster navigation
+    (function () {
+        var prefetched = {};
+        var cards = document.querySelectorAll('.tool-card');
+        cards.forEach(function (card) {
+            card.addEventListener('mouseenter', function () {
+                var url = card.getAttribute('href');
+                if (url && !prefetched[url] && !document.querySelector('link[rel="prefetch"][href="' + url + '"]')) {
+                    var link = document.createElement('link');
+                    link.rel = 'prefetch';
+                    link.href = url;
+                    link.as = 'document';
+                    document.head.appendChild(link);
+                    prefetched[url] = true;
+                }
+            }, { passive: true });
+        });
     })();
 </script>
 {% endblock %}

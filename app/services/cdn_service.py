@@ -1,11 +1,29 @@
 """CDN Detection Service - Deteksi provider CDN menggunakan DNS CNAME + HTTP Headers"""
 import asyncio
 import dns.resolver
+import httpx
 import logging
 from typing import Dict, Any, List, Optional
 from app.utils.cache import cached
 
 logger = logging.getLogger("konektivitas.cdn")
+
+# Shared HTTP client for connection pooling
+_http_client: Optional[httpx.AsyncClient] = None
+
+
+async def _get_client() -> httpx.AsyncClient:
+    """Get or create shared HTTP client with connection pooling"""
+    global _http_client
+    if _http_client is None or _http_client.is_closed:
+        _http_client = httpx.AsyncClient(
+            verify=False,
+            follow_redirects=True,
+            timeout=10,
+            limits=httpx.Limits(max_connections=10, max_keepalive_connections=5),
+        )
+    return _http_client
+
 
 # ============ CDN SIGNATURES ============
 
@@ -308,7 +326,7 @@ def _detect_cdn_from_headers(headers: Dict[str, str]) -> List[Dict[str, Any]]:
     return detected
 
 
-@cached(ttl=300)
+@cached(ttl=3600)
 async def detect_cdn(domain: str) -> Dict[str, Any]:
     """Detect CDN provider for a domain using DNS CNAME + HTTP Headers"""
     results = {
@@ -332,16 +350,15 @@ async def detect_cdn(domain: str) -> Dict[str, Any]:
         cdn_from_cname = _detect_cdn_from_cname(cname_results["cname_chain"])
 
         # Step 2: Fetch HTTP headers
-        import httpx
         cdn_from_headers = []
         try:
-            async with httpx.AsyncClient(verify=False, follow_redirects=True, timeout=10) as client:
-                https_url = f"https://{domain}"
-                try:
-                    response = await client.get(https_url)
-                except Exception:
-                    http_url = f"http://{domain}"
-                    response = await client.get(http_url)
+            client = await _get_client()
+            https_url = f"https://{domain}"
+            try:
+                response = await client.get(https_url)
+            except Exception:
+                http_url = f"http://{domain}"
+                response = await client.get(http_url)
 
                 # Store relevant headers
                 relevant_headers = {}

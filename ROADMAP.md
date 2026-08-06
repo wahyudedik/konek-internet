@@ -244,7 +244,90 @@
 
 ---
 
+## 🎯 Hub.konektivitas.com — Blockchain Infrastructure
+
+> Platform infrastruktur blockchain yang menyediakan akses node RPC API untuk developer, startup, perusahaan, dan aplikasi Web3.
+
+**Detail:** [`plans/hub-konektivitas-plan.md`](plans/hub-konektivitas-plan.md)
+
+### Visi
+
+Menjadi penyedia infrastruktur konektivitas blockchain yang sederhana, cepat, dan andal untuk developer di Indonesia maun global.
+
+### Tahun 1 — MVP (2026)
+
+#### Produk: RPC Node Platform
+
+- ✅ Dashboard dengan usage statistics
+- ✅ API Key system dengan prefix `hk_`
+- ✅ Authentication (JWT + bcrypt)
+- ✅ Rate limiting per API key (100 req/min)
+- ✅ Request logging & monitoring
+- ✅ JSON-RPC proxy untuk Ethereum
+- ✅ API documentation (Swagger)
+
+#### Target Metrics
+
+| Metric | Target |
+|--------|--------|
+| Registered users | 500 |
+| API keys issued | 200 |
+| RPC requests/hari | 50.000 |
+| Supported networks | 1 (Ethereum) |
+
+### Tahun 2 — Multi Blockchain (2027)
+
+#### Produk: Multi-Chain RPC Platform
+
+- **Multi Chain** — Polygon, BSC, Arbitrum, Optimism, Avalanche
+- **Load Balancer** — Round-robin + health-based routing
+- **WebSocket** — Real-time event subscriptions
+- **Analytics** — Detailed usage analytics
+- **Billing** — Usage-based billing system
+- **Team Management** — Multi-user workspace
+
+#### Target Metrics
+
+| Metric | Target |
+|--------|--------|
+| Registered users | 5.000 |
+| API keys issued | 2.000 |
+| RPC requests/hari | 500.000 |
+| Supported networks | 6 |
+| Pro subscribers | 100 |
+
+### Tahun 3 — Enterprise (2028-2029)
+
+#### Produk: Enterprise Blockchain Infrastructure
+
+- **Global Infrastructure** — Multi-region deployment
+- **Auto Scaling** — Otomatis menambah resource
+- **Enterprise API** — Custom solutions
+- **SSO Integration** — Login perusahaan
+- **Audit Logging** — Jejak aktivitas lengkap
+- **SLA** — Jaminan uptime 99.9%
+
+#### Marketplace
+
+- **Node Providers** — Third-party node providers
+- **Revenue Sharing** — Berbagi pendapatan
+- **Quality Monitoring** — Monitor kualitas layanan
+
+#### Target Metrics
+
+| Metric | Target |
+|--------|--------|
+| Registered users | 20.000 |
+| API keys issued | 10.000 |
+| RPC requests/hari | 5.000.000 |
+| Supported networks | 10+ |
+| Enterprise clients | 50 |
+
+---
+
 ## Evolusi Teknologi
+
+### Konektivitas.com
 
 | Tahun | Server | Database | Cache | DNS | Infrastruktur |
 |-------|--------|----------|-------|-----|---------------|
@@ -253,6 +336,14 @@
 | 2028 | 2 servers | PostgreSQL | Redis | DNS Hosting | + Mobile app |
 | 2029 | LB + 2 servers | PG Primary+Replica | Redis Cluster | DNS Anycast | + BI engine |
 | 2030-31 | Multi Region | PG Multi Region | Redis Cluster | Public DNS | Full platform |
+
+### Hub.konektivitas.com
+
+| Tahun | Server | Database | Cache | Blockchain | Infrastruktur |
+|-------|--------|----------|-------|------------|---------------|
+| 2026 | 1 (4C/8GB) | PostgreSQL | Redis | Ethereum | Docker + Nginx |
+| 2027 | 2 servers | PostgreSQL | Redis | +5 chains | + Load Balancer |
+| 2028-29 | Multi Region | PG Primary+Replica | Redis Cluster | +10 chains | + Auto Scaling |
 
 ---
 

@@ -55,7 +55,7 @@ async def lookup_asn(ip_address: str) -> Dict[str, Any]:
     return results
 
 
-@cached(ttl=3600)
+@cached(ttl=600)
 async def check_blacklist(ip_address: str) -> Dict[str, Any]:
     """Blacklist Checker - Cek apakah IP ada di blacklist"""
     import asyncio

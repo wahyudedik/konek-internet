@@ -383,7 +383,7 @@ EDUCATION_DATA = {
 <li>Mulai dengan <code>p=none</code> untuk monitoring dulu</li>
 <li>Setelah 2-4 minggu, naikkan ke <code>p=quarantine</code></li>
 <li>Tambahkan <code>rua=mailto:</code> untuk laporan DMARC</li>
-<li>Pastikan SPF dan DKIM sudah benar sebelum启用 DMARC reject</li>
+<li>Pastikan SPF dan DKIM sudah benar sebelum mengaktifkan DMARC reject</li>
 </ul>"""
             }
         ],

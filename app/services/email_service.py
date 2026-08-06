@@ -2,7 +2,7 @@
 import re
 import asyncio
 import logging
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Tuple, Optional
 
 logger = logging.getLogger("konektivitas.email")
 
@@ -111,7 +111,7 @@ _FREE_EMAIL_DOMAINS = {
 }
 
 
-def validate_email_format(email: str) -> tuple:
+def validate_email_format(email: str) -> Tuple[bool, Optional[str]]:
     """Validasi format email"""
     if not email:
         return False, "Email tidak boleh kosong"

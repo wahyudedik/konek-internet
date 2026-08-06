@@ -1,3 +1,24 @@
+/* ============ SMOOTH SCROLL ============ */
+html {
+    scroll-behavior: smooth;
+}
+
+/* ============ FOCUS VISIBLE ============ */
+:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
 /* ============ CSS VARIABLES ============ */
 :root {
     --bg-primary: #ffffff;
@@ -1480,6 +1501,91 @@ a.breadcrumb-item:hover {
     font-size: 1rem;
 }
 
+/* ============ MOBILE NAV ANIMATION ============ */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.menu-toggle.active {
+    transform: rotate(90deg);
+    transition: transform 0.2s ease;
+}
+
+/* ============ TOUCH-FRIENDLY TARGETS ============ */
+/* Minimum 44px tap targets for WCAG 2.5.5 compliance */
+.btn,
+button,
+.nav-dropdown-toggle,
+.nav-dropdown-menu a,
+.tool-card,
+.back-to-top,
+.breadcrumb a,
+.result-actions .btn,
+.result-header .btn {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+.nav-dropdown-menu a {
+    display: flex;
+    align-items: center;
+}
+
+/* ============ TABLET RESPONSIVE (768px - 1024px) ============ */
+@media (max-width: 1024px) and (min-width: 769px) {
+
+    /* Grid - Tablet: 2 columns */
+    .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+
+    /* Hero - Tablet */
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero p {
+        font-size: 1.1rem;
+    }
+
+    /* Form - Tablet */
+    .form-row {
+        gap: 12px;
+    }
+
+    /* Footer - Tablet: 3 columns */
+    .footer-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+    }
+
+    /* Education - Tablet */
+    .edu-related-grid {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .edu-related-link {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    /* About grid - Tablet */
+    .about-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+}
+
 /* ============ RESPONSIVE ============ */
 @media (max-width: 768px) {
 
@@ -1497,6 +1603,7 @@ a.breadcrumb-item:hover {
         max-height: 70vh;
         overflow-y: auto;
         border-top: 1px solid var(--footer-border);
+        animation: slideDown 0.2s ease-out;
     }
 
     .nav.active {
@@ -2011,6 +2118,11 @@ a.breadcrumb-item:hover {
 .api-method.get {
     background: var(--success-bg);
     color: var(--success-text);
+}
+
+.api-method.post {
+    background: var(--info-bg);
+    color: var(--info-text);
 }
 
 .api-endpoint p {

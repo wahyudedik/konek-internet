@@ -33,11 +33,14 @@
 - **Mobile Responsive** — Hamburger nav, stacked forms, card layout di mobile
 - **Tool History** — Riwayat 10 query terakhir per tool (localStorage)
 - **URL Query State** — Shareable URLs dengan query parameters
-- **Keyboard Shortcuts** — Ctrl+K search, Escape close menus
+- **Keyboard Shortcuts** — Ctrl+K search, Escape close menus, Ctrl+D toggle dark mode
+- **Keyboard Navigation** — Arrow keys navigate between tool cards (WCAG)
 - **PWA Support** — Installable sebagai Progressive Web App
 - **Breadcrumb Navigation** — Navigasi kategori yang clickable
 - **Education Section** — Konten edukasi interaktif di semua tool pages
 - **Search/Filter** — Cari dan filter tools di homepage
+- **Tool Page Preloading** — Prefetch on hover untuk navigasi cepat
+- **Dark Mode System Sync** — Auto-sync dengan system preference (matchMedia listener)
 
 #### 25 Tools (per Kategori)
 
@@ -106,8 +109,32 @@
 - **XSS Protection** — HTML escaping + CSP headers + JavaScript Map
 - **Rate Limiting** — 60 requests per minute per IP
 - **Security Headers** — X-Content-Type-Options, X-Frame-Options, X-XSS-Protection
+- **Request ID** — X-Request-ID header untuk tracing (uuid, 8 char)
 - **HTTPS Only** — HSTS header untuk production
 - **No Data Storage** — Tidak menyimpan data pribadi pengguna
+
+#### Accessibility (WCAG 2.1)
+
+- **Touch-Friendly Targets** — Minimum 44px tap targets (WCAG 2.5.5)
+- **Focus Visible** — Keyboard focus indicators untuk semua interactive elements
+- **ARIA Labels** — Search box dan navigation dengan aria-label
+- **Keyboard Navigation** — Arrow keys untuk tool cards, Tab untuk form elements
+
+#### Responsive Design
+
+- **Mobile (< 768px)** — Single column, hamburger nav, stacked forms
+- **Tablet (768px - 1024px)** — 2-column grid, optimized layout
+- **Desktop (> 1024px)** — Full grid layout, horizontal nav
+- **Small Mobile (< 480px)** — Card layout untuk result tables
+
+#### Performance Optimizations
+
+- **HTTP Client Reuse** — Shared httpx.AsyncClient dengan connection pooling
+- **Cache TTL Tuning** — Optimized berdasarkan data volatility
+  - Blacklist: 10 menit (sering berubah)
+  - CDN Detection: 1 jam (jarang berubah)
+  - DNS/Website: 1-5 menit (real-time)
+- **Tool Page Preloading** — Prefetch on hover
 
 ---
 
@@ -343,7 +370,7 @@
 - **CSS:** Custom CSS with variables (65+ variables, light/dark themes)
 - **JavaScript:** Vanilla JS (handleToolForm, displayResults, URL state)
 - **PWA:** manifest.json + service worker
-- **Responsive:** 768px + 480px breakpoints
+- **Responsive:** 1024px + 768px + 480px breakpoints (desktop, tablet, mobile, small mobile)
 
 ### Infrastructure
 
@@ -365,6 +392,7 @@
 - **XSS Protection** — HTML escaping + CSP headers + JavaScript Map
 - **Rate Limiting** — 60 requests per minute per IP
 - **Security Headers** — X-Content-Type-Options, X-Frame-Options, X-XSS-Protection
+- **Request ID** — X-Request-ID header untuk distributed tracing (uuid, 8 char)
 - **HTTPS Only** — HSTS header untuk production
 - **No Data Storage** — Tidak menyimpan data pribadi pengguna
 
@@ -403,18 +431,22 @@
 - [x] Redis cache (+ in-memory fallback)
 - [x] Graceful error handling
 - [x] X-Process-Time header
+- [x] X-Request-ID header (distributed tracing)
 - [x] Async non-blocking (asyncio.to_thread)
 - [x] HTTP fallback (HTTPS → HTTP)
-- [x] HTTP client reuse
+- [x] HTTP client reuse (shared httpx.AsyncClient + connection pooling)
+- [x] Cache TTL tuning (blacklist 10min, CDN 1hr, DNS/Website 1-5min)
 
 ---
 
 ## Feature Checklist
 
-- [x] Dark mode toggle (65+ CSS variables)
+- [x] Dark mode toggle (65+ CSS variables, localStorage, system preference sync)
+- [x] Dark mode system sync (matchMedia listener, real-time preference)
 - [x] Tool history (localStorage, 10 per tool)
 - [x] URL query state (shareable URLs)
-- [x] Keyboard shortcuts (Ctrl+K, Escape)
+- [x] Keyboard shortcuts (Ctrl+K, Escape, Ctrl+D)
+- [x] Keyboard navigation (arrow keys untuk tool cards, WCAG)
 - [x] PWA support (manifest.json + service worker)
 - [x] Mobile card layout (result tables)
 - [x] Breadcrumb navigation (clickable categories)
@@ -425,6 +457,295 @@
 - [x] CDN Detection (CNAME + Header analysis)
 - [x] XSS protection in history items
 - [x] Email validator: free email detection
+- [x] Tool page preloading (prefetch on hover)
+- [x] Touch-friendly tap targets (WCAG 2.5.5, minimum 44px)
+- [x] Tablet responsive (768px-1024px breakpoint)
+
+---
+
+---
+
+# Fitur Hub.konektivitas.com — Blockchain Infrastructure
+
+> Platform infrastruktur blockchain yang menyediakan akses node RPC API untuk developer, startup, perusahaan, dan aplikasi Web3.
+
+---
+
+## Visi
+
+Menjadi penyedia infrastruktur konektivitas blockchain yang sederhana, cepat, dan andal untuk developer di Indonesia maupun global.
+
+## Misi
+
+1. Menyediakan RPC Node berkinerja tinggi.
+2. Mempermudah integrasi blockchain melalui REST API dan JSON-RPC.
+3. Menyediakan endpoint yang stabil dengan uptime tinggi.
+4. Mendukung berbagai jaringan blockchain populer.
+5. Menjadi fondasi berbagai aplikasi Web3.
+
+---
+
+## Fase 1 — MVP (2026)
+
+### Authentication System
+
+- **User Registration** — Email + password dengan email verification
+- **Login System** — JWT token-based authentication
+- **Password Hashing** — Bcrypt untuk keamanan
+- **Session Management** — Token refresh mechanism
+- **Profile Management** — Edit profil pengguna
+
+### API Key Management
+
+- **Generate API Keys** — Prefix `hk_` untuk identifikasi
+- **Hash API Keys** — SHA-256 hash sebelum storage
+- **CRUD Operations** — Create, list, update, delete API keys
+- **Network Permissions** — Batasi akses per blockchain network
+- **Key Expiration** — Set masa berlaku API key
+- **Rate Limit Per Key** — Batasi request per API key
+
+### RPC Proxy
+
+- **JSON-RPC Proxy** — Proxy untuk Ethereum mainnet
+- **Request Validation** — Validasi JSON-RPC request format
+- **Response Caching** — Cache response di Redis
+- **Rate Limiting** — 100 request per menit per API key
+- **Request Logging** — Log semua RPC requests
+
+### Dashboard
+
+- **Landing Page** — Hero section, features, pricing
+- **User Dashboard** — Overview usage statistics
+- **API Key Management UI** — Kelola API keys dari UI
+- **Network Status** — Status kesehatan node
+- **Usage Statistics** — Grafik penggunaan API
+
+### API Documentation
+
+- **Swagger/OpenAPI** — Interactive API documentation
+- **Code Examples** — Contoh integrasi Python, JavaScript, Go
+- **SDK Information** — Library yang tersedia
+
+### Monitoring
+
+- **Health Check Endpoints** — `/api/v1/status`
+- **Node Health** — Cek kesehatan blockchain node
+- **Prometheus Metrics** — Export metrics untuk monitoring
+- **Grafana Dashboards** — Dashboard monitoring visual
+
+### Security
+
+- **API Key Authentication** — Wajib API key untuk akses
+- **JWT Validation** — Validasi token di setiap request
+- **CORS Configuration** — Cross-origin resource sharing
+- **Rate Limiting** — Per-API-key rate limiting
+- **Request Logging** — Audit trail untuk semua request
+
+---
+
+## Fase 2 — Multi Blockchain (2027)
+
+### Multi Chain Support
+
+| Network | Chain ID | Status |
+|---------|----------|--------|
+| Ethereum | 1 | ✅ MVP |
+| Polygon | 137 | 📋 Planned |
+| BSC | 56 | 📋 Planned |
+| Arbitrum | 42161 | 📋 Planned |
+| Optimism | 10 | 📋 Planned |
+| Avalanche | 43114 | 📋 Planned |
+
+### Load Balancer
+
+- **Round-Robin Routing** — Distribusi beban merata
+- **Health-Based Routing** — Route ke node sehat
+- **Failover Handling** — Automatic failover jika node down
+
+### WebSocket
+
+- **WebSocket Proxy** — Proxy untuk real-time events
+- **Subscription Management** — Kelola subscriptions
+- **Connection Pooling** — Optimasi koneksi
+
+### Analytics
+
+- **Detailed Usage Analytics** — Analisis penggunaan mendalam
+- **Cost Tracking** — Lacak biaya penggunaan
+- **Performance Metrics** — Metrik performa API
+
+### Billing
+
+- **Usage-Based Billing** — Bayar sesuai penggunaan
+- **Plan Management** — Kelola paket berlangganan
+- **Invoice Generation** — Generate invoice otomatis
+
+### Team Management
+
+- **Team Workspace** — Kolaborasi tim
+- **Team Members** — Undang anggota tim
+- **Roles & Permissions** — Role admin, developer, viewer
+- **Shared API Keys** — API keys yang dibagikan tim
+
+---
+
+## Fase 3 — Enterprise (2028-2029)
+
+### Global Infrastructure
+
+- **Multi-Region Deployment** — Server di beberapa wilayah
+- **Auto Scaling** — Otomatis menambah resource
+- **CDN Integration** — CDN untuk static assets
+
+### Enterprise Features
+
+- **SSO Integration** — Login perusahaan (SAML, OIDC)
+- **Audit Logging** — Jejak aktivitas lengkap
+- **SLA Monitoring** — Jaminan uptime
+- **Custom Rate Limits** — Rate limit kustom per klien
+- **Priority Support** — Support prioritas
+
+### Marketplace
+
+- **Third-Party Node Providers** — Provider node pihak ketiga
+- **Revenue Sharing** — Berbagi pendapatan
+- **Quality Monitoring** — Monitor kualitas layanan
+
+---
+
+## API Endpoints
+
+### Authentication
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/v1/auth/register` | POST | Register pengguna baru |
+| `/api/v1/auth/login` | POST | Login |
+| `/api/v1/auth/refresh` | POST | Refresh token |
+| `/api/v1/auth/me` | GET | Ambil data pengguna |
+| `/api/v1/auth/me` | PUT | Update profil |
+
+### API Keys
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/v1/keys` | GET | List API keys |
+| `/api/v1/keys` | POST | Buat API key baru |
+| `/api/v1/keys/{id}` | PUT | Update API key |
+| `/api/v1/keys/{id}` | DELETE | Hapus API key |
+
+### RPC Proxy
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/rpc/{network}` | POST | JSON-RPC proxy |
+| `/rpc/{network}/health` | GET | Node health check |
+
+### Blockchain Data
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/v1/networks` | GET | List supported networks |
+| `/api/v1/networks/{slug}` | GET | Network details |
+| `/api/v1/{network}/block/{id}` | GET | Get block |
+| `/api/v1/{network}/tx/{hash}` | GET | Get transaction |
+| `/api/v1/{network}/address/{addr}` | GET | Get address info |
+| `/api/v1/{network}/balance/{addr}` | GET | Get balance |
+| `/api/v1/{network}/broadcast` | POST | Broadcast transaction |
+
+### Monitoring
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/v1/status` | GET | System status |
+| `/api/v1/status/{network}` | GET | Network status |
+| `/api/v1/usage` | GET | Usage statistics |
+| `/api/v1/usage/daily` | GET | Daily usage stats |
+
+---
+
+## Technology Stack
+
+### Backend
+
+- **Framework:** FastAPI (Python)
+- **Database:** PostgreSQL 15+
+- **Cache:** Redis 7+
+- **Auth:** JWT + API Keys (bcrypt + SHA-256)
+- **Migration:** Alembic
+
+### Infrastructure
+
+- **Container:** Docker + Docker Compose
+- **Reverse Proxy:** Nginx
+- **Orchestration:** Traefik (optional)
+- **Monitoring:** Prometheus + Grafana
+- **Database:** PostgreSQL (relational, berbeda dengan SQLite Konektivitas.com)
+
+### Architecture
+
+```
+Client Apps → Nginx → FastAPI → PostgreSQL
+                            → Redis Cache
+                            → Blockchain Nodes
+                            → Prometheus → Grafana
+```
+
+---
+
+## Database Schema
+
+### Users Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | UUID | Primary key |
+| email | VARCHAR(255) | Unique email |
+| password_hash | VARCHAR(255) | Bcrypt hash |
+| full_name | VARCHAR(255) | Nama lengkap |
+| company | VARCHAR(255) | Perusahaan |
+| is_active | BOOLEAN | Status aktif |
+| plan | VARCHAR(50) | Paket: free/pro/team |
+| created_at | TIMESTAMP | Tanggal daftar |
+
+### API Keys Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | UUID | Primary key |
+| user_id | UUID | Foreign key ke users |
+| name | VARCHAR(100) | Nama key |
+| key_hash | VARCHAR(255) | SHA-256 hash |
+| key_prefix | VARCHAR(10) | Prefix untuk display |
+| networks | TEXT[] | Blockchain networks |
+| rate_limit | INTEGER | Request per menit |
+| is_active | BOOLEAN | Status aktif |
+| expires_at | TIMESTAMP | Masa berlaku |
+
+### Usage Logs Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | BIGSERIAL | Primary key |
+| api_key_id | UUID | Foreign key ke api_keys |
+| network | VARCHAR(50) | Blockchain network |
+| method | VARCHAR(100) | RPC method |
+| response_time_ms | INTEGER | Response time |
+| status_code | INTEGER | HTTP status |
+| created_at | TIMESTAMP | Timestamp |
+
+### Blockchain Networks Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | SERIAL | Primary key |
+| name | VARCHAR(100) | Network name |
+| slug | VARCHAR(50) | URL-friendly name |
+| chain_id | INTEGER | Chain ID |
+| rpc_endpoint | TEXT | RPC URL |
+| ws_endpoint | TEXT | WebSocket URL |
+| explorer_url | TEXT | Block explorer URL |
+| is_active | BOOLEAN | Status aktif |
 
 ---
 
@@ -434,3 +755,4 @@
 - [BRIEF2.md](BRIEF2.md) — Detail teknis dan arsitektur
 - [ROADMAP.md](ROADMAP.md) — Roadmap pengembangan 5 tahun
 - [AGENT.md](AGENT.md) — Panduan untuk AI/agent
+- [plans/hub-konektivitas-plan.md](plans/hub-konektivitas-plan.md) — Rencana detail Hub.konektivitas.com

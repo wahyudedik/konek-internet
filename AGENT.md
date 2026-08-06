@@ -252,11 +252,15 @@ Apakah fitur ini membantu pengguna memahami internet *(Learn)*, mengelola aset i
 
 #### User Experience
 - Dark Mode Toggle (65+ CSS variables, localStorage, system preference)
+- Dark Mode System Sync (matchMedia listener, real-time preference update)
 - Mobile responsive: hamburger nav, dropdown, stacked forms, card layout
+- Tablet responsive (768px-1024px breakpoint, 2-column grid)
 - Tool History localStorage (10 query terakhir per tool)
 - URL Query State (shareable URLs)
-- Keyboard Shortcuts (Ctrl+K search, Escape close)
+- Keyboard Shortcuts (Ctrl+K search, Escape close, Ctrl+D dark mode)
+- Keyboard Navigation (arrow keys untuk tool cards, WCAG compliant)
 - PWA Support (manifest.json + service worker)
+- Tool Page Preloading (prefetch on hover untuk navigasi cepat)
 - Section edukasi interaktif di semua 25 tool pages
 - Navigation dropdown 5 kategori (DNS, Domain, SSL, Website, IP)
 - Footer grid dengan semua 25 tools terorganisir + About + API Docs
@@ -271,12 +275,15 @@ Apakah fitur ini membantu pengguna memahami internet *(Learn)*, mengelola aset i
 - CDN Detection (CNAME + Header analysis) — tool ke-25
 - Email validator: free email provider detection
 - HTTP fallback (HTTPS → HTTP) di website service
-- HTTP client reuse di redirect checker
+- HTTP client reuse (shared httpx.AsyncClient + connection pooling)
+- Cache TTL tuning (blacklist 10min, CDN 1hr, DNS/Website 1-5min)
 - XSS protection di copyJSON function (JavaScript Map)
 - XSS protection di history items (event delegation)
 - Breadcrumb links ke category
 - Health check endpoint
 - Response time display (X-Process-Time header)
+- Request ID (X-Request-ID header untuk distributed tracing)
+- Touch-friendly tap targets (WCAG 2.5.5, minimum 44px)
 
 ### Cara Menjalankan
 ```bash
@@ -355,6 +362,7 @@ X-XSS-Protection: 1; mode=block
 Referrer-Policy: strict-origin-when-cross-origin
 Permissions-Policy: camera=(), microphone=(), geolocation=()
 X-Process-Time: {ms}
+X-Request-ID: {uuid-8char}
 Strict-Transport-Security: max-age=31536000 (HTTPS only)
 ```
 
@@ -478,8 +486,11 @@ app/
 - [x] Redis cache untuk data yang sering diakses (+ in-memory fallback)
 - [x] Graceful error handling
 - [x] X-Process-Time header
+- [x] X-Request-ID header (distributed tracing)
 - [x] Async non-blocking (asyncio.to_thread untuk semua blocking operations)
 - [x] HTTP fallback (HTTPS → HTTP)
+- [x] HTTP client reuse (shared httpx.AsyncClient + connection pooling)
+- [x] Cache TTL tuning (optimized per data volatility)
 
 ### SEO Checklist
 - [x] Meta title & description
@@ -493,10 +504,12 @@ app/
 - [x] FAQ rich snippets
 
 ### Feature Checklist
-- [x] Dark mode toggle (65+ CSS variables)
+- [x] Dark mode toggle (65+ CSS variables, localStorage, system preference sync)
+- [x] Dark mode system sync (matchMedia listener, real-time preference)
 - [x] Tool history (localStorage, 10 per tool)
 - [x] URL query state (shareable URLs)
-- [x] Keyboard shortcuts (Ctrl+K, Escape)
+- [x] Keyboard shortcuts (Ctrl+K, Escape, Ctrl+D)
+- [x] Keyboard navigation (arrow keys untuk tool cards, WCAG)
 - [x] PWA support (manifest.json + service worker)
 - [x] Mobile card layout (result tables)
 - [x] Breadcrumb navigation (clickable categories)
@@ -507,6 +520,9 @@ app/
 - [x] CDN Detection (CNAME + Header analysis)
 - [x] XSS protection in history items
 - [x] Email validator: free email detection
+- [x] Tool page preloading (prefetch on hover)
+- [x] Touch-friendly tap targets (WCAG 2.5.5, minimum 44px)
+- [x] Tablet responsive (768px-1024px breakpoint)
 
 ---
 
@@ -607,12 +623,319 @@ Yang dijual adalah:
 
 ---
 
+# Hub.konektivitas.com — Blockchain Infrastructure
+
+> Panduan untuk AI/agent agar mudah memahami dan mengerjakan proyek Hub.konektivitas.com.
+
+**Detail:** [`plans/hub-konektivitas-plan.md`](plans/hub-konektivitas-plan.md)
+
+## Overview
+
+Hub.konektivitas.com adalah platform infrastruktur blockchain yang menyediakan akses node RPC API untuk developer, startup, perusahaan, dan aplikasi Web3 tanpa harus menjalankan node sendiri.
+
+Fokus utama proyek ini adalah menyediakan layanan yang cepat, stabil, aman, dan mudah diintegrasikan melalui API.
+
+## Visi
+
+Menjadi penyedia infrastruktur konektivitas blockchain yang sederhana, cepat, dan andal untuk developer di Indonesia maupun global.
+
+## Misi
+
+1. Menyediakan RPC Node berkinerja tinggi.
+2. Mempermudah integrasi blockchain melalui REST API dan JSON-RPC.
+3. Menyediakan endpoint yang stabil dengan uptime tinggi.
+4. Mendukung berbagai jaringan blockchain populer.
+5. Menjadi fondasi berbagai aplikasi Web3.
+
+## Layanan
+
+- **Public RPC Endpoint** — Akses publik tanpa registrasi
+- **Private RPC Endpoint** — Akses privat dengan API key
+- **JSON-RPC API** — Standar JSON-RPC 2.0
+- **WebSocket Endpoint** — Real-time event subscriptions
+- **Blockchain Data API** — Block, transaction, address data
+- **Transaction Broadcast API** — Broadcast transaksi
+- **Block Explorer API** — Data explorasi block
+- **Address Balance API** — Cek saldo alamat
+- **Smart Contract API** — Interaksi smart contract
+- **Monitoring and Status API** — Status kesehatan node
+
+## Target Pengguna
+
+- Developer blockchain
+- Startup Web3
+- Perusahaan / Fintech
+- Wallet / Exchange
+- Game Blockchain / NFT Platform
+- AI Agent / IoT
+
+## Arsitektur
+
+```
+Client Apps → Nginx → FastAPI → PostgreSQL
+                            → Redis Cache
+                            → Blockchain Nodes
+                            → Prometheus → Grafana
+```
+
+### Alur Request
+
+1. Client mengirim JSON-RPC request
+2. Nginx menerima dan forward ke FastAPI
+3. FastAPI memvalidasi API key
+4. FastAPI memeriksa rate limit
+5. FastAPI memeriksa cache (Redis)
+6. Jika cache miss, forward ke blockchain node
+7. Response disimpan di cache
+8. Request dilog ke PostgreSQL
+9. Response dikembalikan ke client
+
+## Struktur Direktori
+
+```
+hub-konektivitas/
+├── app/
+│   ├── main.py                 # FastAPI app utama
+│   ├── config.py               # Konfigurasi Pydantic
+│   ├── dependencies.py         # Dependency injection
+│   ├── middleware/
+│   │   ├── auth.py             # API Key authentication
+│   │   ├── rate_limit.py       # Rate limiting
+│   │   └── logging.py          # Request logging
+│   ├── models/
+│   │   ├── user.py             # User model
+│   │   ├── api_key.py          # API Key model
+│   │   ├── usage.py            # Usage tracking
+│   │   └── blockchain.py       # Network model
+│   ├── routers/
+│   │   ├── auth.py             # Login, Register
+│   │   ├── dashboard.py        # Dashboard endpoints
+│   │   ├── rpc.py              # JSON-RPC proxy
+│   │   ├── blockchain.py       # Blockchain data
+│   │   ├── monitoring.py       # Status and health
+│   │   └── admin.py            # Admin endpoints
+│   ├── services/
+│   │   ├── auth_service.py     # Authentication logic
+│   │   ├── api_key_service.py  # API Key CRUD
+│   │   ├── rpc_service.py      # RPC proxy logic
+│   │   ├── blockchain_service.py # Blockchain interactions
+│   │   └── usage_service.py    # Usage tracking
+│   ├── utils/
+│   │   ├── cache.py            # Redis + in-memory cache
+│   │   ├── crypto.py           # API key hashing, JWT
+│   │   └── validators.py       # Input validation
+│   ├── templates/
+│   │   ├── base.html           # Base layout
+│   │   ├── index.html          # Landing page
+│   │   ├── dashboard.html      # User dashboard
+│   │   ├── login.html          # Login page
+│   │   ├── register.html       # Register page
+│   │   ├── api_keys.html       # API Key management
+│   │   └── docs.html           # API documentation
+│   └── static/
+│       ├── css/style.css
+│       ├── js/app.js
+│       └── favicon.svg
+├── alembic/                    # Database migrations
+├── tests/
+├── docker-compose.yml
+├── Dockerfile
+├── requirements.txt
+└── .env.example
+```
+
+## API Endpoints
+
+### Authentication
+
+```
+POST   /api/v1/auth/register       # Register new user
+POST   /api/v1/auth/login          # Login
+POST   /api/v1/auth/refresh        # Refresh token
+GET    /api/v1/auth/me             # Get current user
+PUT    /api/v1/auth/me             # Update profile
+```
+
+### API Keys
+
+```
+GET    /api/v1/keys               # List API keys
+POST   /api/v1/keys               # Create API key
+DELETE /api/v1/keys/{id}          # Revoke API key
+PUT    /api/v1/keys/{id}          # Update API key
+```
+
+### RPC Proxy
+
+```
+POST   /rpc/{network}             # JSON-RPC proxy
+GET    /rpc/{network}/health      # Node health check
+```
+
+### Blockchain Data
+
+```
+GET    /api/v1/networks           # List supported networks
+GET    /api/v1/networks/{slug}    # Network details
+GET    /api/v1/{network}/block/{id}  # Get block
+GET    /api/v1/{network}/tx/{hash}   # Get transaction
+GET    /api/v1/{network}/address/{addr} # Get address info
+GET    /api/v1/{network}/balance/{addr} # Get balance
+POST   /api/v1/{network}/broadcast    # Broadcast transaction
+```
+
+### Monitoring
+
+```
+GET    /api/v1/status             # System status
+GET    /api/v1/status/{network}   # Network status
+GET    /api/v1/usage              # Usage statistics
+```
+
+## Database Schema
+
+### Users
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | UUID | Primary key |
+| email | VARCHAR(255) | Unique email |
+| password_hash | VARCHAR(255) | Bcrypt hash |
+| full_name | VARCHAR(255) | Nama lengkap |
+| plan | VARCHAR(50) | free/pro/team |
+| created_at | TIMESTAMP | Tanggal daftar |
+
+### API Keys
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | UUID | Primary key |
+| user_id | UUID | Foreign key ke users |
+| name | VARCHAR(100) | Nama key |
+| key_hash | VARCHAR(255) | SHA-256 hash |
+| key_prefix | VARCHAR(10) | Prefix untuk display |
+| networks | TEXT[] | Blockchain networks |
+| rate_limit | INTEGER | Request per menit |
+| is_active | BOOLEAN | Status aktif |
+
+### Usage Logs
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | BIGSERIAL | Primary key |
+| api_key_id | UUID | Foreign key |
+| network | VARCHAR(50) | Blockchain network |
+| method | VARCHAR(100) | RPC method |
+| response_time_ms | INTEGER | Response time |
+| status_code | INTEGER | HTTP status |
+
+### Blockchain Networks
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | SERIAL | Primary key |
+| name | VARCHAR(100) | Network name |
+| slug | VARCHAR(50) | URL-friendly name |
+| chain_id | INTEGER | Chain ID |
+| rpc_endpoint | TEXT | RPC URL |
+| is_active | BOOLEAN | Status aktif |
+
+## Konvensi Penamaan
+
+### File
+- snake_case.py untuk semua file Python
+
+### Function
+- snake_case() untuk semua function
+
+### Class
+- PascalCase untuk semua class
+
+### Variable
+- snake_case untuk semua variable
+
+### API Endpoint
+- kebab-case untuk URL
+- `/api/v1/{resource}` untuk REST
+- `/rpc/{network}` untuk RPC proxy
+
+### API Key Prefix
+- `hk_` untuk Hub.konektivitas.com
+
+## Security
+
+### API Key Security
+- API key di-hash dengan SHA-256 sebelum disimpan
+- Hanya prefix yang ditampilkan ke user (contoh: `hk_abc123...`)
+- Full key hanya ditampilkan sekali saat pembuatan
+- Support key expiration dan revocation
+
+### Authentication
+- JWT tokens untuk web session
+- API key untuk programmatic access
+- Bcrypt untuk password hashing
+- Rate limiting per API key
+
+### Rate Limiting
+- Default: 100 requests per menit per API key
+- Configurable per plan
+- Custom limits untuk enterprise
+
+## Monitoring
+
+### Prometheus Metrics
+- Request count per network
+- Response time histogram
+- Error rate counter
+- Cache hit/miss ratio
+- Active connections
+
+### Grafana Dashboards
+- System overview
+- API performance
+- Node health
+- Usage analytics
+
+## Cara Menjalankan
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Setup database
+alembic upgrade head
+
+# Start server
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8003
+
+# Akses
+# Web: http://localhost:8003
+# API: http://localhost:8003/api/v1/
+# Docs: http://localhost:8003/docs
+# Health: http://localhost:8003/api/v1/status
+```
+
+## Perbedaan dengan Konektivitas.com
+
+| Aspek | Konektivitas.com | Hub.konektivitas.com |
+|-------|------------------|---------------------|
+| Database | SQLite → PostgreSQL | PostgreSQL |
+| Auth | Tidak ada | JWT + API Keys |
+| Rate Limit | Per-IP | Per-API-Key |
+| Container | Tidak ada | Docker |
+| Monitoring | Prometheus headers | Prometheus + Grafana |
+| Purpose | Internet tools | Blockchain RPC |
+| Port | 8002 | 8003 |
+
+---
+
 ## Referensi Penting
 
-- [BRIEF.md](BRIEF.md) — Visi, misi, dan filosofi
-- [BRIEF2.md](BRIEF2.md) — Detail teknis dan arsitektur
+- [BRIEF.md](BRIEF.md) — Visi, misi, dan filosofi Konektivitas.com
+- [BRIEF2.md](BRIEF2.md) — Detail teknis dan arsitektur Konektivitas.com
 - [ROADMAP.md](ROADMAP.md) — Roadmap pengembangan 5 tahun
 - [FEATURES.md](FEATURES.md) — Daftar lengkap fitur per fase
+- [plans/hub-konektivitas-plan.md](plans/hub-konektivitas-plan.md) — Rencana detail Hub.konektivitas.com
 
 ---
 

@@ -1,4 +1,5 @@
 import time
+import uuid
 import logging
 from datetime import date
 from fastapi import FastAPI, Request
@@ -51,14 +52,18 @@ app.add_middleware(
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         start_time = time.time()
+        request_id = str(uuid.uuid4())[:8]
         
         try:
             response = await call_next(request)
         except Exception as e:
-            logger.error("Request error: %s %s - %s", request.method, request.url.path, str(e))
+            logger.error("[%s] Request error: %s %s - %s", request_id, request.method, request.url.path, str(e))
             raise
         
         process_time = round((time.time() - start_time) * 1000, 2)
+        
+        # Request ID for tracing
+        response.headers["X-Request-ID"] = request_id
         
         # Security headers
         response.headers["X-Content-Type-Options"] = "nosniff"
@@ -89,7 +94,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         
         # Log API requests
         if request.url.path.startswith("/api/"):
-            logger.info("%s %s %s - %dms %s", request.client.host if request.client else "?", request.method, request.url.path, response.status_code, f"{process_time}ms")
+            logger.info("[%s] %s %s %s - %dms %s", request_id, request.client.host if request.client else "?", request.method, request.url.path, response.status_code, f"{process_time}ms")
         
         return response
 
@@ -409,6 +414,8 @@ async def sitemap_xml():
         ("/email-validator", "0.8", "monthly"),
         ("/port-scanner", "0.8", "monthly"),
         ("/cdn-detect", "0.8", "monthly"),
+        ("/batch-lookup", "0.8", "monthly"),
+        ("/compare", "0.8", "monthly"),
         ("/about", "0.7", "monthly"),
         ("/api-docs", "0.7", "monthly"),
     ]
