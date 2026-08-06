@@ -85,7 +85,7 @@ hub-konektivitas/
 │   └── static/
 │       ├── css/style.css
 │       ├── js/app.js
-│       └── favicon.svg
+│       └── favicon.png
 ├── alembic/                    # Database migrations
 ├── tests/
 ├── docker-compose.yml

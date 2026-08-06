@@ -163,7 +163,7 @@ konek-internet/
     │   ├── education.py  # Konten edukasi 25 tools
     │   └── faq_data.py   # FAQ JSON-LD (8 entries)
     └── static/           # Static files
-        ├── favicon.svg   # SVG favicon
+        ├── favicon.png   # PNG favicon
         ├── robots.txt    # SEO robots
         ├── sitemap.xml   # SEO sitemap
         ├── manifest.json # PWA manifest
@@ -465,7 +465,8 @@ app/
 ├── static/
 │   ├── css/style.css
 │   ├── js/app.js     # handleToolForm(), displayResults(), copyJSON()
-│   ├── favicon.svg
+│   ├── favicon.png
+│   ├── logo.png
 │   ├── manifest.json # PWA
 │   └── sw.js         # Service Worker
 └── models/           # Data models
@@ -735,7 +736,7 @@ hub-konektivitas/
 │   └── static/
 │       ├── css/style.css
 │       ├── js/app.js
-│       └── favicon.svg
+│       └── favicon.png
 ├── alembic/                    # Database migrations
 ├── tests/
 ├── docker-compose.yml

@@ -198,7 +198,7 @@ server {
 
     # Favicon
     location /favicon.ico {
-        alias /www/wwwroot/konektivitas/app/static/favicon.svg;
+        alias /www/wwwroot/konektivitas/app/static/favicon.png;
     }
 
     # API and Pages (proxy to FastAPI)
