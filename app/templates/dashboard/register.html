@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block title %}Daftar - Konektivitas.com{% endblock %}
+{% block description %}Daftar akun baru di Konektivitas.com.{% endblock %}
+
+{% block head %}
+<style>
+    .auth-page {
+        min-height: calc(100vh - 60px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: var(--bg-primary);
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 420px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 32px;
+    }
+
+    .auth-card h1 {
+        text-align: center;
+        margin: 0 0 8px;
+        font-size: 1.5rem;
+        color: var(--text-primary);
+    }
+
+    .auth-card .subtitle {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-bottom: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: var(--text-primary);
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        box-sizing: border-box;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+
+    .form-group .hint {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 12px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 8px;
+    }
+
+    .btn-primary:hover {
+        opacity: 0.9;
+    }
+
+    .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .auth-links {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    .auth-links a {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+    .error-msg {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        margin-bottom: 16px;
+        display: none;
+    }
+
+    .dark-mode .error-msg {
+        background: #450a0a;
+        border-color: #7f1d1d;
+        color: #fca5a5;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card">
+        <h1>📝 Daftar</h1>
+        <p class="subtitle">Buat akun Konektivitas.com baru</p>
+
+        <div class="error-msg" id="errorMsg"></div>
+
+        <form id="registerForm" onsubmit="handleRegister(event)">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="username" required minlength="3" maxlength="30">
+                <div class="hint">3-30 karakter, huruf, angka, underscore</div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="email@contoh.com" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Min. 8 karakter" required minlength="8">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Konfirmasi Password</label>
+                <input type="password" id="confirmPassword" placeholder="Ulangi password" required>
+            </div>
+            <button type="submit" class="btn-primary" id="registerBtn">Daftar</button>
+        </form>
+
+        <div class="auth-links">
+            Sudah punya akun? <a href="/login">Login</a>
+        </div>
+        <div class="auth-links" style="margin-top: 8px;">
+            <a href="/">← Kembali ke beranda</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        if (localStorage.getItem('konek_token')) {
+            window.location.href = '/dashboard';
+            return;
+        }
+
+        window.handleRegister = function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('registerBtn');
+            const errorDiv = document.getElementById('errorMsg');
+
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirmPassword').value;
+
+            if (password !== confirm) {
+                errorDiv.textContent = 'Password tidak cocok.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            btn.textContent = '⏳ Mendaftar...';
+            btn.disabled = true;
+            errorDiv.style.display = 'none';
+
+            const body = {
+                username: document.getElementById('username').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                password: password,
+            };
+
+            fetch('/api/v1/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            })
+                .then(r => r.ok ? r.json() : r.json().then(d => Promise.reject(d)))
+                .then(data => {
+                    localStorage.setItem('konek_token', data.access_token);
+                    if (data.refresh_token) {
+                        localStorage.setItem('konek_refresh_token', data.refresh_token);
+                    }
+                    window.location.href = '/dashboard';
+                })
+                .catch(err => {
+                    btn.textContent = 'Daftar';
+                    btn.disabled = false;
+                    errorDiv.textContent = err.detail || 'Pendaftaran gagal.';
+                    errorDiv.style.display = 'block';
+                });
+        };
+    })();
+</script>
+{% endblock %}

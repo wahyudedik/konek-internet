@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+
+{% block title %}Notifikasi - Konektivitas.com{% endblock %}
+{% block description %}Kelola pengaturan notifikasi Konektivitas.com workspace.{% endblock %}
+
+{% block head %}
+<style>
+    .dashboard-layout {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 0;
+        min-height: calc(100vh - 60px);
+    }
+
+    .dashboard-sidebar {
+        background: var(--bg-secondary);
+        border-right: 1px solid var(--border-color);
+        padding: 24px 0;
+    }
+
+    .dashboard-sidebar .sidebar-header {
+        padding: 0 20px 20px;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 16px;
+    }
+
+    .dashboard-sidebar .sidebar-header h3 {
+        margin: 0 0 4px;
+        font-size: 1rem;
+    }
+
+    .dashboard-sidebar .sidebar-header .plan-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .sidebar-nav a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+        background: var(--bg-hover);
+        color: var(--primary-color);
+    }
+
+    .sidebar-nav a .nav-icon {
+        font-size: 1.1rem;
+        width: 24px;
+        text-align: center;
+    }
+
+    .dashboard-main {
+        padding: 24px 32px;
+    }
+
+    .page-header h1 {
+        margin: 0 0 24px;
+        font-size: 1.5rem;
+    }
+
+    .channel-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+    }
+
+    .channel-card .channel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .channel-card .channel-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .channel-card .channel-desc {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 12px;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 26px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #ccc;
+        border-radius: 26px;
+        transition: 0.3s;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 3px;
+        bottom: 3px;
+        background: white;
+        border-radius: 50%;
+        transition: 0.3s;
+    }
+
+    .toggle-switch input:checked+.toggle-slider {
+        background: var(--primary-color);
+    }
+
+    .toggle-switch input:checked+.toggle-slider:before {
+        transform: translateX(22px);
+    }
+
+    .channel-config {
+        margin-top: 12px;
+    }
+
+    .form-group {
+        margin-bottom: 12px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+    }
+
+    .btn-save {
+        padding: 8px 16px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.85rem;
+    }
+
+    .not-configured {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .dashboard-sidebar {
+            display: none;
+        }
+
+        .dashboard-main {
+            padding: 16px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+        <div class="sidebar-header">
+            <h3>👋 {{ user.display_name or user.username }}</h3>
+            <span class="plan-badge">{{ user.plan | upper }}</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/dashboard"><span class="nav-icon">📊</span> Dashboard</a>
+            <a href="/dashboard/domains"><span class="nav-icon">🌐</span> Domain Saya</a>
+            <a href="/dashboard/api-keys"><span class="nav-icon">🔑</span> API Keys</a>
+            <a href="/dashboard/notifications" class="active"><span class="nav-icon">🔔</span> Notifikasi</a>
+            <a href="/dashboard/profile"><span class="nav-icon">👤</span> Profil</a>
+            <hr style="border-color: var(--border-color); margin: 12px 20px;">
+            <a href="/"><span class="nav-icon">🏠</span> Beranda</a>
+        </nav>
+    </aside>
+
+    <main class="dashboard-main">
+        <h1>🔔 Pengaturan Notifikasi</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 24px;">Konfigurasi channel notifikasi untuk alert
+            monitoring domain Anda.</p>
+
+        <!-- Email Channel -->
+        <div class="channel-card">
+            <div class="channel-header">
+                <span class="channel-name">📧 Email</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="emailToggle" onchange="toggleChannel('email', this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="channel-desc">Notifikasi dikirim ke alamat email: <strong>{{ user.email }}</strong></div>
+            <div class="channel-config" id="emailConfig">
+                <p class="not-configured">Email notification menggunakan SMTP server default (Gmail). Untuk konfigurasi
+                    custom, hubungi admin.</p>
+            </div>
+        </div>
+
+        <!-- Telegram Channel -->
+        <div class="channel-card">
+            <div class="channel-header">
+                <span class="channel-name">📱 Telegram</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="telegramToggle" onchange="toggleChannel('telegram', this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="channel-desc">Notifikasi dikirim ke bot Telegram Anda.</div>
+            <div class="channel-config" id="telegramConfig">
+                <div class="form-group">
+                    <label>Bot Token</label>
+                    <input type="text" id="telegramBotToken" placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11">
+                </div>
+                <div class="form-group">
+                    <label>Chat ID</label>
+                    <input type="text" id="telegramChatId" placeholder="123456789">
+                </div>
+                <button class="btn-save" onclick="saveTelegram()">💾 Simpan</button>
+            </div>
+        </div>
+
+        <!-- Discord Channel -->
+        <div class="channel-card">
+            <div class="channel-header">
+                <span class="channel-name">💬 Discord</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="discordToggle" onchange="toggleChannel('discord', this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="channel-desc">Notifikasi dikirim ke channel Discord via webhook.</div>
+            <div class="channel-config" id="discordConfig">
+                <div class="form-group">
+                    <label>Webhook URL</label>
+                    <input type="text" id="discordWebhookUrl" placeholder="https://discord.com/api/webhooks/...">
+                </div>
+                <button class="btn-save" onclick="saveDiscord()">💾 Simpan</button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    (function () {
+        const token = localStorage.getItem('konek_token');
+        if (!token) { window.location.href = '/login'; return; }
+        const headers = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+
+        // Load existing settings
+        fetch('/api/v1/notifications/', { headers })
+            .then(r => r.ok ? r.json() : [])
+            .then(settings => {
+                settings.forEach(s => {
+                    if (s.channel === 'email') {
+                        document.getElementById('emailToggle').checked = s.is_enabled;
+                    } else if (s.channel === 'telegram') {
+                        document.getElementById('telegramToggle').checked = s.is_enabled;
+                        if (s.config.bot_token) document.getElementById('telegramBotToken').value = s.config.bot_token;
+                        if (s.config.chat_id) document.getElementById('telegramChatId').value = s.config.chat_id;
+                    } else if (s.channel === 'discord') {
+                        document.getElementById('discordToggle').checked = s.is_enabled;
+                        if (s.config.webhook_url) document.getElementById('discordWebhookUrl').value = s.config.webhook_url;
+                    }
+                });
+            })
+            .catch(() => { });
+
+        window.toggleChannel = function (channel, enabled) {
+            if (enabled) {
+                // If enabling without config, just toggle
+                fetch('/api/v1/notifications/', { method: 'POST', headers, body: JSON.stringify({ channel: channel }) })
+                    .then(() => fetch('/api/v1/notifications/' + channel + '/toggle', { method: 'PUT', headers, body: JSON.stringify({ enabled: true }) }))
+                    .catch(() => { });
+            } else {
+                fetch('/api/v1/notifications/' + channel + '/toggle', { method: 'PUT', headers, body: JSON.stringify({ enabled: false }) })
+                    .catch(() => { });
+            }
+        };
+
+        window.saveTelegram = function () {
+            const config = {
+                bot_token: document.getElementById('telegramBotToken').value.trim(),
+                chat_id: document.getElementById('telegramChatId').value.trim(),
+            };
+            if (!config.bot_token || !config.chat_id) { alert('Bot Token dan Chat ID harus diisi.'); return; }
+            fetch('/api/v1/notifications/', { method: 'POST', headers, body: JSON.stringify({ channel: 'telegram', config: config }) })
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(() => {
+                    document.getElementById('telegramToggle').checked = true;
+                    alert('Telegram notification berhasil disimpan.');
+                })
+                .catch(() => alert('Gagal menyimpan.'));
+        };
+
+        window.saveDiscord = function () {
+            const webhook_url = document.getElementById('discordWebhookUrl').value.trim();
+            if (!webhook_url) { alert('Webhook URL harus diisi.'); return; }
+            fetch('/api/v1/notifications/', { method: 'POST', headers, body: JSON.stringify({ channel: 'discord', config: { webhook_url } }) })
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(() => {
+                    document.getElementById('discordToggle').checked = true;
+                    alert('Discord notification berhasil disimpan.');
+                })
+                .catch(() => alert('Gagal menyimpan.'));
+        };
+    })();
+</script>
+{% endblock %}

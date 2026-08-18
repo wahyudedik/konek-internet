@@ -1,0 +1,446 @@
+{% extends "base.html" %}
+
+{% block title %}Detail Domain - Konektivitas.com{% endblock %}
+{% block description %}Detail monitoring domain di Konektivitas.com workspace.{% endblock %}
+
+{% block head %}
+<style>
+    .dashboard-layout {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 0;
+        min-height: calc(100vh - 60px);
+    }
+
+    .dashboard-sidebar {
+        background: var(--bg-secondary);
+        border-right: 1px solid var(--border-color);
+        padding: 24px 0;
+    }
+
+    .dashboard-sidebar .sidebar-header {
+        padding: 0 20px 20px;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 16px;
+    }
+
+    .dashboard-sidebar .sidebar-header h3 {
+        margin: 0 0 4px;
+        font-size: 1rem;
+    }
+
+    .dashboard-sidebar .sidebar-header .plan-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .sidebar-nav a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+        background: var(--bg-hover);
+        color: var(--primary-color);
+    }
+
+    .sidebar-nav a .nav-icon {
+        font-size: 1.1rem;
+        width: 24px;
+        text-align: center;
+    }
+
+    .dashboard-main {
+        padding: 24px 32px;
+    }
+
+    .breadcrumb {
+        font-size: 0.85rem;
+        margin-bottom: 16px;
+        color: var(--text-secondary);
+    }
+
+    .breadcrumb a {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+    .domain-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .domain-header h1 {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .btn-primary {
+        padding: 8px 16px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .check-buttons {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 24px;
+    }
+
+    .check-buttons button {
+        padding: 8px 16px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--bg-secondary);
+        cursor: pointer;
+        font-size: 0.85rem;
+    }
+
+    .check-buttons button:hover {
+        border-color: var(--primary-color);
+    }
+
+    .tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 2px solid var(--border-color);
+        margin-bottom: 20px;
+    }
+
+    .tab {
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+    }
+
+    .tab.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .section-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .info-item {
+        font-size: 0.9rem;
+    }
+
+    .info-item .label {
+        color: var(--text-secondary);
+        margin-bottom: 2px;
+    }
+
+    .info-item .value {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    table.history-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    table.history-table th,
+    table.history-table td {
+        padding: 8px 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    table.history-table th {
+        color: var(--text-secondary);
+        font-weight: 600;
+    }
+
+    .change-badge {
+        padding: 2px 8px;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .change-badge.changed {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .dark-mode .change-badge.changed {
+        background: #451a03;
+        color: #fcd34d;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .dashboard-sidebar {
+            display: none;
+        }
+
+        .dashboard-main {
+            padding: 16px;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+        <div class="sidebar-header">
+            <h3>👋 {{ user.display_name or user.username }}</h3>
+            <span class="plan-badge">{{ user.plan | upper }}</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/dashboard"><span class="nav-icon">📊</span> Dashboard</a>
+            <a href="/dashboard/domains" class="active"><span class="nav-icon">🌐</span> Domain Saya</a>
+            <a href="/dashboard/api-keys"><span class="nav-icon">🔑</span> API Keys</a>
+            <a href="/dashboard/notifications"><span class="nav-icon">🔔</span> Notifikasi</a>
+            <a href="/dashboard/profile"><span class="nav-icon">👤</span> Profil</a>
+            <hr style="border-color: var(--border-color); margin: 12px 20px;">
+            <a href="/"><span class="nav-icon">🏠</span> Beranda</a>
+        </nav>
+    </aside>
+
+    <main class="dashboard-main">
+        <div class="breadcrumb">
+            <a href="/dashboard/domains">Domain Saya</a> / <span id="domainName">Loading...</span>
+        </div>
+
+        <div class="domain-header">
+            <h1 id="domainTitle">Loading...</h1>
+        </div>
+
+        <div class="check-buttons">
+            <button onclick="runCheck('ssl')">🔒 Check SSL</button>
+            <button onclick="runCheck('dns')">🌍 Check DNS</button>
+            <button onclick="runCheck('uptime')">📡 Check Uptime</button>
+            <button onclick="runCheck('all')" class="btn-primary">🔄 Check Semua</button>
+        </div>
+
+        <div class="section-card" id="domainInfo">
+            <h3 style="margin: 0 0 12px;">Informasi Domain</h3>
+            <div class="info-grid" id="infoGrid">Loading...</div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('ssl')">🔒 SSL History</div>
+            <div class="tab" onclick="switchTab('dns')">🌍 DNS History</div>
+            <div class="tab" onclick="switchTab('uptime')">📡 Uptime Logs</div>
+        </div>
+
+        <div class="tab-content active" id="tab-ssl">
+            <table class="history-table" id="sslTable">
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Issuer</th>
+                        <th>Valid Until</th>
+                        <th>Days Left</th>
+                        <th>Protocol</th>
+                        <th>Valid</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" style="text-align:center; color: var(--text-secondary);">Memuat...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-content" id="tab-dns">
+            <table class="history-table" id="dnsTable">
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Type</th>
+                        <th>Value</th>
+                        <th>TTL</th>
+                        <th>Changed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="5" style="text-align:center; color: var(--text-secondary);">Memuat...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-content" id="tab-uptime">
+            <table class="history-table" id="uptimeTable">
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Status</th>
+                        <th>Code</th>
+                        <th>Response Time</th>
+                        <th>Error</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="5" style="text-align:center; color: var(--text-secondary);">Memuat...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<script>
+    (function () {
+        const pathParts = window.location.pathname.split('/');
+        const domainId = pathParts[pathParts.length - 1];
+        const token = localStorage.getItem('konek_token');
+        if (!token) { window.location.href = '/login'; return; }
+        const headers = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+
+        window.switchTab = function (tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tab).classList.add('active');
+        };
+
+        window.runCheck = function (type) {
+            const url = '/api/v1/workspace/domains/' + domainId + '/check-' + type;
+            fetch(url, { method: 'POST', headers })
+                .then(r => r.json())
+                .then(data => {
+                    alert(data.message || 'Check selesai');
+                    loadAll();
+                })
+                .catch(() => alert('Check gagal'));
+        };
+
+        function loadDomain() {
+            fetch('/api/v1/workspace/domains/' + domainId, { headers })
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(d => {
+                    document.getElementById('domainName').textContent = d.domain;
+                    document.getElementById('domainTitle').textContent = '🌐 ' + d.domain;
+                    document.getElementById('infoGrid').innerHTML = `
+                    <div class="info-item"><div class="label">Status</div><div class="value">${d.status}</div></div>
+                    <div class="info-item"><div class="label">Catatan</div><div class="value">${d.notes || '-'}</div></div>
+                    <div class="info-item"><div class="label">Monitor SSL</div><div class="value">${d.monitor_ssl ? '✅ Ya' : '❌ Tidak'}</div></div>
+                    <div class="info-item"><div class="label">Monitor DNS</div><div class="value">${d.monitor_dns ? '✅ Ya' : '❌ Tidak'}</div></div>
+                    <div class="info-item"><div class="label">Monitor Uptime</div><div class="value">${d.monitor_uptime ? '✅ Ya' : '❌ Tidak'}</div></div>
+                    <div class="info-item"><div class="label">Interval</div><div class="value">${d.check_interval_minutes} menit</div></div>
+                    <div class="info-item"><div class="label">Dibuat</div><div class="value">${d.created_at ? new Date(d.created_at).toLocaleString('id-ID') : '-'}</div></div>
+                    <div class="info-item"><div class="label">Terakhir Cek</div><div class="value">${d.last_checked_at ? new Date(d.last_checked_at).toLocaleString('id-ID') : 'Belum'}</div></div>
+                `;
+                })
+                .catch(() => { });
+        }
+
+        function loadSSL() {
+            fetch('/api/v1/workspace/domains/' + domainId + '/ssl/history', { headers })
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(data => {
+                    const tbody = document.querySelector('#sslTable tbody');
+                    if (!data.history.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Belum ada data SSL.</td></tr>'; return; }
+                    tbody.innerHTML = data.history.map(h => `
+                    <tr>
+                        <td>${h.checked_at ? new Date(h.checked_at).toLocaleString('id-ID') : '-'}</td>
+                        <td>${h.issuer || '-'}</td>
+                        <td>${h.valid_until || '-'}</td>
+                        <td>${h.days_remaining != null ? h.days_remaining + ' hari' : '-'}</td>
+                        <td>${h.protocol_version || '-'}</td>
+                        <td>${h.is_valid ? '✅' : '❌'}</td>
+                    </tr>
+                `).join('');
+                })
+                .catch(() => { });
+        }
+
+        function loadDNS() {
+            fetch('/api/v1/workspace/domains/' + domainId + '/dns/history', { headers })
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(data => {
+                    const tbody = document.querySelector('#dnsTable tbody');
+                    if (!data.history.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Belum ada data DNS.</td></tr>'; return; }
+                    tbody.innerHTML = data.history.map(h => `
+                    <tr>
+                        <td>${h.checked_at ? new Date(h.checked_at).toLocaleString('id-ID') : '-'}</td>
+                        <td>${h.record_type}</td>
+                        <td>${h.record_value}</td>
+                        <td>${h.ttl || '-'}</td>
+                        <td>${h.has_changed ? '<span class="change-badge changed">CHANGED</span>' : '-'}</td>
+                    </tr>
+                `).join('');
+                })
+                .catch(() => { });
+        }
+
+        function loadUptime() {
+            fetch('/api/v1/workspace/domains/' + domainId + '/uptime/logs', { headers })
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(data => {
+                    const tbody = document.querySelector('#uptimeTable tbody');
+                    if (!data.logs.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Belum ada data uptime.</td></tr>'; return; }
+                    tbody.innerHTML = data.logs.map(l => `
+                    <tr>
+                        <td>${l.checked_at ? new Date(l.checked_at).toLocaleString('id-ID') : '-'}</td>
+                        <td>${l.is_up ? '🟢 UP' : '🔴 DOWN'}</td>
+                        <td>${l.status_code || '-'}</td>
+                        <td>${l.response_time_ms != null ? l.response_time_ms + 'ms' : '-'}</td>
+                        <td>${l.error_message || '-'}</td>
+                    </tr>
+                `).join('');
+                })
+                .catch(() => { });
+        }
+
+        function loadAll() { loadDomain(); loadSSL(); loadDNS(); loadUptime(); }
+        loadAll();
+    })();
+</script>
+{% endblock %}

@@ -1,0 +1,416 @@
+{% extends "base.html" %}
+
+{% block title %}Domain Saya - Konektivitas.com{% endblock %}
+{% block description %}Kelola domain yang dipantau di Konektivitas.com workspace.{% endblock %}
+
+{% block head %}
+<style>
+    .dashboard-layout {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 0;
+        min-height: calc(100vh - 60px);
+    }
+
+    .dashboard-sidebar {
+        background: var(--bg-secondary);
+        border-right: 1px solid var(--border-color);
+        padding: 24px 0;
+    }
+
+    .dashboard-sidebar .sidebar-header {
+        padding: 0 20px 20px;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 16px;
+    }
+
+    .dashboard-sidebar .sidebar-header h3 {
+        margin: 0 0 4px;
+        font-size: 1rem;
+    }
+
+    .dashboard-sidebar .sidebar-header .plan-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .sidebar-nav a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+        background: var(--bg-hover);
+        color: var(--primary-color);
+    }
+
+    .sidebar-nav a .nav-icon {
+        font-size: 1.1rem;
+        width: 24px;
+        text-align: center;
+    }
+
+    .dashboard-main {
+        padding: 24px 32px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .btn-primary {
+        padding: 10px 20px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .btn-primary:hover {
+        opacity: 0.9;
+    }
+
+    .domain-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .domain-card .domain-info {
+        flex: 1;
+    }
+
+    .domain-card .domain-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+    }
+
+    .domain-card .domain-name a {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+    .domain-card .domain-meta {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+    }
+
+    .domain-card .domain-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .domain-card .domain-actions button {
+        padding: 6px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        background: var(--bg-secondary);
+        cursor: pointer;
+        font-size: 0.85rem;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .status-active {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-error {
+        background: #fecaca;
+        color: #991b1b;
+    }
+
+    .status-paused {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .dark-mode .status-active {
+        background: #052e16;
+        color: #86efac;
+    }
+
+    .dark-mode .status-error {
+        background: #450a0a;
+        color: #fca5a5;
+    }
+
+    .dark-mode .status-paused {
+        background: #451a03;
+        color: #fcd34d;
+    }
+
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal {
+        background: var(--bg-secondary);
+        border-radius: 12px;
+        padding: 24px;
+        width: 90%;
+        max-width: 480px;
+    }
+
+    .modal h2 {
+        margin: 0 0 16px;
+        font-size: 1.2rem;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: var(--text-primary);
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+
+    .btn-cancel {
+        padding: 8px 16px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--bg-secondary);
+        cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .dashboard-sidebar {
+            display: none;
+        }
+
+        .dashboard-main {
+            padding: 16px;
+        }
+
+        .domain-card {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+        <div class="sidebar-header">
+            <h3>👋 {{ user.display_name or user.username }}</h3>
+            <span class="plan-badge">{{ user.plan | upper }}</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/dashboard"><span class="nav-icon">📊</span> Dashboard</a>
+            <a href="/dashboard/domains" class="active"><span class="nav-icon">🌐</span> Domain Saya</a>
+            <a href="/dashboard/api-keys"><span class="nav-icon">🔑</span> API Keys</a>
+            <a href="/dashboard/notifications"><span class="nav-icon">🔔</span> Notifikasi</a>
+            <a href="/dashboard/profile"><span class="nav-icon">👤</span> Profil</a>
+            <hr style="border-color: var(--border-color); margin: 12px 20px;">
+            <a href="/"><span class="nav-icon">🏠</span> Beranda</a>
+        </nav>
+    </aside>
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>🌐 Domain Saya</h1>
+            <button class="btn-primary" onclick="openAddModal()">➕ Tambah Domain</button>
+        </div>
+
+        <div id="domainList">
+            <p style="color: var(--text-secondary);">Memuat data...</p>
+        </div>
+    </main>
+</div>
+
+<!-- Add Domain Modal -->
+<div class="modal-overlay" id="addModal">
+    <div class="modal">
+        <h2>➕ Tambah Domain Baru</h2>
+        <form id="addDomainForm" onsubmit="submitAddDomain(event)">
+            <div class="form-group">
+                <label for="domainInput">Domain</label>
+                <input type="text" id="domainInput" placeholder="contoh: konektivitas.com" required>
+            </div>
+            <div class="form-group">
+                <label for="notesInput">Catatan (opsional)</label>
+                <input type="text" id="notesInput" placeholder="Catatan tentang domain ini">
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="sslCheck" checked> Monitor SSL
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="dnsCheck" checked> Monitor DNS
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="uptimeCheck" checked> Monitor Uptime
+                </label>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-cancel" onclick="closeAddModal()">Batal</button>
+                <button type="submit" class="btn-primary">Tambah</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const token = localStorage.getItem('konek_token');
+        if (!token) { window.location.href = '/login'; return; }
+        const headers = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+
+        window.openAddModal = function () { document.getElementById('addModal').classList.add('active'); };
+        window.closeAddModal = function () { document.getElementById('addModal').classList.remove('active'); };
+
+        window.submitAddDomain = function (e) {
+            e.preventDefault();
+            const body = {
+                domain: document.getElementById('domainInput').value.trim(),
+                notes: document.getElementById('notesInput').value.trim() || null,
+                monitor_ssl: document.getElementById('sslCheck').checked,
+                monitor_dns: document.getElementById('dnsCheck').checked,
+                monitor_uptime: document.getElementById('uptimeCheck').checked,
+            };
+            fetch('/api/v1/workspace/domains', { method: 'POST', headers, body: JSON.stringify(body) })
+                .then(r => { if (!r.ok) return r.json().then(d => Promise.reject(d)); return r.json(); })
+                .then(() => { closeAddModal(); loadDomains(); document.getElementById('addDomainForm').reset(); })
+                .catch(err => alert('Gagal menambah domain: ' + (err.detail || 'Error')));
+        };
+
+        window.deleteDomain = function (id) {
+            if (!confirm('Yakin ingin menghapus domain ini?')) return;
+            fetch('/api/v1/workspace/domains/' + id, { method: 'DELETE', headers })
+                .then(r => { if (r.ok) loadDomains(); else alert('Gagal menghapus.'); });
+        };
+
+        window.checkAll = function (id) {
+            const btn = event.target;
+            btn.textContent = '⏳ Checking...';
+            btn.disabled = true;
+            fetch('/api/v1/workspace/domains/' + id + '/check-all', { method: 'POST', headers })
+                .then(r => r.json())
+                .then(data => {
+                    btn.textContent = '🔄 Check';
+                    btn.disabled = false;
+                    alert('Check selesai: ' + data.message);
+                    loadDomains();
+                })
+                .catch(() => { btn.textContent = '🔄 Check'; btn.disabled = false; });
+        };
+
+        function loadDomains() {
+            fetch('/api/v1/workspace/domains', { headers })
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(domains => {
+                    const container = document.getElementById('domainList');
+                    if (!domains.length) {
+                        container.innerHTML = '<div class="section-card" style="text-align:center; padding:40px;"><p style="font-size:1.2rem; color: var(--text-secondary);">Belum ada domain.</p><p><button class="btn-primary" onclick="openAddModal()">Tambah Domain Pertama</button></p></div>';
+                        return;
+                    }
+                    container.innerHTML = domains.map(d => `
+                    <div class="domain-card">
+                        <div class="domain-info">
+                            <div class="domain-name"><a href="/dashboard/domains/${d.id}">${d.domain}</a></div>
+                            <div class="domain-meta">
+                                <span class="status-badge status-${d.status}">${d.status}</span>
+                                &nbsp; SSL: ${d.monitor_ssl ? '✅' : '❌'} | DNS: ${d.monitor_dns ? '✅' : '❌'} | Uptime: ${d.monitor_uptime ? '✅' : '❌'}
+                                &nbsp; • Cek tiap ${d.check_interval_minutes} menit
+                                ${d.last_checked_at ? ' • Terakhir: ' + new Date(d.last_checked_at).toLocaleString('id-ID') : ''}
+                            </div>
+                        </div>
+                        <div class="domain-actions">
+                            <button onclick="checkAll(${d.id})">🔄 Check</button>
+                            <button onclick="window.location.href='/dashboard/domains/${d.id}'">📋 Detail</button>
+                            <button onclick="deleteDomain(${d.id})" style="color: #ef4444;">🗑️</button>
+                        </div>
+                    </div>
+                `).join('');
+                })
+                .catch(() => {
+                    document.getElementById('domainList').innerHTML = '<p style="color: var(--error-color, #ef4444);">Gagal memuat data domain.</p>';
+                });
+        }
+
+        loadDomains();
+    })();
+</script>
+{% endblock %}

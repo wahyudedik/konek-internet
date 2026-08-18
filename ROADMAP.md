@@ -8,9 +8,7 @@
 
 **Target:** Menjadi platform utilitas internet terbesar berbahasa Indonesia.
 
-### Produk: Public Tools (Gratis)
-
-**Status: ✅ SELESAI (25 tools)**
+### ✅ Public Tools — 25 Tools (SELESAI)
 
 - ✅ 25 Tools DNS, Domain, SSL, Website, IP
 - ✅ 25+ API Endpoints (RESTful, rate limit 60 req/min)
@@ -41,16 +39,16 @@
 
 ## 🎯 Tahun 2 — Developer Platform & Workspace MVP (2027)
 
-**Target:** Developer mulai memakai API. Workspace MVP launching.
+**Target:** Developer mulai memakai API. Workspace MVP launching. Utility Search Engine dimulai.
 
-### Produk: Public Tools + Workspace (Berbayar)
+### Public Tools (lanjutan)
 
-#### Public Tools (lanjutan)
 - 5 tools tambahan (total 30)
 - Improved SEO & content
 - Multi-language support (ID/EN)
 
-#### Workspace MVP
+### Workspace MVP
+
 - **User Authentication** — Login, register, email verification
 - **Domain Management** — Tambah & monitor domain
 - **SSL Monitoring** — Alert saat SSL expiry < 30 hari
@@ -59,10 +57,53 @@
 - **Notification Settings** — Email, Telegram, Discord
 - **Dashboard** — Overview semua aset internet
 
-#### API Platform
+### API Platform
+
 - **API Key System** — Daftar & kelola API key
 - **API Dashboard** — Usage stats, rate limit info
 - **Dynamic DNS** — Update DNS record via API
+
+### Utility Search Engine — Core Engine & Jobs Vertical
+
+**Fokus:** Buktikan bahwa Utility Index punya value dengan satu vertical: **Jobs**.
+
+#### Core Engine
+
+- **Crawler Infrastructure** — HTTP-first crawler (httpx + selectolax), Playwright fallback
+- **Parser Pipeline** — Extraction → Cleaning → Entity Detection → Normalization → Deduplication → Validation
+- **Rule-Based Normalization** — Normalisasi title, skill, location, salary tanpa AI
+- **robots.txt Compliance** — Respectful crawling dengan rate limit per source
+- **PostgreSQL Database** — Schema relasional (companies, jobs, skills, tools, sources, categories)
+- **PostgreSQL FTS + pg_trgm** — Full text search + fuzzy matching
+- **UtilityRank** — Scoring algorithm (freshness, availability, relevance, reliability, completeness)
+
+#### Jobs Vertical (MVP)
+
+- **Job Discovery** — Crawling dari public career pages
+- **Structured Job Data** — Title, company, location, remote, salary, skills, employment type
+- **Active Status Detection** — 🟢 ACTIVE / 🟡 CLOSING SOON / ⚪ UNKNOWN / 🔴 EXPIRED
+- **Skill Matching** — Pencarian berdasarkan skill requirements
+- **Remote Filter** — Filter remote/hybrid/onsite
+- **Salary Range Filter** — Filter berdasarkan range gaji
+
+#### Search Experience
+
+- **Homepage** — "What do you want to accomplish?" search interface
+- **Natural Language Query** — Pencarian dalam bahasa alami
+- **Intent Detection** — Auto-detect intent (work, buy, learn, build) dari query
+- **Structured Results** — Hasil terstruktur, bukan sekadar URL
+- **Filter & Sort** — By status, location, price, utility score
+
+#### Background Jobs
+
+- **APScheduler** — Crawl schedule (jobs: 6 jam, verification: 6 jam, index rebuild: 24 jam)
+- **Active/Expired Detection** — Re-crawl untuk cek status job masih aktif
+
+#### Deployment
+
+- **Docker Compose** — FastAPI + PostgreSQL + Redis + APScheduler
+- **Nginx** — Reverse proxy
+- **Ubuntu VPS** — Shared server dengan Konektivitas.com
 
 ### Target Metrics
 
@@ -73,6 +114,16 @@
 | Developer API key | 1.000 |
 | Pro subscribers | 100 |
 | Domain monitored | 5.000 |
+| Indexed jobs | 10.000+ |
+| Active sources | 10+ career pages |
+| Search latency | < 500ms |
+
+### Kelayakan Utility Search
+
+MVP harus membuktikan 3 hal:
+1. **Discovery** — Bisakah menemukan data publik secara otomatis?
+2. **Quality** — Bisakah hasil jauh lebih bersih dari pencarian umum?
+3. **Utility** — Apakah orang merasa "ini menghemat waktu saya"?
 
 ### Pendapatan
 
@@ -82,31 +133,119 @@
 
 ---
 
-## 🎯 Tahun 3 — Infrastructure & Mobile (2028)
+## 🎯 Tahun 3 — Infrastructure, Multi-Vertical & Mobile (2028)
 
-**Target:** Mulai menyediakan layanan internet fundamental.
+**Target:** Mulai menyediakan layanan internet fundamental. Utility Search berkembang ke multi-vertical. Blockchain RPC diluncurkan.
 
-### Produk: Public Tools + Workspace + Infrastructure
+### Public Tools (lanjutan)
 
-#### Public Tools (lanjutan)
 - Total 40+ tools
 - Tool comparison & batch lookup
 - Advanced analytics per tool
 
-#### Workspace (enhanced)
+### Workspace (enhanced)
+
 - **Team Workspace** — Kolaborasi tim
 - **Shared Monitoring** — Monitor bareng
 - **Laporan PDF** — Export laporan bulanan
 - **Custom Alerts** — Threshold kustom
 - **DNS Hosting** — Kelola DNS dari dashboard
 
-#### Infrastructure
+### Infrastructure
+
 - **DNS Hosting** — Hosting DNS gratis & premium
 - **DNS Anycast (bertahap)** — Resolusi DNS cepat global
 - **Status Page** — Status page publik untuk website
 - **SSL Certificate Management** — Auto-renewal integration
 
-#### Mobile App
+### Utility Search — Multi-Vertical & B2B
+
+#### Vertical Baru
+
+| Vertical | Source | Priority |
+|----------|--------|----------|
+| Tools | Product Hunt, GitHub, direktori tools | Tinggi |
+| APIs | RapidAPI, ProgrammableWeb | Tinggi |
+| Suppliers | Direktori bisnis, marketplace B2B | Sedang |
+| Products | Marketplace, e-commerce directories | Sedang |
+| Courses | Coursera, Udemy, edX | Sedang |
+| Opportunities | Affiliate directories, freelance platforms | Rendah |
+
+#### Intelligence Features
+
+- **Trend Detection** — Deteksi tren skill, tools, salary
+- **Recommendation** — Rekomendasi berdasarkan search history
+- **Monitoring** — Monitor perubahan data
+- **Historical Data** — Data historis untuk analisis trend
+
+#### B2B Features
+
+- **Market Intelligence** — Analisis pasar digital
+- **Supplier Intelligence** — Analisis supplier per kategori/lokasi
+- **Labor Intelligence** — Skill demand analysis, salary benchmarking
+- **Competitor Intelligence** — Track perubahan di industri
+- **Custom Reports** — Laporan kustom untuk enterprise
+
+#### Developer API
+
+- **Full API** — Semua vertical tersedia via API
+- **Webhooks** — Real-time notification untuk perubahan data
+- **SDK** — Python, JavaScript SDK
+- **Developer Dashboard** — Usage stats, documentation
+
+#### Search Scale
+
+- **OpenSearch** — Migrasi dari PostgreSQL FTS ke OpenSearch
+- **Full-Text Advanced** — Autocomplete, synonym, typo tolerance
+
+### Blockchain Infrastructure — RPC Node Platform
+
+#### RPC Node Platform
+
+- **JSON-RPC Proxy** — Proxy untuk Ethereum mainnet + multi-chain
+- **Request Validation** — Validasi JSON-RPC request format
+- **Response Caching** — Cache response di Redis
+- **Rate Limiting** — 100 request per menit per API key
+- **Request Logging** — Log semua RPC requests
+
+#### Multi Chain Support
+
+| Network | Chain ID | Status |
+|---------|----------|--------|
+| Ethereum | 1 | 📋 Planned |
+| Polygon | 137 | 📋 Planned |
+| BSC | 56 | 📋 Planned |
+| Arbitrum | 42161 | 📋 Planned |
+| Optimism | 10 | 📋 Planned |
+| Avalanche | 43114 | 📋 Planned |
+
+#### Load Balancer & WebSocket
+
+- **Round-Robin + Health-Based Routing** — Distribusi beban merata
+- **Failover Handling** — Automatic failover jika node down
+- **WebSocket Proxy** — Real-time event subscriptions
+- **Connection Pooling** — Optimasi koneksi
+
+#### Blockchain Data API
+
+- **Network Discovery** — List supported networks
+- **Block API** — Get block data
+- **Transaction API** — Get transaction data
+- **Address API** — Get address info & balance
+- **Broadcast API** — Broadcast transaksi
+- **Smart Contract API** — Interaksi smart contract
+
+#### Monitoring & Documentation
+
+- **Health Check Endpoints** — `/api/v1/status`
+- **Node Health** — Cek kesehatan blockchain node
+- **Prometheus Metrics** — Export metrics untuk monitoring
+- **Grafana Dashboards** — Dashboard monitoring visual
+- **Swagger/OpenAPI** — Interactive API documentation
+- **Code Examples** — Contoh integrasi Python, JavaScript, Go
+
+### Mobile App
+
 - **Mobile App (Android)** — Dashboard di genggaman
 - **Push Notifications** — Alert langsung ke HP
 - **Quick Check** — Tools tanpa login
@@ -121,6 +260,13 @@
 | Pro subscribers | 1.000 |
 | Domain di DNS hosting | 1.000 |
 | Mobile app installs | 10.000 |
+| Indexed objects | 100.000+ |
+| Active verticals | 4+ (Jobs, Tools, APIs, Suppliers) |
+| Search daily visitors | 10.000 |
+| Search API users | 100 |
+| Blockchain users | 1.000 |
+| RPC requests/hari | 100.000 |
+| Supported networks | 6 |
 
 ### Pendapatan
 
@@ -129,40 +275,77 @@
 - Team (Rp 99.000-199.000/bulan)
 - API access
 - DNS hosting
+- Blockchain API access
 
 ---
 
-## 🎯 Tahun 4 — Business Intelligence (2029)
+## 🎯 Tahun 4 — Business Intelligence & Enterprise (2029)
 
-**Target:** Masuk ke layanan cloud ringan & data intelligence.
+**Target:** Masuk ke layanan enterprise, data intelligence, dan ekosistem developer.
 
-### Produk: Public Tools + Workspace + BI
+### Public Tools (lanjutan)
 
-#### Public Tools (lanjutan)
 - Total 50+ tools
 - API v3 dengan fitur baru
 - White-label widget
 
-#### Workspace (enterprise)
+### Workspace (enterprise)
+
 - **Multi User** — Tim besar
 - **Audit Log** — Jejak aktivitas
 - **SLA** — Jaminan uptime
 - **SSO Integration** — Login perusahaan
 - **Custom Branding** — Dashboard custom
 
+### Utility Search — Intelligence & Ecosystem
+
+#### Advanced Search
+
+- **Semantic Search** — Understanding intent lebih dalam
+- **Cross-Vertical Search** — Search lintas vertical
+- **Personalized Results** — Results yang dipersonalisasi
+- **AI Classification** — AI untuk entity extraction & normalization
+
+#### Ecosystem
+
+- **Developer Marketplace** — Third-party integrations
+- **Data Contributors** — Sumbang data ke index
+- **Partner Program** — Revenue sharing dengan partner
+- **Community** — Forum, documentation, tutorials
+
 #### Business Intelligence
+
 - **GeoIP Indonesia Database** — Data geografis IP Indonesia
 - **ASN Database** — Database ASN lengkap
 - **IP Reputation** — Reputasi IP berbasis data
 - **Market Analysis** — Analisis pasar digital per wilayah
-  - Berapa bisnis yang sudah punya website
-  - Berapa yang belum memiliki domain
-  - Berapa yang belum memakai SSL
-  - Teknologi yang umum dipakai
-  - Peluang digital yang masih terbuka
 - **CDN Analytics** — Analisis penggunaan CDN
 - **Network Intelligence** — Insight jaringan
 - **Custom Reports** — Laporan kustom untuk enterprise
+
+### Blockchain Infrastructure — Enterprise
+
+#### Enterprise Features
+
+- **SSO Integration** — Login perusahaan (SAML, OIDC)
+- **Audit Logging** — Jejak aktivitas lengkap
+- **SLA Monitoring** — Jaminan uptime
+- **Custom Rate Limits** — Rate limit kustom per klien
+- **Priority Support** — Support prioritas
+
+#### Analytics & Billing
+
+- **Detailed Usage Analytics** — Analisis penggunaan mendalam
+- **Cost Tracking** — Lacak biaya penggunaan
+- **Performance Metrics** — Metrik performa API
+- **Usage-Based Billing** — Bayar sesuai penggunaan
+- **Invoice Generation** — Generate invoice otomatis
+
+#### Marketplace
+
+- **Third-Party Node Providers** — Provider node pihak ketiga
+- **Revenue Sharing** — Berbagi pendapatan
+- **Quality Monitoring** — Monitor kualitas layanan
 
 ### Target Metrics
 
@@ -174,6 +357,13 @@
 | Pro subscribers | 5.000 |
 | Enterprise clients | 50 |
 | API request/hari | 1.000.000 |
+| Indexed objects | 1.000.000+ |
+| Search daily visitors | 50.000 |
+| Search API users | 1.000 |
+| B2B clients | 20 |
+| Blockchain users | 5.000 |
+| RPC requests/hari | 500.000 |
+| Supported networks | 10+ |
 
 ### Pendapatan
 
@@ -184,36 +374,50 @@
 - API access
 - DNS hosting
 - BI reports
+- Blockchain API access
 
 ---
 
 ## 🎯 Tahun 5 — Internet Platform (2030-2031)
 
-**Target:** Menjadi **pusat data infrastruktur internet Indonesia**.
+**Target:** Menjadi **pusat data infrastruktur internet Indonesia** dan platform utility index terdepan.
 
-### Produk: Full Platform
+### Public DNS
 
-#### Public DNS
 - **Public DNS Service** — DNS 1.1.1.1-style untuk Indonesia
   - `dns.konektivitas.com` — DNS resolver publik
   - Cepat, aman, privat
   - DNS-over-HTTPS & DNS-over-TLS
 
-#### Internet Intelligence
+### Internet Intelligence
+
 - **Internet Health Dashboard** — Kondisi internet Indonesia real-time
 - **BGP Monitoring** — Monitoring routing internet
 - **IXP Data** — Data Internet Exchange Point
 - **Latency Map** — Peta latensi antar kota
 - **Bandwidth Analytics** — Analisis bandwidth nasional
 
-#### Platform
+### Utility Search — Full Platform
+
+- **100+ Vertical Categories** — Index terstruktur atas semua kategori utilitas
+- **Real-Time Index** — Update data dalam hitungan menit
+- **Global Coverage** — Data dari seluruh dunia
+- **Multi-Language** — Bahasa Indonesia, English, dan lainnya
+- **Advanced Analytics** — Predictive analytics, trend forecasting
+- **Custom Dashboards** — Dashboard BI kustom
+- **Data Feeds** — Real-time data feeds untuk enterprise
+- **White Label** — Utility search untuk client
+
+### Platform
+
 - **Developer Marketplace** — Jual/beli tools & integrasi
 - **Plugin System** — Extend Konektivitas
 - **Enterprise API v3** — Custom solutions
 - **Multi Region** — Server di beberapa wilayah
 - **Load Balancer** — High availability
 
-#### Mobile App (enhanced)
+### Mobile App (enhanced)
+
 - **iOS App** — iPhone & iPad
 - **Offline Mode** — Tools tanpa internet
 - **Widget** — Quick check dari home screen
@@ -229,6 +433,12 @@
 | Enterprise clients | 500 |
 | Public DNS users | 1.000.000 |
 | API request/hari | 10.000.000 |
+| Indexed objects | 100.000.000+ |
+| Search daily visitors | 500.000 |
+| Search API users | 20.000 |
+| B2B clients | 500 |
+| Blockchain users | 20.000 |
+| RPC requests/hari | 5.000.000 |
 
 ### Pendapatan
 
@@ -241,109 +451,22 @@
 - BI reports
 - Marketplace commissions
 - Public DNS sponsorships
-
----
-
-## 🎯 Hub.konektivitas.com — Blockchain Infrastructure
-
-> Platform infrastruktur blockchain yang menyediakan akses node RPC API untuk developer, startup, perusahaan, dan aplikasi Web3.
-
-**Detail:** [`plans/hub-konektivitas-plan.md`](plans/hub-konektivitas-plan.md)
-
-### Visi
-
-Menjadi penyedia infrastruktur konektivitas blockchain yang sederhana, cepat, dan andal untuk developer di Indonesia maun global.
-
-### Tahun 1 — MVP (2026)
-
-#### Produk: RPC Node Platform
-
-- ✅ Dashboard dengan usage statistics
-- ✅ API Key system dengan prefix `hk_`
-- ✅ Authentication (JWT + bcrypt)
-- ✅ Rate limiting per API key (100 req/min)
-- ✅ Request logging & monitoring
-- ✅ JSON-RPC proxy untuk Ethereum
-- ✅ API documentation (Swagger)
-
-#### Target Metrics
-
-| Metric | Target |
-|--------|--------|
-| Registered users | 500 |
-| API keys issued | 200 |
-| RPC requests/hari | 50.000 |
-| Supported networks | 1 (Ethereum) |
-
-### Tahun 2 — Multi Blockchain (2027)
-
-#### Produk: Multi-Chain RPC Platform
-
-- **Multi Chain** — Polygon, BSC, Arbitrum, Optimism, Avalanche
-- **Load Balancer** — Round-robin + health-based routing
-- **WebSocket** — Real-time event subscriptions
-- **Analytics** — Detailed usage analytics
-- **Billing** — Usage-based billing system
-- **Team Management** — Multi-user workspace
-
-#### Target Metrics
-
-| Metric | Target |
-|--------|--------|
-| Registered users | 5.000 |
-| API keys issued | 2.000 |
-| RPC requests/hari | 500.000 |
-| Supported networks | 6 |
-| Pro subscribers | 100 |
-
-### Tahun 3 — Enterprise (2028-2029)
-
-#### Produk: Enterprise Blockchain Infrastructure
-
-- **Global Infrastructure** — Multi-region deployment
-- **Auto Scaling** — Otomatis menambah resource
-- **Enterprise API** — Custom solutions
-- **SSO Integration** — Login perusahaan
-- **Audit Logging** — Jejak aktivitas lengkap
-- **SLA** — Jaminan uptime 99.9%
-
-#### Marketplace
-
-- **Node Providers** — Third-party node providers
-- **Revenue Sharing** — Berbagi pendapatan
-- **Quality Monitoring** — Monitor kualitas layanan
-
-#### Target Metrics
-
-| Metric | Target |
-|--------|--------|
-| Registered users | 20.000 |
-| API keys issued | 10.000 |
-| RPC requests/hari | 5.000.000 |
-| Supported networks | 10+ |
-| Enterprise clients | 50 |
+- Utility Search Pro
+- Utility Search B2B
+- Utility Search API
+- Blockchain API access
 
 ---
 
 ## Evolusi Teknologi
 
-### Konektivitas.com
-
-| Tahun | Server | Database | Cache | DNS | Infrastruktur |
-|-------|--------|----------|-------|-----|---------------|
-| 2026 | 1 (4C/6GB) | SQLite → PG | Redis | External | AAPanel + Nginx |
-| 2027 | 1 (upgrade) | PostgreSQL | Redis | External | + Auth system |
-| 2028 | 2 servers | PostgreSQL | Redis | DNS Hosting | + Mobile app |
-| 2029 | LB + 2 servers | PG Primary+Replica | Redis Cluster | DNS Anycast | + BI engine |
-| 2030-31 | Multi Region | PG Multi Region | Redis Cluster | Public DNS | Full platform |
-
-### Hub.konektivitas.com
-
-| Tahun | Server | Database | Cache | Blockchain | Infrastruktur |
-|-------|--------|----------|-------|------------|---------------|
-| 2026 | 1 (4C/8GB) | PostgreSQL | Redis | Ethereum | Docker + Nginx |
-| 2027 | 2 servers | PostgreSQL | Redis | +5 chains | + Load Balancer |
-| 2028-29 | Multi Region | PG Primary+Replica | Redis Cluster | +10 chains | + Auto Scaling |
+| Tahun | Server | Database | Cache | Search | Queue | DNS | Blockchain | Infrastruktur |
+|-------|--------|----------|-------|--------|-------|-----|------------|---------------|
+| 2026 | 1 (4C/6GB) | SQLite → PG | Redis | — | — | External | — | AAPanel + Nginx |
+| 2027 | 1 (upgrade) | PostgreSQL | Redis | PG FTS | APScheduler | External | — | + Auth + Crawler |
+| 2028 | 2 servers | PostgreSQL | Redis | OpenSearch | Celery + Redis | DNS Hosting | Ethereum + 5 chains | + Docker Compose |
+| 2029 | LB + 2 servers | PG Primary+Replica | Redis Cluster | OpenSearch Cluster | Celery + Redis Cluster | DNS Anycast | +10 chains | + Auto Scaling |
+| 2030-31 | Multi Region | PG Multi Region | Redis Cluster | OpenSearch Multi Region | Celery + Redis Cluster | Public DNS | Full platform | Multi Region |
 
 ---
 
@@ -351,12 +474,15 @@ Menjadi penyedia infrastruktur konektivitas blockchain yang sederhana, cepat, da
 
 ### Produk
 
-✅ 100+ Public Tools
-✅ Workspace (Domain, SSL, DNS, Server, Email Monitoring)
-✅ Business Intelligence
-✅ Public DNS
+✅ 100+ Public Tools (Learn)
+✅ Workspace — Domain, SSL, DNS, Server, Email Monitoring (Manage)
+✅ Utility Search Engine — 100+ indexed vertical categories (Discover)
+✅ Business Intelligence — Market Analysis, Technology Detection, Opportunity Finder (Discover)
+✅ Blockchain Infrastructure — RPC, WebSocket, Multi-chain (Connect)
+✅ Developer Platform — Utility API, Blockchain API (Connect)
+✅ Public DNS (dns.konektivitas.com)
 ✅ Mobile App (Android + iOS)
-✅ Enterprise API
+✅ Enterprise features (SSO, Audit Log, SLA)
 ✅ Developer Marketplace
 
 ### Pengguna
@@ -370,6 +496,10 @@ Menjadi penyedia infrastruktur konektivitas blockchain yang sederhana, cepat, da
 | Team subscribers | 5.000 |
 | Enterprise clients | 500 |
 | Public DNS users | 1.000.000 |
+| Search daily visitors | 500.000 |
+| Search API users | 20.000 |
+| Indexed objects | 100.000.000+ |
+| Blockchain users | 20.000 |
 
 ### Pendapatan
 
@@ -384,6 +514,10 @@ Menjadi penyedia infrastruktur konektivitas blockchain yang sederhana, cepat, da
 | Monitoring | ✅ |
 | BI Reports | ✅ |
 | Marketplace | ✅ |
+| Utility Search Pro | ✅ |
+| Utility Search B2B | ✅ |
+| Utility Search API | ✅ |
+| Blockchain API | ✅ |
 
 ---
 
@@ -395,9 +529,9 @@ Menjadi penyedia infrastruktur konektivitas blockchain yang sederhana, cepat, da
 
 Gunakan **dua framework** saat memutuskan fitur baru:
 
-**Framework 1 — Arah Produk (3 Pertanyaan Pilar):**
+**Framework 1 — Arah Produk (4 Pertanyaan Pilar):**
 
-Apakah fitur ini membantu pengguna memahami internet *(Learn)*, mengelola aset internetnya *(Manage)*, atau menemukan peluang *(Discover)*? Kalau tidak menjawab salah satunya, tolak.
+Apakah fitur ini membantu pengguna memahami internet *(Learn)*, mengelola aset internetnya *(Manage)*, menemukan peluang *(Discover)*, atau menghubungkan infrastruktur *(Connect)*? Kalau tidak menjawab salah satunya, tolak.
 
 **Framework 2 — Kelayakan Teknis (3 Syarat):**
 
@@ -411,7 +545,10 @@ Apakah fitur ini membantu pengguna memahami internet *(Learn)*, mengelola aset i
 
 ## Referensi
 
-- [BRIEF.md](BRIEF.md) — Visi, misi, dan filosofi
+- [BRIEF.md](BRIEF.md) — Visi, misi, dan filosofi (Master Brief)
 - [BRIEF2.md](BRIEF2.md) — Detail teknis dan arsitektur
+- [BRIEF3.md](BRIEF3.md) — Brief Utility Search Engine
+- [BRIEF4.md](BRIEF4.md) — Tech stack Utility Search Engine
 - [FEATURES.md](FEATURES.md) — Daftar lengkap fitur per fase
 - [AGENT.md](AGENT.md) — Panduan untuk AI/agent
+- [plans/hub-konektivitas-plan.md](plans/hub-konektivitas-plan.md) — Rencana detail blockchain infrastructure

@@ -1,0 +1,366 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Konektivitas.com{% endblock %}
+{% block description %}Dashboard Konektivitas.com — Kelola domain, monitoring, dan aset internet Anda.{% endblock %}
+
+{% block head %}
+<style>
+    .dashboard-layout {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 0;
+        min-height: calc(100vh - 60px);
+    }
+
+    .dashboard-sidebar {
+        background: var(--bg-secondary);
+        border-right: 1px solid var(--border-color);
+        padding: 24px 0;
+    }
+
+    .dashboard-sidebar .sidebar-header {
+        padding: 0 20px 20px;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 16px;
+    }
+
+    .dashboard-sidebar .sidebar-header h3 {
+        margin: 0 0 4px;
+        font-size: 1rem;
+        color: var(--text-primary);
+    }
+
+    .dashboard-sidebar .sidebar-header .plan-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .sidebar-nav a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+        background: var(--bg-hover);
+        color: var(--primary-color);
+    }
+
+    .sidebar-nav a .nav-icon {
+        font-size: 1.1rem;
+        width: 24px;
+        text-align: center;
+    }
+
+    .dashboard-main {
+        padding: 24px 32px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 32px;
+    }
+
+    .stat-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 20px;
+    }
+
+    .stat-card .stat-label {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 8px;
+    }
+
+    .stat-card .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .stat-card .stat-icon {
+        float: right;
+        font-size: 2rem;
+        opacity: 0.3;
+    }
+
+    .stat-card.alert {
+        border-left: 4px solid var(--error-color, #ef4444);
+    }
+
+    .stat-card.success {
+        border-left: 4px solid var(--success-color, #22c55e);
+    }
+
+    .stat-card.warning {
+        border-left: 4px solid var(--warning-color, #f59e0b);
+    }
+
+    .stat-card.info {
+        border-left: 4px solid var(--primary-color, #3b82f6);
+    }
+
+    .section-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+
+    .section-card h2 {
+        margin: 0 0 16px;
+        font-size: 1.1rem;
+        color: var(--text-primary);
+    }
+
+    .recent-domains-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .recent-domains-table th,
+    .recent-domains-table td {
+        padding: 10px 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 0.9rem;
+    }
+
+    .recent-domains-table th {
+        color: var(--text-secondary);
+        font-weight: 600;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .status-active {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-error {
+        background: #fecaca;
+        color: #991b1b;
+    }
+
+    .status-paused {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .dark-mode .status-active {
+        background: #052e16;
+        color: #86efac;
+    }
+
+    .dark-mode .status-error {
+        background: #450a0a;
+        color: #fca5a5;
+    }
+
+    .dark-mode .status-paused {
+        background: #451a03;
+        color: #fcd34d;
+    }
+
+    .quick-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 32px;
+    }
+
+    .quick-action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+
+    .quick-action-btn:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .dashboard-sidebar {
+            display: none;
+        }
+
+        .dashboard-main {
+            padding: 16px;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+        <div class="sidebar-header">
+            <h3>👋 {{ user.display_name or user.username }}</h3>
+            <span class="plan-badge">{{ user.plan | upper }}</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/dashboard" class="active"><span class="nav-icon">📊</span> Dashboard</a>
+            <a href="/dashboard/domains"><span class="nav-icon">🌐</span> Domain Saya</a>
+            <a href="/dashboard/api-keys"><span class="nav-icon">🔑</span> API Keys</a>
+            <a href="/dashboard/notifications"><span class="nav-icon">🔔</span> Notifikasi</a>
+            <a href="/dashboard/profile"><span class="nav-icon">👤</span> Profil</a>
+            <hr style="border-color: var(--border-color); margin: 12px 20px;">
+            <a href="/"><span class="nav-icon">🏠</span> Beranda</a>
+        </nav>
+    </aside>
+
+    <main class="dashboard-main">
+        <h1 style="margin: 0 0 24px; font-size: 1.5rem;">Dashboard</h1>
+
+        <div class="stats-grid">
+            <div class="stat-card info">
+                <div class="stat-icon">🌐</div>
+                <div class="stat-label">Total Domain</div>
+                <div class="stat-value" id="totalDomains">-</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-icon">✅</div>
+                <div class="stat-label">Aktif</div>
+                <div class="stat-value" id="activeDomains">-</div>
+            </div>
+            <div class="stat-card alert">
+                <div class="stat-icon">⚠️</div>
+                <div class="stat-label">Error</div>
+                <div class="stat-value" id="alertDomains">-</div>
+            </div>
+            <div class="stat-card warning">
+                <div class="stat-icon">🔑</div>
+                <div class="stat-label">API Keys</div>
+                <div class="stat-value" id="apiKeys">-</div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <a href="/dashboard/domains" class="quick-action-btn">➕ Tambah Domain</a>
+            <a href="/api-docs" class="quick-action-btn">📖 API Docs</a>
+            <a href="/dashboard/api-keys" class="quick-action-btn">🔑 Buat API Key</a>
+        </div>
+
+        <div class="section-card">
+            <h2>🌐 Domain Terbaru</h2>
+            <table class="recent-domains-table" id="recentDomains">
+                <thead>
+                    <tr>
+                        <th>Domain</th>
+                        <th>Status</th>
+                        <th>SSL</th>
+                        <th>DNS</th>
+                        <th>Uptime</th>
+                        <th>Terakhir Cek</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" style="text-align:center; color: var(--text-secondary);">Memuat data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<script>
+    (function () {
+        const token = localStorage.getItem('konek_token');
+        if (!token) {
+            window.location.href = '/login';
+            return;
+        }
+
+        const headers = { 'Authorization': 'Bearer ' + token };
+
+        // Load dashboard data
+        fetch('/api/v1/workspace/dashboard', { headers })
+            .then(r => r.ok ? r.json() : Promise.reject(r))
+            .then(data => {
+                document.getElementById('totalDomains').textContent = data.total_domains;
+                document.getElementById('activeDomains').textContent = data.active_domains;
+                document.getElementById('alertDomains').textContent = data.alert_domains;
+            })
+            .catch(() => {
+                document.getElementById('totalDomains').textContent = '0';
+                document.getElementById('activeDomains').textContent = '0';
+                document.getElementById('alertDomains').textContent = '0';
+            });
+
+        // Load API keys count
+        fetch('/api/v1/keys/', { headers })
+            .then(r => r.ok ? r.json() : Promise.reject(r))
+            .then(keys => {
+                document.getElementById('apiKeys').textContent = keys.length;
+            })
+            .catch(() => {
+                document.getElementById('apiKeys').textContent = '0';
+            });
+
+        // Load recent domains
+        fetch('/api/v1/workspace/domains', { headers })
+            .then(r => r.ok ? r.json() : Promise.reject(r))
+            .then(domains => {
+                const tbody = document.querySelector('#recentDomains tbody');
+                if (!domains.length) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: var(--text-secondary);">Belum ada domain. <a href="/dashboard/domains">Tambah domain pertama</a></td></tr>';
+                    return;
+                }
+                tbody.innerHTML = domains.slice(0, 10).map(d => `
+                <tr>
+                    <td><a href="/dashboard/domains/${d.id}" style="color: var(--primary-color); text-decoration: none;">${d.domain}</a></td>
+                    <td><span class="status-badge status-${d.status}">${d.status}</span></td>
+                    <td>${d.monitor_ssl ? '✅' : '—'}</td>
+                    <td>${d.monitor_dns ? '✅' : '—'}</td>
+                    <td>${d.monitor_uptime ? '✅' : '—'}</td>
+                    <td>${d.last_checked_at ? new Date(d.last_checked_at).toLocaleString('id-ID') : 'Belum dicek'}</td>
+                </tr>
+            `).join('');
+            })
+            .catch(() => {
+                document.querySelector('#recentDomains tbody').innerHTML = '<tr><td colspan="6" style="text-align:center; color: var(--text-secondary);">Gagal memuat data.</td></tr>';
+            });
+    })();
+</script>
+{% endblock %}

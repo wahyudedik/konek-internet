@@ -10,13 +10,17 @@ Namun, mengelola infrastruktur tersebut masih tersebar di banyak layanan dan ser
 
 **Konektivitas hadir untuk menyederhanakan cara orang memahami, mengelola, dan mengembangkan aset internet mereka.**
 
-> **"Konektivitas.com adalah platform yang menghubungkan manusia dengan infrastruktur internet—membantu siapa pun memahami, mengelola, dan menemukan peluang dari aset digital mereka dalam satu tempat."**
+> **"Konektivitas.com adalah platform Utility & Digital Infrastructure yang membantu manusia dan aplikasi menemukan, memahami, mengelola, memantau, dan terhubung dengan hal-hal yang berguna di internet."**
 
 **Tagline:** "Memahami. Mengelola. Mengembangkan Internet."
 
 ## Visi
 
-**Menjadi platform infrastruktur internet terdepan di Indonesia yang membantu individu dan bisnis memahami, mengelola, dan mengembangkan aset digital mereka.**
+> **"Make the useful internet searchable."**
+
+Atau versi yang lebih luas:
+
+> **"Konektivitas.com adalah platform Utility & Digital Infrastructure yang membantu manusia dan aplikasi menemukan, memahami, mengelola, memantau, dan terhubung dengan hal-hal yang berguna di internet."**
 
 ### Misi
 
@@ -25,38 +29,37 @@ Namun, mengelola infrastruktur tersebut masih tersebar di banyak layanan dan ser
 3. Memberikan edukasi internet dalam bahasa Indonesia.
 4. Membantu pengguna mengambil keputusan berdasarkan data.
 5. Menjadi pusat kendali aset internet.
-
-### Value Proposition
-
-Daripada membuka banyak layanan berbeda, pengguna cukup membuka Konektivitas untuk mendapatkan gambaran menyeluruh tentang aset internet mereka.
-
-### Filosofi
-
-Kebanyakan orang hanya melihat website. Konektivitas membantu melihat seluruh infrastruktur yang membuat website tersebut dapat berjalan.
+6. Mengindeks hal-hal yang berguna di internet (Utility Index).
 
 ### Positioning
 
 **Bukan:**
 
+- Google clone
 - Domain Registrar
 - Hosting Provider
 - Cloud Provider
+- Blockchain Provider
+- Business Directory
 
-**Tetapi:** Platform Infrastruktur Internet.
+**Tetapi:** Platform Utility & Digital Infrastructure.
 
 ### Pertanyaan Penuntun
 
-Setiap fitur baru harus menjawab setidaknya satu dari tiga pertanyaan berikut:
+Setiap fitur baru harus menjawab setidaknya satu dari empat pertanyaan berikut:
 
 1. **"Apakah fitur ini membantu pengguna memahami internet?"** *(Learn)*
 2. **"Apakah fitur ini membantu pengguna mengelola aset internetnya?"** *(Manage)*
-3. **"Apakah fitur ini membantu pengguna menemukan peluang atau mengambil keputusan?"** *(Discover)*
+3. **"Apakah fitur ini membantu pengguna menemukan sesuatu yang berguna?"** *(Discover)*
+4. **"Apakah fitur ini membantu menghubungkan aplikasi dan infrastruktur?"** *(Connect)*
 
-Kalau jawabannya "ya", berarti fitur tersebut sejalan dengan visi Konektivitas. Kalau tidak, lebih baik ditunda agar produk tetap fokus dan identitasnya tidak melebar ke mana-mana.
+Kalau jawabannya "ya", berarti fitur tersebut sejalan dengan visi Konektivitas. Kalau tidak, lebih baik ditunda agar produk tetap fokus.
 
 ---
 
-## 3 Pilar Produk
+## 4 Pilar Produk
+
+> Konektivitas adalah **satu platform modular**. Tidak ada subdomain terpisah. Setiap fitur adalah modul dalam satu platform.
 
 ### 1. Learn — Membantu orang memahami internet
 
@@ -85,14 +88,27 @@ Kalau jawabannya "ya", berarti fitur tersebut sejalan dengan visi Konektivitas. 
 
 ### 3. Discover — Menemukan peluang
 
-**Implementasi:** Business Intelligence (Enterprise)
+**Implementasi:** Utility Search Engine + Business Intelligence
 
-- Business Discovery & Industry Insight
-- Technology Insight & Digital Opportunity
-- Analisis aset digital berbasis data publik
+- Utility Index (Jobs, Tools, APIs, Suppliers, Products, Courses, Opportunities)
+- Full-Text Search + UtilityRank
+- Crawler Pipeline (Discovery → Crawl → Extract → Normalize → Index → Search)
+- Business Intelligence & Market Analysis
 - Custom Reports
 
-**Target Pengguna:** Business Owner, Konsultan, Freelancer, Marketing
+**Target Pengguna:** Job seeker, Freelancer, Business Owner, Konsultan, Marketing
+
+### 4. Connect — Menghubungkan infrastruktur
+
+**Implementasi:** Developer Platform + Blockchain Infrastructure
+
+- Utility Search API
+- Blockchain RPC API (JSON-RPC, WebSocket)
+- Multi-chain support (Ethereum, Polygon, BSC, Arbitrum, dll)
+- API Key System & Dashboard
+- Dynamic DNS API
+
+**Target Pengguna:** Developer blockchain, Startup Web3, AI Agent, IoT
 
 ---
 
@@ -100,15 +116,19 @@ Kalau jawabannya "ya", berarti fitur tersebut sejalan dengan visi Konektivitas. 
 
 ### 🌐 Public — Belajar, Mengecek, Mencari referensi
 
-Pelajar, Mahasiswa, Freelancer, Developer pemula, Ide startup
+Pelajar, Mahasiswa, Freelancer, Developer pemula, Ide startup, Job seeker
 
 ### 💼 Professional — Monitoring, Workspace, Manajemen aset
 
-Developer, DevOps, IT Support, SysAdmin, Agency, Startup
+Developer, DevOps, IT Support, SysAdmin, Network Engineer, Agency, Software House
 
 ### 🏢 Business — Insight, Peluang, Analisis
 
-UMKM, Perusahaan, Konsultan, Marketing, Investor, Business Owner
+UMKM, Startup, Business Owner, Enterprise, Konsultan, Procurement
+
+### 🔗 Technology — Blockchain, AI, IoT
+
+Developer blockchain, Startup Web3, AI Agent, Wallet/Exchange, Game Blockchain
 
 ---
 
@@ -116,60 +136,121 @@ UMKM, Perusahaan, Konsultan, Marketing, Investor, Business Owner
 
 ```
 konek-internet/
-├── BRIEF.md              # Brief proyek (visi, misi, target)
+├── BRIEF.md              # Master Brief (visi, misi, filosofi terpadu)
 ├── BRIEF2.md             # Detail teknis & arsitektur
-├── ROADMAP.md            # Roadmap 5 tahun (2026-2031)
-├── FEATURES.md           # Daftar lengkap fitur per fase
+├── BRIEF3.md             # Brief Utility Search Engine
+├── BRIEF4.md             # Tech stack Utility Search Engine
+├── ROADMAP.md            # Roadmap terintegrasi 5 tahun (2026-2031)
+├── FEATURES.md           # Daftar lengkap fitur per fase (4 pilar)
 ├── AGENT.md              # Dokumen ini
 ├── requirements.txt      # Python dependencies
 ├── .venv/                # Virtual environment
+├── plans/                # Rencana detail per modul
+│   ├── hub-konektivitas-plan.md
+│   ├── full-implementation-plan.md
+│   └── ...
 └── app/
     ├── __init__.py
     ├── main.py           # FastAPI app + middleware
     ├── config.py         # Konfigurasi (Pydantic)
-    ├── routers/          # API endpoints (6 router, 25+ endpoints)
+    ├── routers/          # API endpoints
     │   ├── dns.py        # 8 endpoints: lookup, reverse, mx, txt, cname, spf, dmarc, propagation
     │   ├── domain.py     # 2 endpoints: whois, expiry
     │   ├── ssl.py        # 2 endpoints: ssl check, expiry
     │   ├── website.py    # 5 endpoints: ping, http-status, redirect, headers, ua
     │   ├── ip.py         # 5 endpoints: ip lookup, asn, blacklist, my-ip, port, email
-    │   └── cdn.py        # 1 endpoint: cdn detect
-    ├── services/         # Business logic (9 services)
-    │   ├── dns_service.py    # DNS operations + @cached
-    │   ├── whois_service.py  # WHOIS lookup + @cached
-    │   ├── ip_service.py     # IP lookup via ip-api.com
-    │   ├── ssl_service.py    # SSL verification + @cached
-    │   ├── website_service.py  # HTTP fallback (HTTPS → HTTP)
-    │   ├── ua_service.py       # User-Agent parser
-    │   ├── email_service.py    # Email validation + disposable detection
-    │   ├── port_service.py     # Port scanner
-    │   └── cdn_service.py      # CDN detection (CNAME + Headers)
-    ├── utils/            # Helper functions
+    │   ├── cdn.py        # 1 endpoint: cdn detect
+    │   ├── batch.py      # Batch lookup endpoints
+    │   └── compare.py    # Comparison endpoints
+    ├── services/         # Business logic
+    │   ├── dns_service.py
+    │   ├── whois_service.py
+    │   ├── ip_service.py
+    │   ├── ssl_service.py
+    │   ├── website_service.py
+    │   ├── ua_service.py
+    │   ├── email_service.py
+    │   ├── port_service.py
+    │   └── cdn_service.py
+    ├── utils/
     │   ├── cache.py      # Redis + in-memory fallback cache
     │   ├── rate_limit.py # Per-IP rate limiting (60 req/min)
     │   └── validators.py # Input validation (domain, IP, URL, host)
     ├── models/           # Data models (Pydantic)
     ├── templates/        # Jinja2 HTML templates
     │   ├── base.html     # Base layout (navbar, footer, JSON-LD)
-    │   ├── index.html    # Homepage (25 tools grid)
+    │   ├── index.html    # Homepage (tools grid)
     │   ├── 404.html      # Custom 404 page
     │   ├── about.html    # About page
     │   ├── api_docs.html # API Documentation page
-    │   ├── partials/     # Template partials
-    │   │   ├── education.html  # Macro edukasi untuk tool pages
-    │   │   └── breadcrumb.html # Breadcrumb navigation
-    │   └── tools/        # 25 tool pages (dengan section edukasi)
-    ├── data/             # Data modules
-    │   ├── education.py  # Konten edukasi 25 tools
-    │   └── faq_data.py   # FAQ JSON-LD (8 entries)
-    └── static/           # Static files
-        ├── favicon.png   # PNG favicon
-        ├── robots.txt    # SEO robots
-        ├── sitemap.xml   # SEO sitemap
-        ├── manifest.json # PWA manifest
-        ├── sw.js         # Service Worker
+    │   ├── partials/
+    │   │   ├── education.html
+    │   │   └── breadcrumb.html
+    │   └── tools/        # Tool pages (dengan section edukasi)
+    ├── data/
+    │   ├── education.py  # Konten edukasi tools
+    │   └── faq_data.py   # FAQ JSON-LD
+    └── static/
+        ├── favicon.png
+        ├── logo.png
+        ├── robots.txt
+        ├── sitemap.xml
+        ├── manifest.json
+        ├── sw.js
         ├── css/style.css # Responsive CSS (65+ variables, dark mode)
-        └── js/app.js     # Frontend JavaScript (URL state, keyboard shortcuts)
+        └── js/app.js     # Frontend JavaScript
+```
+
+### Struktur Future (Utility Search Engine + Blockchain)
+
+```
+konek-internet/
+├── app/
+│   ├── main.py
+│   ├── config.py
+│   ├── crawler/              # Utility Search Crawler
+│   │   ├── base.py
+│   │   ├── discovery.py
+│   │   ├── jobs.py
+│   │   ├── tools.py
+│   │   ├── apis.py
+│   │   └── robots.py
+│   ├── parser/
+│   │   ├── html_parser.py
+│   │   ├── content_extractor.py
+│   │   └── dynamic_parser.py
+│   ├── processor/
+│   │   ├── normalizer.py
+│   │   ├── deduplicator.py
+│   │   ├── validator.py
+│   │   └── entity_detector.py
+│   ├── search/
+│   │   ├── engine.py        # PostgreSQL FTS + pg_trgm
+│   │   ├── ranking.py       # UtilityRank
+│   │   └── query_parser.py
+│   ├── scheduler/
+│   │   └── jobs.py          # APScheduler / Celery tasks
+│   ├── blockchain/          # Blockchain Infrastructure
+│   │   ├── rpc_proxy.py
+│   │   ├── websocket_proxy.py
+│   │   ├── data_api.py
+│   │   └── monitoring.py
+│   ├── middleware/
+│   │   ├── auth.py          # API Key + JWT auth
+│   │   ├── rate_limit.py    # Per-IP + Per-API-Key
+│   │   └── logging.py
+│   ├── routers/
+│   ├── services/
+│   ├── models/
+│   ├── utils/
+│   ├── templates/
+│   └── static/
+├── alembic/                  # Database migrations
+├── tests/
+├── docker-compose.yml
+├── Dockerfile
+├── requirements.txt
+└── .env.example
 ```
 
 ---
@@ -183,9 +264,22 @@ konek-internet/
 - **Cache:** Redis
 - **Database:** SQLite → PostgreSQL (2027)
 
-### Alur Request
+### Alur Request — Public Tools
 ```
-Internet → Cloudflare → AAPanel → Nginx → FastAPI → Redis → Database
+Internet → Cloudflare → AAPanel → Nginx → FastAPI → Redis → External APIs
+```
+
+### Alur Request — Utility Search
+```
+Internet → Nginx → FastAPI → PostgreSQL (FTS+pg_trgm) → Response
+                                    ↑
+                            Crawler → Parser → Processor → Index
+```
+
+### Alur Request — Blockchain RPC
+```
+Client → Nginx → FastAPI → Auth → Rate Limit → Cache (Redis) → Blockchain Node
+                                              → Log (PostgreSQL)
 ```
 
 ### Target Server
@@ -207,9 +301,9 @@ Internet → Cloudflare → AAPanel → Nginx → FastAPI → Redis → Database
 
 Gunakan **dua framework** saat memutuskan fitur baru:
 
-**Framework 1 — Arah Produk (3 Pertanyaan Pilar):**
+**Framework 1 — Arah Produk (4 Pertanyaan Pilar):**
 
-Apakah fitur ini membantu pengguna memahami internet *(Learn)*, mengelola aset internetnya *(Manage)*, atau menemukan peluang *(Discover)*? Kalau tidak menjawab salah satunya, tolak.
+Apakah fitur ini membantu pengguna memahami internet *(Learn)*, mengelola aset internetnya *(Manage)*, menemukan sesuatu yang berguna *(Discover)*, atau menghubungkan infrastruktur *(Connect)*? Kalau tidak menjawab salah satunya, tolak.
 
 **Framework 2 — Kelayakan Teknis (3 Syarat):**
 
@@ -220,11 +314,13 @@ Apakah fitur ini membantu pengguna memahami internet *(Learn)*, mengelola aset i
 > Fitur harus lolos **kedua** framework sebelum diimplementasikan.
 
 ### Yang TIDAK Perlu
-- Docker (di awal)
+- Docker (di awal, untuk public tools)
 - Kubernetes
-- Microservice
-- Elasticsearch
+- Microservice (di awal)
+- Elasticsearch (gunakan PostgreSQL FTS dulu)
 - RabbitMQ
+- AI API (untuk MVP — rule-based dulu)
+- OpenSearch (ketika data belum jutaan)
 
 ---
 
@@ -242,7 +338,7 @@ Apakah fitur ini membantu pengguna memahami internet *(Learn)*, mengelola aset i
 - Redis caching + in-memory fallback
 - Rate limiting (60 req/min per IP)
 - Security headers middleware
-- Input validation di semua endpoints (validate_domain, validate_ip, validate_url, validate_host)
+- Input validation di semua endpoints
 - Async non-blocking di semua services (asyncio.to_thread)
 
 #### SEO
@@ -302,6 +398,26 @@ e:\PROJEKU\konek-internet\.venv\Scripts\python.exe -m uvicorn app.main:app --rel
 # API Docs: http://localhost:8002/api-docs
 ```
 
+### Cara Menjalankan (Future — Utility Search + Blockchain)
+```bash
+# Setup database
+alembic upgrade head
+
+# Start crawler scheduler
+python -m app.scheduler.jobs
+
+# Start server (integrated)
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8002
+
+# Akses
+# Web: http://localhost:8002
+# Tools: http://localhost:8002/dns-lookup
+# Search: http://localhost:8002/search
+# Blockchain: http://localhost:8002/rpc/{network}
+# API: http://localhost:8002/api/v1/
+# Docs: http://localhost:8002/docs
+```
+
 ---
 
 ## Konvensi Penamaan
@@ -321,12 +437,15 @@ e:\PROJEKU\konek-internet\.venv\Scripts\python.exe -m uvicorn app.main:app --rel
 /ns-lookup
 /port-scanner
 /cdn-detect
+/search              # Utility Search (future)
+/rpc/{network}       # Blockchain RPC (future)
 /about
 /api-docs
 ```
 
 ### API Pattern
 ```
+# Public Tools (Fase 1 — aktif)
 GET /api/v1/dns/{domain}
 GET /api/v1/dns/{domain}/reverse
 GET /api/v1/dns/{domain}/mx
@@ -352,6 +471,35 @@ GET /api/v1/ua/{encoded_ua:path}
 GET /api/v1/email/{email}/validate
 GET /api/v1/port/{host}?ports=80,443,22
 GET /api/v1/cdn/{domain}/detect
+
+# Utility Search (Future)
+GET /api/v1/search?intent=work&category=jobs&skill=python
+GET /api/v1/jobs?skill=python&remote=true&status=active
+GET /api/v1/tools?category=calculator&pricing=free
+GET /api/v1/apis?category=payment&status=online
+GET /api/v1/suppliers?category=network_equipment&location=indonesia
+
+# Blockchain RPC (Future)
+POST   /rpc/{network}             # JSON-RPC proxy
+GET    /rpc/{network}/health      # Node health check
+GET    /api/v1/networks           # List supported networks
+GET    /api/v1/{network}/block/{id}
+GET    /api/v1/{network}/tx/{hash}
+GET    /api/v1/{network}/address/{addr}
+GET    /api/v1/{network}/balance/{addr}
+POST   /api/v1/{network}/broadcast
+
+# Authentication (Future)
+POST   /api/v1/auth/register
+POST   /api/v1/auth/login
+POST   /api/v1/auth/refresh
+GET    /api/v1/auth/me
+
+# API Keys (Future)
+GET    /api/v1/keys
+POST   /api/v1/keys
+DELETE /api/v1/keys/{id}
+PUT    /api/v1/keys/{id}
 ```
 
 ### Security Headers (otomatis ditambahkan)
@@ -366,6 +514,9 @@ X-Request-ID: {uuid-8char}
 Strict-Transport-Security: max-age=31536000 (HTTPS only)
 ```
 
+### API Key Prefix
+- `kn_` — Konektivitas.com unified API keys (tools, search, blockchain)
+
 ---
 
 ## Roadmap (Ringkasan)
@@ -375,34 +526,40 @@ Strict-Transport-Security: max-age=31536000 (HTTPS only)
 - API gratis dengan rate limit
 - Target: 100.000 visitor/bulan
 
-### Fase 2 — Developer Platform & Workspace MVP (2027)
+### Fase 2 — Developer Platform, Workspace & Utility Search MVP (2027)
 - 5 tools tambahan (total 30)
 - User Authentication & Workspace
 - Domain, SSL, DNS, Uptime Monitoring
 - API Key System & Dashboard
 - Dynamic DNS
+- Utility Search Engine: Core Engine + Jobs Vertical
 - Target: 500.000 visitor/bulan, 100 premium subscribers
 
-### Fase 3 — Infrastructure & Mobile (2028)
+### Fase 3 — Infrastructure, Multi-Vertical, Blockchain & Mobile (2028)
 - Total 40+ tools
 - Team Workspace & Shared Monitoring
 - DNS Hosting & DNS Anycast (bertahap)
 - Status Page
+- Utility Search: Multi-Vertical (Tools, APIs, Suppliers, Products)
+- Utility Search: B2B Intelligence
+- Blockchain RPC: Ethereum + 5 chains, Load Balancer, WebSocket
 - Mobile App (Android)
 - Target: 1 juta visitor/bulan, 1.000 premium subscribers
 
-### Fase 4 — Business Intelligence (2029)
+### Fase 4 — Business Intelligence, Enterprise & Ecosystem (2029)
 - Total 50+ tools
 - Enterprise features (SSO, Audit Log, SLA)
 - BI: Market Analysis, Technology Detection, Opportunity Finder
 - GeoIP & ASN Database
-- Load Balancer
+- Utility Search: Semantic Search, AI Classification, Developer Marketplace
+- Blockchain: Enterprise features, Analytics, Billing
 - Target: 3 juta visitor/bulan, 50 enterprise clients
 
 ### Fase 5 — Internet Platform (2030-2031)
 - 100+ tools
 - Public DNS (dns.konektivitas.com)
 - Internet Intelligence (BGP, IXP, Latency Map)
+- Utility Search: 100+ vertical categories, Global coverage
 - Developer Marketplace
 - Mobile App (Android + iOS)
 - Multi Region
@@ -417,7 +574,7 @@ Detail lengkap di [ROADMAP.md](ROADMAP.md).
 ### Saat Mengerjakan Fitur
 1. Baca [FEATURES.md](FEATURES.md) untuk memahami konteks fitur
 2. Gunakan **Framework Keputusan Fitur** (lihat section Filosofi Pengembangan)
-3. Tanyakan: "Apakah fitur ini membantu pengguna **memahami** *(Learn)*, **mengelola** *(Manage)*, atau **menemukan peluang** *(Discover)*?"
+3. Tanyakan: "Apakah fitur ini membantu pengguna **memahami** *(Learn)*, **mengelola** *(Manage)*, **menemukan** *(Discover)*, atau **menghubungkan** *(Connect)*?"
 4. Pastikan fitur memenuhi 3 syarat: **ringan**, **bermanfaat**, **tahan lama**
 5. Ikuti konvensi penamaan yang sudah ada
 6. Pastikan response time < 1 detik
@@ -428,48 +585,81 @@ Detail lengkap di [ROADMAP.md](ROADMAP.md).
 app/
 ├── main.py           # FastAPI app + middleware (Security, RateLimit)
 ├── config.py         # Pydantic settings
-├── routers/          # API endpoints (6 router, 25+ endpoints)
+├── routers/          # API endpoints
 │   ├── dns.py        # DNS: lookup, reverse, mx, txt, cname, spf, dmarc, propagation
 │   ├── domain.py     # Domain: whois, expiry
 │   ├── ssl.py        # SSL: check, expiry
 │   ├── website.py    # Website: ping, http-status, redirect, headers, ua
 │   ├── ip.py         # IP: lookup, asn, blacklist, my-ip, port, email
-│   └── cdn.py        # CDN: detect
+│   ├── cdn.py        # CDN: detect
+│   ├── search.py     # Search: universal search (future)
+│   ├── jobs.py       # Jobs API (future)
+│   ├── rpc.py        # Blockchain RPC proxy (future)
+│   ├── auth.py       # Authentication (future)
+│   └── keys.py       # API Key management (future)
 ├── services/         # Business logic (dengan @cached decorator)
 │   ├── dns_service.py
 │   ├── whois_service.py
 │   ├── ip_service.py
 │   ├── ssl_service.py
-│   ├── website_service.py  # HTTP fallback
-│   ├── ua_service.py       # User-Agent parser
-│   ├── email_service.py    # Email validation + disposable detection
-│   ├── port_service.py     # Port scanner
-│   └── cdn_service.py      # CDN detection (CNAME + Headers)
+│   ├── website_service.py
+│   ├── ua_service.py
+│   ├── email_service.py
+│   ├── port_service.py
+│   ├── cdn_service.py
+│   ├── search_service.py    # (future)
+│   ├── crawl_service.py     # (future)
+│   ├── rpc_service.py       # (future)
+│   ├── auth_service.py      # (future)
+│   └── api_key_service.py   # (future)
+├── crawler/          # Utility Search Crawler (future)
+│   ├── base.py
+│   ├── discovery.py
+│   ├── jobs.py
+│   └── robots.py
+├── search/           # Search Engine (future)
+│   ├── engine.py     # PostgreSQL FTS + pg_trgm
+│   ├── ranking.py    # UtilityRank
+│   └── query_parser.py
+├── processor/        # Data Processing (future)
+│   ├── normalizer.py
+│   ├── deduplicator.py
+│   ├── validator.py
+│   └── entity_detector.py
+├── scheduler/        # Background Jobs (future)
+│   └── jobs.py       # APScheduler / Celery
+├── middleware/        # (future)
+│   ├── auth.py       # API Key + JWT
+│   ├── rate_limit.py
+│   └── logging.py
 ├── utils/
 │   ├── cache.py      # Redis + in-memory cache
 │   ├── rate_limit.py # Per-IP rate limiting
-│   └── validators.py # Input validation (domain, IP, URL, host)
-├── templates/        # Jinja2 HTML (25 tool pages + about + api_docs)
+│   ├── validators.py # Input validation (domain, IP, URL, host)
+│   └── crypto.py     # API key hashing, JWT (future)
+├── templates/        # Jinja2 HTML
 │   ├── base.html     # Base layout + JSON-LD
 │   ├── index.html    # Homepage
 │   ├── 404.html      # Error page
 │   ├── about.html    # About page
 │   ├── api_docs.html # API Documentation
+│   ├── search.html   # Search homepage (future)
+│   ├── results.html  # Search results (future)
 │   ├── partials/
 │   │   ├── education.html
 │   │   └── breadcrumb.html
-│   └── tools/        # 25 tool pages
+│   └── tools/        # Tool pages
 ├── data/
-│   ├── education.py  # Konten edukasi 25 tools
-│   └── faq_data.py   # FAQ JSON-LD (8 entries)
+│   ├── education.py  # Konten edukasi tools
+│   └── faq_data.py   # FAQ JSON-LD
 ├── static/
 │   ├── css/style.css
-│   ├── js/app.js     # handleToolForm(), displayResults(), copyJSON()
+│   ├── js/app.js
 │   ├── favicon.png
 │   ├── logo.png
 │   ├── manifest.json # PWA
 │   └── sw.js         # Service Worker
-└── models/           # Data models
+└── models/           # Data models (Pydantic + SQLAlchemy future)
 ```
 
 ### Naming Convention
@@ -479,6 +669,7 @@ app/
 - **Variable:** snake_case
 - **Constant:** UPPER_SNAKE_CASE
 - **API Endpoint:** kebab-case (/dns-lookup)
+- **API Key Prefix:** `kn_` (unified)
 
 ### Performance Checklist
 - [x] Response time < 1 detik
@@ -537,7 +728,7 @@ app/
 | Tools | 25 | ✅ |
 | API request/hari | 10.000 | 🔄 |
 
-### Year 2 (2027) — Developer Platform & Workspace
+### Year 2 (2027) — Developer Platform, Workspace & Search MVP
 
 | Metric | Target |
 |--------|--------|
@@ -545,8 +736,9 @@ app/
 | Registered users | 10.000 |
 | Pro subscribers | 100 |
 | Domain monitored | 5.000 |
+| Indexed jobs | 10.000+ |
 
-### Year 3 (2028) — Infrastructure & Mobile
+### Year 3 (2028) — Infrastructure, Multi-Vertical, Blockchain & Mobile
 
 | Metric | Target |
 |--------|--------|
@@ -554,8 +746,11 @@ app/
 | Registered users | 50.000 |
 | Pro subscribers | 1.000 |
 | Mobile app installs | 10.000 |
+| Indexed objects | 100.000+ |
+| Active verticals | 4+ |
+| Blockchain users | 1.000 |
 
-### Year 4 (2029) — Business Intelligence
+### Year 4 (2029) — Business Intelligence, Enterprise & Ecosystem
 
 | Metric | Target |
 |--------|--------|
@@ -563,6 +758,8 @@ app/
 | Registered users | 100.000 |
 | Enterprise clients | 50 |
 | API request/hari | 1.000.000 |
+| Indexed objects | 1.000.000+ |
+| B2B clients | 20 |
 
 ### Year 5 (2030-2031) — Internet Platform
 
@@ -574,6 +771,9 @@ app/
 | Enterprise clients | 500 |
 | Public DNS users | 1.000.000 |
 | API request/hari | 10.000.000 |
+| Indexed objects | 100.000.000+ |
+| Search daily visitors | 500.000 |
+| Blockchain users | 20.000 |
 
 ---
 
@@ -582,12 +782,15 @@ app/
 ### Free
 - Public tools (25+ → 100+ tools)
 - Edukasi internet
+- Public search & discovery
 - API dengan rate limit
 
 ### Pro (Rp 49.000/bulan)
 - Workspace (Domain, SSL, DNS, Server, Email Monitoring)
 - Notification (Email, Telegram, Discord)
 - Laporan & Export
+- Saved searches & alerts
+- Advanced filtering
 - Tanpa iklan
 
 ### Team (Rp 99.000-199.000/bulan)
@@ -617,326 +820,24 @@ Yang dijual adalah:
 - **Kejelasan** — Memahami infrastruktur internet
 - **Monitoring** — Peringatan dini sebelum masalah terjadi
 - **Edukasi** — Belajar internet dalam bahasa Indonesia
+- **Discovery** — Menemukan hal-hal berguna di internet
 - **Insight** — Data untuk pengambilan keputusan
 - **Efisiensi** — Satu tempat untuk semua aset internet
 - **Produktivitas** — Mengelola aset internet lebih cepat
+- **Konektivitas** — Menghubungkan aplikasi dengan infrastruktur
 - **Kepercayaan** — Platform yang bisa diandalkan
 
 ---
 
-# Hub.konektivitas.com — Blockchain Infrastructure
+## Referensi
 
-> Panduan untuk AI/agent agar mudah memahami dan mengerjakan proyek Hub.konektivitas.com.
-
-**Detail:** [`plans/hub-konektivitas-plan.md`](plans/hub-konektivitas-plan.md)
-
-## Overview
-
-Hub.konektivitas.com adalah platform infrastruktur blockchain yang menyediakan akses node RPC API untuk developer, startup, perusahaan, dan aplikasi Web3 tanpa harus menjalankan node sendiri.
-
-Fokus utama proyek ini adalah menyediakan layanan yang cepat, stabil, aman, dan mudah diintegrasikan melalui API.
-
-## Visi
-
-Menjadi penyedia infrastruktur konektivitas blockchain yang sederhana, cepat, dan andal untuk developer di Indonesia maupun global.
-
-## Misi
-
-1. Menyediakan RPC Node berkinerja tinggi.
-2. Mempermudah integrasi blockchain melalui REST API dan JSON-RPC.
-3. Menyediakan endpoint yang stabil dengan uptime tinggi.
-4. Mendukung berbagai jaringan blockchain populer.
-5. Menjadi fondasi berbagai aplikasi Web3.
-
-## Layanan
-
-- **Public RPC Endpoint** — Akses publik tanpa registrasi
-- **Private RPC Endpoint** — Akses privat dengan API key
-- **JSON-RPC API** — Standar JSON-RPC 2.0
-- **WebSocket Endpoint** — Real-time event subscriptions
-- **Blockchain Data API** — Block, transaction, address data
-- **Transaction Broadcast API** — Broadcast transaksi
-- **Block Explorer API** — Data explorasi block
-- **Address Balance API** — Cek saldo alamat
-- **Smart Contract API** — Interaksi smart contract
-- **Monitoring and Status API** — Status kesehatan node
-
-## Target Pengguna
-
-- Developer blockchain
-- Startup Web3
-- Perusahaan / Fintech
-- Wallet / Exchange
-- Game Blockchain / NFT Platform
-- AI Agent / IoT
-
-## Arsitektur
-
-```
-Client Apps → Nginx → FastAPI → PostgreSQL
-                            → Redis Cache
-                            → Blockchain Nodes
-                            → Prometheus → Grafana
-```
-
-### Alur Request
-
-1. Client mengirim JSON-RPC request
-2. Nginx menerima dan forward ke FastAPI
-3. FastAPI memvalidasi API key
-4. FastAPI memeriksa rate limit
-5. FastAPI memeriksa cache (Redis)
-6. Jika cache miss, forward ke blockchain node
-7. Response disimpan di cache
-8. Request dilog ke PostgreSQL
-9. Response dikembalikan ke client
-
-## Struktur Direktori
-
-```
-hub-konektivitas/
-├── app/
-│   ├── main.py                 # FastAPI app utama
-│   ├── config.py               # Konfigurasi Pydantic
-│   ├── dependencies.py         # Dependency injection
-│   ├── middleware/
-│   │   ├── auth.py             # API Key authentication
-│   │   ├── rate_limit.py       # Rate limiting
-│   │   └── logging.py          # Request logging
-│   ├── models/
-│   │   ├── user.py             # User model
-│   │   ├── api_key.py          # API Key model
-│   │   ├── usage.py            # Usage tracking
-│   │   └── blockchain.py       # Network model
-│   ├── routers/
-│   │   ├── auth.py             # Login, Register
-│   │   ├── dashboard.py        # Dashboard endpoints
-│   │   ├── rpc.py              # JSON-RPC proxy
-│   │   ├── blockchain.py       # Blockchain data
-│   │   ├── monitoring.py       # Status and health
-│   │   └── admin.py            # Admin endpoints
-│   ├── services/
-│   │   ├── auth_service.py     # Authentication logic
-│   │   ├── api_key_service.py  # API Key CRUD
-│   │   ├── rpc_service.py      # RPC proxy logic
-│   │   ├── blockchain_service.py # Blockchain interactions
-│   │   └── usage_service.py    # Usage tracking
-│   ├── utils/
-│   │   ├── cache.py            # Redis + in-memory cache
-│   │   ├── crypto.py           # API key hashing, JWT
-│   │   └── validators.py       # Input validation
-│   ├── templates/
-│   │   ├── base.html           # Base layout
-│   │   ├── index.html          # Landing page
-│   │   ├── dashboard.html      # User dashboard
-│   │   ├── login.html          # Login page
-│   │   ├── register.html       # Register page
-│   │   ├── api_keys.html       # API Key management
-│   │   └── docs.html           # API documentation
-│   └── static/
-│       ├── css/style.css
-│       ├── js/app.js
-│       └── favicon.png
-├── alembic/                    # Database migrations
-├── tests/
-├── docker-compose.yml
-├── Dockerfile
-├── requirements.txt
-└── .env.example
-```
-
-## API Endpoints
-
-### Authentication
-
-```
-POST   /api/v1/auth/register       # Register new user
-POST   /api/v1/auth/login          # Login
-POST   /api/v1/auth/refresh        # Refresh token
-GET    /api/v1/auth/me             # Get current user
-PUT    /api/v1/auth/me             # Update profile
-```
-
-### API Keys
-
-```
-GET    /api/v1/keys               # List API keys
-POST   /api/v1/keys               # Create API key
-DELETE /api/v1/keys/{id}          # Revoke API key
-PUT    /api/v1/keys/{id}          # Update API key
-```
-
-### RPC Proxy
-
-```
-POST   /rpc/{network}             # JSON-RPC proxy
-GET    /rpc/{network}/health      # Node health check
-```
-
-### Blockchain Data
-
-```
-GET    /api/v1/networks           # List supported networks
-GET    /api/v1/networks/{slug}    # Network details
-GET    /api/v1/{network}/block/{id}  # Get block
-GET    /api/v1/{network}/tx/{hash}   # Get transaction
-GET    /api/v1/{network}/address/{addr} # Get address info
-GET    /api/v1/{network}/balance/{addr} # Get balance
-POST   /api/v1/{network}/broadcast    # Broadcast transaction
-```
-
-### Monitoring
-
-```
-GET    /api/v1/status             # System status
-GET    /api/v1/status/{network}   # Network status
-GET    /api/v1/usage              # Usage statistics
-```
-
-## Database Schema
-
-### Users
-
-| Column | Type | Description |
-|--------|------|-------------|
-| id | UUID | Primary key |
-| email | VARCHAR(255) | Unique email |
-| password_hash | VARCHAR(255) | Bcrypt hash |
-| full_name | VARCHAR(255) | Nama lengkap |
-| plan | VARCHAR(50) | free/pro/team |
-| created_at | TIMESTAMP | Tanggal daftar |
-
-### API Keys
-
-| Column | Type | Description |
-|--------|------|-------------|
-| id | UUID | Primary key |
-| user_id | UUID | Foreign key ke users |
-| name | VARCHAR(100) | Nama key |
-| key_hash | VARCHAR(255) | SHA-256 hash |
-| key_prefix | VARCHAR(10) | Prefix untuk display |
-| networks | TEXT[] | Blockchain networks |
-| rate_limit | INTEGER | Request per menit |
-| is_active | BOOLEAN | Status aktif |
-
-### Usage Logs
-
-| Column | Type | Description |
-|--------|------|-------------|
-| id | BIGSERIAL | Primary key |
-| api_key_id | UUID | Foreign key |
-| network | VARCHAR(50) | Blockchain network |
-| method | VARCHAR(100) | RPC method |
-| response_time_ms | INTEGER | Response time |
-| status_code | INTEGER | HTTP status |
-
-### Blockchain Networks
-
-| Column | Type | Description |
-|--------|------|-------------|
-| id | SERIAL | Primary key |
-| name | VARCHAR(100) | Network name |
-| slug | VARCHAR(50) | URL-friendly name |
-| chain_id | INTEGER | Chain ID |
-| rpc_endpoint | TEXT | RPC URL |
-| is_active | BOOLEAN | Status aktif |
-
-## Konvensi Penamaan
-
-### File
-- snake_case.py untuk semua file Python
-
-### Function
-- snake_case() untuk semua function
-
-### Class
-- PascalCase untuk semua class
-
-### Variable
-- snake_case untuk semua variable
-
-### API Endpoint
-- kebab-case untuk URL
-- `/api/v1/{resource}` untuk REST
-- `/rpc/{network}` untuk RPC proxy
-
-### API Key Prefix
-- `hk_` untuk Hub.konektivitas.com
-
-## Security
-
-### API Key Security
-- API key di-hash dengan SHA-256 sebelum disimpan
-- Hanya prefix yang ditampilkan ke user (contoh: `hk_abc123...`)
-- Full key hanya ditampilkan sekali saat pembuatan
-- Support key expiration dan revocation
-
-### Authentication
-- JWT tokens untuk web session
-- API key untuk programmatic access
-- Bcrypt untuk password hashing
-- Rate limiting per API key
-
-### Rate Limiting
-- Default: 100 requests per menit per API key
-- Configurable per plan
-- Custom limits untuk enterprise
-
-## Monitoring
-
-### Prometheus Metrics
-- Request count per network
-- Response time histogram
-- Error rate counter
-- Cache hit/miss ratio
-- Active connections
-
-### Grafana Dashboards
-- System overview
-- API performance
-- Node health
-- Usage analytics
-
-## Cara Menjalankan
-
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Setup database
-alembic upgrade head
-
-# Start server
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8003
-
-# Akses
-# Web: http://localhost:8003
-# API: http://localhost:8003/api/v1/
-# Docs: http://localhost:8003/docs
-# Health: http://localhost:8003/api/v1/status
-```
-
-## Perbedaan dengan Konektivitas.com
-
-| Aspek | Konektivitas.com | Hub.konektivitas.com |
-|-------|------------------|---------------------|
-| Database | SQLite → PostgreSQL | PostgreSQL |
-| Auth | Tidak ada | JWT + API Keys |
-| Rate Limit | Per-IP | Per-API-Key |
-| Container | Tidak ada | Docker |
-| Monitoring | Prometheus headers | Prometheus + Grafana |
-| Purpose | Internet tools | Blockchain RPC |
-| Port | 8002 | 8003 |
-
----
-
-## Referensi Penting
-
-- [BRIEF.md](BRIEF.md) — Visi, misi, dan filosofi Konektivitas.com
-- [BRIEF2.md](BRIEF2.md) — Detail teknis dan arsitektur Konektivitas.com
-- [ROADMAP.md](ROADMAP.md) — Roadmap pengembangan 5 tahun
-- [FEATURES.md](FEATURES.md) — Daftar lengkap fitur per fase
-- [plans/hub-konektivitas-plan.md](plans/hub-konektivitas-plan.md) — Rencana detail Hub.konektivitas.com
+- [BRIEF.md](BRIEF.md) — Master Brief (visi, misi, filosofi terpadu)
+- [BRIEF2.md](BRIEF2.md) — Detail teknis dan arsitektur
+- [BRIEF3.md](BRIEF3.md) — Brief Utility Search Engine
+- [BRIEF4.md](BRIEF4.md) — Tech stack Utility Search Engine
+- [ROADMAP.md](ROADMAP.md) — Roadmap terintegrasi 5 tahun
+- [FEATURES.md](FEATURES.md) — Daftar lengkap fitur per fase (4 pilar)
+- [plans/hub-konektivitas-plan.md](plans/hub-konektivitas-plan.md) — Rencana detail blockchain infrastructure
 
 ---
 

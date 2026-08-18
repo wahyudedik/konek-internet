@@ -1,6 +1,7 @@
 import time
 import uuid
 import logging
+from contextlib import asynccontextmanager
 from datetime import date
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,10 +12,13 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 from app.config import get_settings
 from app.routers import dns, domain, ssl, website, ip, cdn, batch, compare
+from app.routers import auth, keys, workspace, notifications
+from app.scheduler.jobs import scheduler
 from app.utils.rate_limit import check_rate_limit, get_client_ip, get_remaining_requests
 from app.data.education import EDUCATION_DATA
 from app.data.faq_data import FAQ_DATA
 from app.utils.validators import get_tool_meta
+from app.database import init_db, close_db
 
 # Configure logging
 logging.basicConfig(
@@ -34,6 +38,32 @@ app = FastAPI(
     redoc_url="/redoc",
     openapi_url="/openapi.json",
 )
+
+
+# ============ LIFECYCLE (Database Init) ============
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize database and scheduler on application startup."""
+    logger.info("Initializing database...")
+    await init_db()
+    logger.info("Database initialized successfully.")
+    
+    # Start monitoring scheduler
+    logger.info("Starting monitoring scheduler...")
+    await scheduler.start()
+    logger.info("Monitoring scheduler started.")
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Cleanup on application shutdown."""
+    logger.info("Stopping monitoring scheduler...")
+    await scheduler.stop()
+    logger.info("Closing database connections...")
+    await close_db()
+    logger.info("Application shutdown complete.")
+
 
 # ============ MIDDLEWARE ============
 
@@ -185,7 +215,7 @@ def tool_context(request: Request, title: str, tool_key: str, extra: dict = None
         ctx.update(extra)
     return ctx
 
-# API routers
+# API routers — Public Tools (Fase 1)
 app.include_router(dns.router, prefix="/api/v1", tags=["DNS"])
 app.include_router(domain.router, prefix="/api/v1", tags=["Domain"])
 app.include_router(ssl.router, prefix="/api/v1", tags=["SSL"])
@@ -194,6 +224,12 @@ app.include_router(ip.router, prefix="/api/v1", tags=["IP"])
 app.include_router(cdn.router, prefix="/api/v1", tags=["CDN"])
 app.include_router(batch.router, prefix="/api/v1", tags=["Batch"])
 app.include_router(compare.router, prefix="/api/v1", tags=["Compare"])
+
+# API routers — Auth, Keys, Workspace, Notifications (Fase 2)
+app.include_router(auth.router, prefix="/api/v1", tags=["Authentication"])
+app.include_router(keys.router, prefix="/api/v1", tags=["API Keys"])
+app.include_router(workspace.router, prefix="/api/v1", tags=["Workspace"])
+app.include_router(notifications.router, prefix="/api/v1", tags=["Notifications"])
 
 
 # ============ PAGE ROUTES ============
@@ -346,6 +382,72 @@ async def page_batch_lookup(request: Request):
 @app.get("/compare")
 async def page_compare(request: Request):
     return templates.TemplateResponse("tools/compare.html", tool_context(request, "Tool Comparison", "compare"))
+
+
+# ============ Dashboard Pages (Fase 2) ============
+
+@app.get("/dashboard")
+async def page_dashboard(request: Request):
+    from app.dependencies import get_current_user_optional
+    user = await get_current_user_optional(request)
+    if not user:
+        return templates.TemplateResponse("tools/dns_lookup.html", tool_context(request, "Dashboard", "dns_lookup"))
+    return templates.TemplateResponse("dashboard.html", {"request": request, "user": user, "title": "Dashboard", "meta": None})
+
+
+@app.get("/dashboard/domains")
+async def page_domains(request: Request):
+    from app.dependencies import get_current_user_optional
+    user = await get_current_user_optional(request)
+    if not user:
+        return templates.TemplateResponse("tools/dns_lookup.html", tool_context(request, "Domain Saya", "dns_lookup"))
+    return templates.TemplateResponse("dashboard/domains.html", {"request": request, "user": user, "title": "Domain Saya", "meta": None})
+
+
+@app.get("/dashboard/domains/{domain_id}")
+async def page_domain_detail(request: Request, domain_id: int):
+    from app.dependencies import get_current_user_optional
+    user = await get_current_user_optional(request)
+    if not user:
+        return templates.TemplateResponse("tools/dns_lookup.html", tool_context(request, "Detail Domain", "dns_lookup"))
+    return templates.TemplateResponse("dashboard/domain_detail.html", {"request": request, "user": user, "domain_id": domain_id, "title": "Detail Domain", "meta": None})
+
+
+@app.get("/dashboard/api-keys")
+async def page_api_keys(request: Request):
+    from app.dependencies import get_current_user_optional
+    user = await get_current_user_optional(request)
+    if not user:
+        return templates.TemplateResponse("tools/dns_lookup.html", tool_context(request, "API Keys", "dns_lookup"))
+    return templates.TemplateResponse("dashboard/api_keys.html", {"request": request, "user": user, "title": "API Keys", "meta": None})
+
+
+@app.get("/dashboard/notifications")
+async def page_notifications(request: Request):
+    from app.dependencies import get_current_user_optional
+    user = await get_current_user_optional(request)
+    if not user:
+        return templates.TemplateResponse("tools/dns_lookup.html", tool_context(request, "Notifikasi", "dns_lookup"))
+    return templates.TemplateResponse("dashboard/notifications.html", {"request": request, "user": user, "title": "Notifikasi", "meta": None})
+
+
+@app.get("/dashboard/profile")
+async def page_profile(request: Request):
+    from app.dependencies import get_current_user_optional
+    user = await get_current_user_optional(request)
+    if not user:
+        return templates.TemplateResponse("tools/dns_lookup.html", tool_context(request, "Profil", "dns_lookup"))
+    return templates.TemplateResponse("dashboard/profile.html", {"request": request, "user": user, "title": "Profil", "meta": None})
+
+
+@app.get("/login")
+async def page_login(request: Request):
+    return templates.TemplateResponse("dashboard/login.html", {"request": request, "title": "Login", "meta": None})
+
+
+@app.get("/register")
+async def page_register(request: Request):
+    return templates.TemplateResponse("dashboard/register.html", {"request": request, "title": "Register", "meta": None})
 
 
 # Health check (API)

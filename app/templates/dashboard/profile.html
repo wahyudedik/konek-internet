@@ -1,0 +1,304 @@
+{% extends "base.html" %}
+
+{% block title %}Profil - Konektivitas.com{% endblock %}
+{% block description %}Kelola profil Konektivitas.com Anda.{% endblock %}
+
+{% block head %}
+<style>
+    .dashboard-layout {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 0;
+        min-height: calc(100vh - 60px);
+    }
+
+    .dashboard-sidebar {
+        background: var(--bg-secondary);
+        border-right: 1px solid var(--border-color);
+        padding: 24px 0;
+    }
+
+    .dashboard-sidebar .sidebar-header {
+        padding: 0 20px 20px;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 16px;
+    }
+
+    .dashboard-sidebar .sidebar-header h3 {
+        margin: 0 0 4px;
+        font-size: 1rem;
+    }
+
+    .dashboard-sidebar .sidebar-header .plan-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .sidebar-nav a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+        background: var(--bg-hover);
+        color: var(--primary-color);
+    }
+
+    .sidebar-nav a .nav-icon {
+        font-size: 1.1rem;
+        width: 24px;
+        text-align: center;
+    }
+
+    .dashboard-main {
+        padding: 24px 32px;
+    }
+
+    .page-header h1 {
+        margin: 0 0 24px;
+        font-size: 1.5rem;
+    }
+
+    .section-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+
+    .section-card h2 {
+        margin: 0 0 16px;
+        font-size: 1.1rem;
+        color: var(--text-primary);
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .form-group input {
+        width: 100%;
+        max-width: 400px;
+        padding: 10px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+    }
+
+    .form-group .hint {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+    }
+
+    .btn-primary {
+        padding: 10px 20px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .btn-danger {
+        padding: 10px 20px;
+        background: #ef4444;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .btn-logout {
+        padding: 10px 20px;
+        background: var(--text-secondary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        margin-top: 16px;
+    }
+
+    .profile-info {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        gap: 8px 16px;
+        font-size: 0.9rem;
+        margin-bottom: 16px;
+    }
+
+    .profile-info .label {
+        color: var(--text-secondary);
+    }
+
+    .profile-info .value {
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .dashboard-sidebar {
+            display: none;
+        }
+
+        .dashboard-main {
+            padding: 16px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+        <div class="sidebar-header">
+            <h3>👋 {{ user.display_name or user.username }}</h3>
+            <span class="plan-badge">{{ user.plan | upper }}</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/dashboard"><span class="nav-icon">📊</span> Dashboard</a>
+            <a href="/dashboard/domains"><span class="nav-icon">🌐</span> Domain Saya</a>
+            <a href="/dashboard/api-keys"><span class="nav-icon">🔑</span> API Keys</a>
+            <a href="/dashboard/notifications"><span class="nav-icon">🔔</span> Notifikasi</a>
+            <a href="/dashboard/profile" class="active"><span class="nav-icon">👤</span> Profil</a>
+            <hr style="border-color: var(--border-color); margin: 12px 20px;">
+            <a href="/"><span class="nav-icon">🏠</span> Beranda</a>
+        </nav>
+    </aside>
+
+    <main class="dashboard-main">
+        <h1>👤 Profil Saya</h1>
+
+        <div class="section-card">
+            <h2>Informasi Akun</h2>
+            <div class="profile-info">
+                <div class="label">Username</div>
+                <div class="value" id="username">-</div>
+                <div class="label">Email</div>
+                <div class="value" id="email">-</div>
+                <div class="label">Display Name</div>
+                <div class="value" id="displayName">-</div>
+                <div class="label">Plan</div>
+                <div class="value" id="plan">-</div>
+                <div class="label">Terakhir Login</div>
+                <div class="value" id="lastLogin">-</div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2>Ubah Profil</h2>
+            <form id="profileForm" onsubmit="updateProfile(event)">
+                <div class="form-group">
+                    <label>Display Name</label>
+                    <input type="text" id="newDisplayName" placeholder="Nama tampilan Anda">
+                </div>
+                <button type="submit" class="btn-primary">💾 Simpan</button>
+            </form>
+        </div>
+
+        <div class="section-card">
+            <h2>Ubah Password</h2>
+            <form id="passwordForm" onsubmit="changePassword(event)">
+                <div class="form-group">
+                    <label>Password Saat Ini</label>
+                    <input type="password" id="currentPassword" placeholder="Password saat ini" required>
+                </div>
+                <div class="form-group">
+                    <label>Password Baru</label>
+                    <input type="password" id="newPassword" placeholder="Password baru (min. 8 karakter)" required
+                        minlength="8">
+                </div>
+                <div class="form-group">
+                    <label>Konfirmasi Password Baru</label>
+                    <input type="password" id="confirmPassword" placeholder="Ulangi password baru" required>
+                </div>
+                <button type="submit" class="btn-primary">🔒 Ubah Password</button>
+            </form>
+        </div>
+
+        <div class="section-card">
+            <h2> Keluar</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 12px;">Keluar dari akun Anda di
+                browser ini.</p>
+            <button class="btn-logout" onclick="logout()">🚪 Keluar</button>
+        </div>
+    </main>
+</div>
+
+<script>
+    (function () {
+        const token = localStorage.getItem('konek_token');
+        if (!token) { window.location.href = '/login'; return; }
+        const headers = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+
+        // Load profile
+        fetch('/api/v1/auth/me', { headers })
+            .then(r => r.ok ? r.json() : Promise.reject(r))
+            .then(user => {
+                document.getElementById('username').textContent = user.username;
+                document.getElementById('email').textContent = user.email;
+                document.getElementById('displayName').textContent = user.display_name || '-';
+                document.getElementById('plan').textContent = user.plan || 'free';
+                document.getElementById('lastLogin').textContent = user.last_login ? new Date(user.last_login).toLocaleString('id-ID') : '-';
+                document.getElementById('newDisplayName').value = user.display_name || '';
+            })
+            .catch(() => { });
+
+        window.updateProfile = function (e) {
+            e.preventDefault();
+            const body = { display_name: document.getElementById('newDisplayName').value.trim() || null };
+            fetch('/api/v1/auth/me', { method: 'PUT', headers, body: JSON.stringify(body) })
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(() => alert('Profil berhasil diupdate.'))
+                .catch(err => alert('Gagal update profil.'));
+        };
+
+        window.changePassword = function (e) {
+            e.preventDefault();
+            const current = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            if (newPass !== confirm) { alert('Password baru tidak cocok.'); return; }
+            fetch('/api/v1/auth/change-password', { method: 'POST', headers, body: JSON.stringify({ current_password: current, new_password: newPass }) })
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(() => { alert('Password berhasil diubah.'); document.getElementById('passwordForm').reset(); })
+                .catch(err => alert('Gagal mengubah password. Pastikan password saat ini benar.'));
+        };
+
+        window.logout = function () {
+            localStorage.removeItem('konek_token');
+            window.location.href = '/';
+        };
+    })();
+</script>
+{% endblock %}

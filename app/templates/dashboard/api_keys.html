@@ -1,0 +1,384 @@
+{% extends "base.html" %}
+
+{% block title %}API Keys - Konektivitas.com{% endblock %}
+{% block description %}Kelola API keys Konektivitas.com workspace.{% endblock %}
+
+{% block head %}
+<style>
+    .dashboard-layout {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 0;
+        min-height: calc(100vh - 60px);
+    }
+
+    .dashboard-sidebar {
+        background: var(--bg-secondary);
+        border-right: 1px solid var(--border-color);
+        padding: 24px 0;
+    }
+
+    .dashboard-sidebar .sidebar-header {
+        padding: 0 20px 20px;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 16px;
+    }
+
+    .dashboard-sidebar .sidebar-header h3 {
+        margin: 0 0 4px;
+        font-size: 1rem;
+    }
+
+    .dashboard-sidebar .sidebar-header .plan-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .sidebar-nav a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+        background: var(--bg-hover);
+        color: var(--primary-color);
+    }
+
+    .sidebar-nav a .nav-icon {
+        font-size: 1.1rem;
+        width: 24px;
+        text-align: center;
+    }
+
+    .dashboard-main {
+        padding: 24px 32px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .btn-primary {
+        padding: 10px 20px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .key-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 12px;
+    }
+
+    .key-card .key-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .key-card .key-name {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .key-card .key-prefix {
+        font-family: monospace;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        background: var(--bg-primary);
+        padding: 2px 8px;
+        border-radius: 4px;
+    }
+
+    .key-card .key-meta {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+    }
+
+    .key-card .key-actions {
+        margin-top: 8px;
+    }
+
+    .key-card .key-actions button {
+        padding: 4px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        background: var(--bg-secondary);
+        cursor: pointer;
+        font-size: 0.8rem;
+        margin-right: 4px;
+    }
+
+    .btn-danger {
+        color: #ef4444 !important;
+        border-color: #ef4444 !important;
+    }
+
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal {
+        background: var(--bg-secondary);
+        border-radius: 12px;
+        padding: 24px;
+        width: 90%;
+        max-width: 480px;
+    }
+
+    .modal h2 {
+        margin: 0 0 16px;
+        font-size: 1.2rem;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+
+    .btn-cancel {
+        padding: 8px 16px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--bg-secondary);
+        cursor: pointer;
+    }
+
+    .key-alert {
+        background: #dbeafe;
+        border: 1px solid #3b82f6;
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+        font-size: 0.9rem;
+    }
+
+    .dark-mode .key-alert {
+        background: #1e3a5f;
+        border-color: #60a5fa;
+    }
+
+    .key-full {
+        font-family: monospace;
+        font-size: 0.85rem;
+        background: var(--bg-primary);
+        padding: 8px 12px;
+        border-radius: 6px;
+        word-break: break-all;
+        margin-top: 8px;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .dashboard-sidebar {
+            display: none;
+        }
+
+        .dashboard-main {
+            padding: 16px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+        <div class="sidebar-header">
+            <h3>👋 {{ user.display_name or user.username }}</h3>
+            <span class="plan-badge">{{ user.plan | upper }}</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/dashboard"><span class="nav-icon">📊</span> Dashboard</a>
+            <a href="/dashboard/domains"><span class="nav-icon">🌐</span> Domain Saya</a>
+            <a href="/dashboard/api-keys" class="active"><span class="nav-icon">🔑</span> API Keys</a>
+            <a href="/dashboard/notifications"><span class="nav-icon">🔔</span> Notifikasi</a>
+            <a href="/dashboard/profile"><span class="nav-icon">👤</span> Profil</a>
+            <hr style="border-color: var(--border-color); margin: 12px 20px;">
+            <a href="/"><span class="nav-icon">🏠</span> Beranda</a>
+        </nav>
+    </aside>
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h1>🔑 API Keys</h1>
+            <button class="btn-primary" onclick="openCreateModal()">➕ Buat API Key</button>
+        </div>
+
+        <div id="keyAlert" class="key-alert" style="display: none;">
+            ⚠️ Simpan API key Anda! Key hanya ditampilkan sekali saat pembuatan.
+        </div>
+
+        <div id="keyList">
+            <p style="color: var(--text-secondary);">Memuat data...</p>
+        </div>
+    </main>
+</div>
+
+<!-- Create Key Modal -->
+<div class="modal-overlay" id="createModal">
+    <div class="modal">
+        <h2>➕ Buat API Key Baru</h2>
+        <form id="createKeyForm" onsubmit="submitCreateKey(event)">
+            <div class="form-group">
+                <label for="keyName">Nama API Key</label>
+                <input type="text" id="keyName" placeholder="contoh: My App Key" required>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-cancel" onclick="closeCreateModal()">Batal</button>
+                <button type="submit" class="btn-primary">Buat</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Show Key Modal -->
+<div class="modal-overlay" id="showKeyModal">
+    <div class="modal">
+        <h2>🔑 API Key Berhasil Dibuat</h2>
+        <div class="key-alert">⚠️ Simpan key ini sekarang! Anda tidak akan bisa melihatnya lagi.</div>
+        <div class="key-full" id="newKeyDisplay"></div>
+        <div class="form-actions" style="margin-top: 16px;">
+            <button class="btn-primary" onclick="copyKey()">📋 Copy</button>
+            <button class="btn-cancel" onclick="closeShowKeyModal()">Tutup</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const token = localStorage.getItem('konek_token');
+        if (!token) { window.location.href = '/login'; return; }
+        const headers = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+
+        window.openCreateModal = function () { document.getElementById('createModal').classList.add('active'); };
+        window.closeCreateModal = function () { document.getElementById('createModal').classList.remove('active'); };
+        window.closeShowKeyModal = function () { document.getElementById('showKeyModal').classList.remove('active'); };
+        window.copyKey = function () {
+            const key = document.getElementById('newKeyDisplay').textContent;
+            navigator.clipboard.writeText(key).then(() => alert('API Key berhasil dicopy!'));
+        };
+
+        window.submitCreateKey = function (e) {
+            e.preventDefault();
+            const body = { name: document.getElementById('keyName').value.trim() };
+            fetch('/api/v1/keys/', { method: 'POST', headers, body: JSON.stringify(body) })
+                .then(r => { if (!r.ok) return r.json().then(d => Promise.reject(d)); return r.json(); })
+                .then(data => {
+                    closeCreateModal();
+                    document.getElementById('newKeyDisplay').textContent = data.key;
+                    document.getElementById('showKeyModal').classList.add('active');
+                    document.getElementById('keyAlert').style.display = 'block';
+                    document.getElementById('createKeyForm').reset();
+                    loadKeys();
+                })
+                .catch(err => alert('Gagal membuat API key: ' + (err.detail || 'Error')));
+        };
+
+        window.revokeKey = function (id) {
+            if (!confirm('Yakin ingin menghapus API key ini?')) return;
+            fetch('/api/v1/keys/' + id, { method: 'DELETE', headers })
+                .then(r => { if (r.ok) loadKeys(); else alert('Gagal menghapus.'); });
+        };
+
+        function loadKeys() {
+            fetch('/api/v1/keys/', { headers })
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(keys => {
+                    const container = document.getElementById('keyList');
+                    if (!keys.length) {
+                        container.innerHTML = '<div class="section-card" style="text-align:center; padding:40px;"><p style="font-size:1.1rem; color: var(--text-secondary);">Belum ada API key.</p></div>';
+                        return;
+                    }
+                    container.innerHTML = keys.map(k => `
+                    <div class="key-card">
+                        <div class="key-header">
+                            <span class="key-name">🔑 ${k.name}</span>
+                            <span class="key-prefix">${k.key_prefix}****</span>
+                        </div>
+                        <div class="key-meta">
+                            Dibuat: ${k.created_at ? new Date(k.created_at).toLocaleString('id-ID') : '-'}
+                            ${k.last_used_at ? ' • Terakhir dipakai: ' + new Date(k.last_used_at).toLocaleString('id-ID') : ' • Belum dipakai'}
+                            ${k.expires_at ? ' • Expired: ' + new Date(k.expires_at).toLocaleString('id-ID') : ''}
+                        </div>
+                        <div class="key-actions">
+                            <button onclick="revokeKey(${k.id})" class="btn-danger">🗑️ Hapus</button>
+                        </div>
+                    </div>
+                `).join('');
+                })
+                .catch(() => {
+                    document.getElementById('keyList').innerHTML = '<p style="color: #ef4444;">Gagal memuat data API keys.</p>';
+                });
+        }
+
+        loadKeys();
+    })();
+</script>
+{% endblock %}

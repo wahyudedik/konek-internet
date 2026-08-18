@@ -1,6 +1,6 @@
 # Fitur Konektivitas.com
 
-> Daftar lengkap fitur per fase implementasi, terstruktur berdasarkan 3 pilar produk: **Learn**, **Manage**, **Discover**.
+> Daftar lengkap fitur per fase implementasi. Satu platform modular dengan empat pilar: **Learn**, **Manage**, **Discover**, **Connect**.
 
 ---
 
@@ -8,7 +8,7 @@
 
 > **Implementasi:** Public Tools (gratis). Tujuan: edukasi, traffic, dan SEO.
 
-### Fase 1 — MVP (2026) ✅ SELESAI
+### Fase 1 — Public Tools MVP (2026) ✅ SELESAI
 
 #### Core Features
 
@@ -303,55 +303,648 @@
 
 ## Pilar 3: Discover — Menemukan Peluang
 
-> **Implementasi:** Business Intelligence (Enterprise). Tujuan: insight berbasis data publik dan pengambilan keputusan.
+> **Implementasi:** Utility Search Engine + Business Intelligence. Tujuan: menemukan objek berguna di internet dan menghasilkan insight.
 
-### Fase 4 — BI MVP (2029)
+### Fase 2 — Core Engine & Jobs Vertical (2027)
 
-#### Data Sources
+#### Core Engine
 
-- **Public DNS Data** — Data DNS publik
-- **WHOIS Data** — Data registrasi domain
-- **SSL Data** — Data sertifikat SSL
-- **Technology Data** — Data teknologi website
-- **Geographic Data** — Data geografis
+- **Crawler Infrastructure** — HTTP-first crawler (httpx + selectolax), Playwright fallback
+- **Parser Pipeline** — Extraction → Cleaning → Entity Detection → Normalization → Deduplication → Validation
+- **Rule-Based Normalization** — Normalisasi title, skill, location, salary tanpa AI
+- **robots.txt Compliance** — Respectful crawling dengan rate limit per source
+- **PostgreSQL Database** — Schema relasional (companies, jobs, skills, tools, sources, categories)
+- **PostgreSQL FTS + pg_trgm** — Full text search + fuzzy matching untuk MVP
+- **UtilityRank** — Scoring algorithm (freshness, availability, relevance, reliability, completeness)
 
-#### Analysis Features
+#### Jobs Vertical (MVP)
 
-- **Market Analysis** — Analisis pasar digital per wilayah
-  - Berapa bisnis yang sudah punya website
-  - Berapa yang belum memiliki domain
-  - Berapa yang belum memakai SSL
-  - Teknologi yang umum dipakai
-  - Peluang digital yang masih terbuka
-- **Competitor Analysis** — Analisis kompetitor
-- **Trend Detection** — Deteksi tren digital
-- **Opportunity Finder** — Temukan peluang bisnis
+- **Job Discovery** — Crawling dari public career pages
+- **Structured Job Data** — Title, company, location, remote, salary, skills, employment type
+- **Active Status Detection** — 🟢 ACTIVE / 🟡 CLOSING SOON / ⚪ UNKNOWN / 🔴 EXPIRED
+- **Skill Matching** — Pencarian berdasarkan skill requirements
+- **Remote Filter** — Filter remote/hybrid/onsite
+- **Salary Range Filter** — Filter berdasarkan range gaji
 
-#### Reports
+#### Search Experience
 
-- **Market Report** — Laporan pasar
-- **Industry Report** — Laporan industri
-- **Regional Report** — Laporan regional
-- **Custom Report** — Laporan kustom
+- **Homepage** — "What do you want to accomplish?" search interface
+- **Natural Language Query** — Pencarian dalam bahasa alami
+- **Intent Detection** — Auto-detect intent (work, buy, learn, build) dari query
+- **Structured Results** — Hasil terstruktur, bukan sekadar URL
+- **Filter & Sort** — By status, location, price, utility score
+- **Dark Mode** — Light/dark theme
+
+#### Background Jobs
+
+- **APScheduler** — Crawl schedule (jobs: 6 jam, verification: 6 jam, index rebuild: 24 jam)
+- **Active/Expired Detection** — Re-crawl untuk cek status job masih aktif
 
 ---
 
-### Fase 5 — BI Advanced (2030-2031)
+### Fase 3 — Multi-Vertical & B2B (2028)
+
+#### Vertical Baru
+
+| Vertical | Source | Priority |
+|----------|--------|----------|
+| Tools | Product Hunt, GitHub, direktori tools | Tinggi |
+| APIs | RapidAPI, ProgrammableWeb | Tinggi |
+| Suppliers | Direktori bisnis, marketplace B2B | Sedang |
+| Products | Marketplace, e-commerce directories | Sedang |
+| Courses | Coursera, Udemy, edX | Sedang |
+| Opportunities | Affiliate directories, freelance platforms | Rendah |
+
+#### Enhancements
+
+- **Multi-Vertical Crawler** — Crawler per vertical dengan parser khusus
+- **Category System** — Hierarchical categories dengan auto-classification
+- **Advanced UtilityRank** — Lebih banyak faktor scoring
+- **Saved Searches** — Simpan pencarian (Pro feature)
+- **Alerts** — Notifikasi saat ada hasil baru (Pro feature)
+- **Search History** — Riwayat pencarian
+- **Advanced Filters** — Filter lanjutan per vertical
+
+#### Intelligence Features
+
+- **Trend Detection** — Deteksi tren skill, tools, salary
+- **Recommendation** — Rekomendasi berdasarkan search history
+- **Monitoring** — Monitor perubahan data (job posting, tool availability)
+- **Historical Data** — Data historis untuk analisis trend
+
+#### B2B Features
+
+- **Market Intelligence** — Berapa banyak perusahaan hiring Python Developer?
+- **Supplier Intelligence** — Analisis supplier per kategori/lokasi
+- **Labor Intelligence** — Skill demand analysis, salary benchmarking
+- **Competitor Intelligence** — Track perubahan di industri
+- **Custom Reports** — Laporan kustom untuk enterprise
+
+#### Developer API
+
+- **Utility Search API** — `GET /v1/search` dengan structured query
+- **Jobs API** — `GET /v1/jobs` dengan filter
+- **Tools API** — `GET /v1/tools` dengan filter
+- **APIs API** — `GET /v1/apis` dengan filter
+- **Suppliers API** — `GET /v1/suppliers` dengan filter
+- **API Key System** — Register & kelola API key
+- **Rate Limiting** — Per-API-key rate limiting
+
+#### Search Scale
+
+- **OpenSearch** — Migrasi dari PostgreSQL FTS ke OpenSearch
+- **Full-Text Advanced** — Autocomplete, synonym, typo tolerance
+
+---
+
+### Fase 4 — Intelligence & Ecosystem (2029)
+
+#### Advanced Search
+
+- **Semantic Search** — Understanding intent lebih dalam
+- **Cross-Vertical Search** — Search lintas vertical
+- **Personalized Results** — Results yang dipersonalisasi
+- **AI Classification** — AI untuk entity extraction & normalization (jika sudah ada revenue)
+
+#### Ecosystem
+
+- **Developer Marketplace** — Third-party integrations
+- **Data Contributors** — Sumbang data ke index
+- **Partner Program** — Revenue sharing dengan partner
+- **Community** — Forum, documentation, tutorials
+
+#### Business Intelligence
+
+- **GeoIP Indonesia Database** — Data geografis IP Indonesia
+- **ASN Database** — Database ASN lengkap
+- **IP Reputation** — Reputasi IP berbasis data
+- **Market Analysis** — Analisis pasar digital per wilayah
+- **CDN Analytics** — Analisis penggunaan CDN
+- **Network Intelligence** — Insight jaringan
+- **Custom Reports** — Laporan kustom untuk enterprise
+
+---
+
+### Fase 5 — Utility Platform (2030-2031)
+
+#### Platform Features
+
+- **100+ Vertical Categories** — Index terstruktur atas semua kategori utilitas
+- **Real-Time Index** — Update data dalam hitungan menit
+- **Global Coverage** — Data dari seluruh dunia
+- **Multi-Language** — Bahasa Indonesia, English, dan lainnya
+- **Mobile App** — Search dari genggaman
 
 #### Advanced Intelligence
 
 - **Real-time Analytics** — Analisis real-time
 - **Predictive Analytics** — Analisis prediktif
 - **Sentiment Analysis** — Analisis sentimen
-- **Network Intelligence** — Insight jaringan
+- **BI Dashboard** — Dashboard BI lengkap
+- **White Label** — BI untuk client
+
+#### Developer Ecosystem
+
+- **Marketplace** — Third-party tools & integrasi
+- **Plugin System** — Extend Utility Search
+- **Revenue Sharing** — Berbagi pendapatan dengan developer
+
+---
+
+## Pilar 4: Connect — Menghubungkan Infrastruktur
+
+> **Implementasi:** Developer Platform + Blockchain Infrastructure. Tujuan: menghubungkan aplikasi dan infrastruktur.
+
+### Fase 2 — Developer Platform MVP (2027)
+
+#### API Platform
+
+- **API Key System** — Daftar & kelola API key
+- **API Dashboard** — Usage stats, rate limit info
+- **Dynamic DNS** — Update DNS record via API
+
+#### Authentication
+
+- **User Registration** — Email + password dengan email verification
+- **Login System** — JWT token-based authentication
+- **Password Hashing** — Bcrypt untuk keamanan
+- **Session Management** — Token refresh mechanism
+
+---
+
+### Fase 3 — Blockchain Infrastructure (2028)
+
+#### RPC Node Platform
+
+- **JSON-RPC Proxy** — Proxy untuk Ethereum mainnet + multi-chain
+- **Request Validation** — Validasi JSON-RPC request format
+- **Response Caching** — Cache response di Redis
+- **Rate Limiting** — 100 request per menit per API key
+- **Request Logging** — Log semua RPC requests
+
+#### Multi Chain Support
+
+| Network | Chain ID | Status |
+|---------|----------|--------|
+| Ethereum | 1 | 📋 Planned |
+| Polygon | 137 | 📋 Planned |
+| BSC | 56 | 📋 Planned |
+| Arbitrum | 42161 | 📋 Planned |
+| Optimism | 10 | 📋 Planned |
+| Avalanche | 43114 | 📋 Planned |
+
+#### Load Balancer
+
+- **Round-Robin Routing** — Distribusi beban merata
+- **Health-Based Routing** — Route ke node sehat
+- **Failover Handling** — Automatic failover jika node down
+
+#### WebSocket
+
+- **WebSocket Proxy** — Proxy untuk real-time events
+- **Subscription Management** — Kelola subscriptions
+- **Connection Pooling** — Optimasi koneksi
+
+#### Blockchain Data API
+
+- **Network Discovery** — List supported networks
+- **Block API** — Get block data
+- **Transaction API** — Get transaction data
+- **Address API** — Get address info & balance
+- **Broadcast API** — Broadcast transaksi
+- **Smart Contract API** — Interaksi smart contract
+
+#### Monitoring
+
+- **Health Check Endpoints** — `/api/v1/status`
+- **Node Health** — Cek kesehatan blockchain node
+- **Prometheus Metrics** — Export metrics untuk monitoring
+- **Grafana Dashboards** — Dashboard monitoring visual
+
+#### API Documentation
+
+- **Swagger/OpenAPI** — Interactive API documentation
+- **Code Examples** — Contoh integrasi Python, JavaScript, Go
+- **SDK Information** — Library yang tersedia
+
+---
+
+### Fase 4 — Enterprise Developer (2029)
+
+#### Enterprise Features
+
+- **SSO Integration** — Login perusahaan (SAML, OIDC)
+- **Audit Logging** — Jejak aktivitas lengkap
+- **SLA Monitoring** — Jaminan uptime
+- **Custom Rate Limits** — Rate limit kustom per klien
+- **Priority Support** — Support prioritas
+
+#### Analytics & Billing
+
+- **Detailed Usage Analytics** — Analisis penggunaan mendalam
+- **Cost Tracking** — Lacak biaya penggunaan
+- **Performance Metrics** — Metrik performa API
+- **Usage-Based Billing** — Bayar sesuai penggunaan
+- **Invoice Generation** — Generate invoice otomatis
+
+#### Marketplace
+
+- **Third-Party Node Providers** — Provider node pihak ketiga
+- **Revenue Sharing** — Berbagi pendapatan
+- **Quality Monitoring** — Monitor kualitas layanan
+
+---
+
+### Fase 5 — Global Infrastructure (2030-2031)
+
+#### Global Infrastructure
+
+- **Multi-Region Deployment** — Server di beberapa wilayah
+- **Auto Scaling** — Otomatis menambah resource
+- **CDN Integration** — CDN untuk static assets
+- **Load Balancer** — High availability
 
 #### Platform Features
 
-- **BI Dashboard** — Dashboard BI lengkap
-- **API Access** — Akses data via API
-- **White Label** — BI untuk client
-- **Integration** — Integrasi dengan tools lain
-- **Custom Models** — Model analisis kustom
+- **Developer Marketplace** — Jual/beli tools & integrasi
+- **Plugin System** — Extend Konektivitas
+- **Enterprise API v3** — Custom solutions
+
+---
+
+## Database Schema
+
+### Public Tools (Fase 1 — SQLite → PostgreSQL)
+
+> Tidak ada database untuk public tools. Semua data bersifat real-time (DNS, WHOIS, SSL, IP, HTTP).
+
+### Utility Search (PostgreSQL)
+
+#### Companies Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | SERIAL | Primary key |
+| name | VARCHAR(255) | Company name |
+| url | TEXT | Company website |
+| logo_url | TEXT | Logo URL |
+| location | VARCHAR(255) | Headquarters |
+| industry | VARCHAR(100) | Industry category |
+| created_at | TIMESTAMP | First seen |
+
+#### Jobs Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | SERIAL | Primary key |
+| company_id | INTEGER | FK ke companies |
+| title | VARCHAR(255) | Normalized title |
+| title_raw | TEXT | Original title |
+| description | TEXT | Job description |
+| location | VARCHAR(255) | Job location |
+| remote | BOOLEAN | Remote flag |
+| salary_min | INTEGER | Minimum salary |
+| salary_max | INTEGER | Maximum salary |
+| salary_currency | VARCHAR(3) | Currency code |
+| employment_type | VARCHAR(50) | full-time, part-time, etc |
+| posted_date | DATE | When posted |
+| expiration_date | DATE | When expires |
+| source_url | TEXT | Original URL |
+| source_id | INTEGER | FK ke sources |
+| status | VARCHAR(20) | active, expired, etc |
+| utility_score | FLOAT | UtilityRank score |
+| created_at | TIMESTAMP | First indexed |
+| updated_at | TIMESTAMP | Last updated |
+
+#### Skills Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | SERIAL | Primary key |
+| name | VARCHAR(100) | Normalized skill name |
+| category | VARCHAR(50) | Programming, Design, etc |
+
+#### Job_Skills Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| job_id | INTEGER | FK ke jobs |
+| skill_id | INTEGER | FK ke skills |
+
+#### Tools Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | SERIAL | Primary key |
+| name | VARCHAR(255) | Tool name |
+| description | TEXT | Tool description |
+| url | TEXT | Tool URL |
+| category | VARCHAR(100) | Tool category |
+| pricing | VARCHAR(20) | free, freemium, paid |
+| features | JSONB | Tool features |
+| status | VARCHAR(20) | available, unavailable |
+| utility_score | FLOAT | UtilityRank score |
+| created_at | TIMESTAMP | First indexed |
+| updated_at | TIMESTAMP | Last updated |
+
+#### APIs Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | SERIAL | Primary key |
+| name | VARCHAR(255) | API name |
+| description | TEXT | API description |
+| url | TEXT | API URL |
+| docs_url | TEXT | Documentation URL |
+| category | VARCHAR(100) | API category |
+| pricing_model | VARCHAR(50) | Pricing model |
+| free_tier | BOOLEAN | Has free tier |
+| sdks | JSONB | Available SDKs |
+| status | VARCHAR(20) | online, offline, etc |
+| utility_score | FLOAT | UtilityRank score |
+| created_at | TIMESTAMP | First indexed |
+| updated_at | TIMESTAMP | Last updated |
+
+#### Suppliers Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | SERIAL | Primary key |
+| name | VARCHAR(255) | Supplier name |
+| description | TEXT | Supplier description |
+| url | TEXT | Supplier website |
+| category | VARCHAR(100) | Supplier category |
+| location | VARCHAR(255) | Supplier location |
+| products | JSONB | Product list |
+| contact_email | VARCHAR(255) | Contact email |
+| contact_phone | VARCHAR(50) | Contact phone |
+| utility_score | FLOAT | UtilityRank score |
+| created_at | TIMESTAMP | First indexed |
+| updated_at | TIMESTAMP | Last updated |
+
+#### Sources Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | SERIAL | Primary key |
+| name | VARCHAR(100) | Source name |
+| url | TEXT | Source URL |
+| type | VARCHAR(50) | career_page, job_board, directory, etc |
+| crawl_interval | INTEGER | Crawl interval in seconds |
+| last_crawled_at | TIMESTAMP | Last crawl time |
+| is_active | BOOLEAN | Active status |
+| robots_allowed | BOOLEAN | robots.txt allows crawling |
+
+#### Categories Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | SERIAL | Primary key |
+| name | VARCHAR(100) | Category name |
+| slug | VARCHAR(100) | URL-friendly name |
+| parent_id | INTEGER | Parent category (self-ref) |
+| object_type | VARCHAR(50) | job, tool, api, supplier, product, course |
+
+### Blockchain Infrastructure (PostgreSQL)
+
+#### Users Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | UUID | Primary key |
+| email | VARCHAR(255) | Unique email |
+| password_hash | VARCHAR(255) | Bcrypt hash |
+| full_name | VARCHAR(255) | Nama lengkap |
+| company | VARCHAR(255) | Perusahaan |
+| is_active | BOOLEAN | Status aktif |
+| plan | VARCHAR(50) | Paket: free/pro/team |
+| created_at | TIMESTAMP | Tanggal daftar |
+
+#### API Keys Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | UUID | Primary key |
+| user_id | UUID | Foreign key ke users |
+| name | VARCHAR(100) | Nama key |
+| key_hash | VARCHAR(255) | SHA-256 hash |
+| key_prefix | VARCHAR(10) | Prefix untuk display (`kn_`) |
+| networks | TEXT[] | Blockchain networks |
+| rate_limit | INTEGER | Request per menit |
+| is_active | BOOLEAN | Status aktif |
+| expires_at | TIMESTAMP | Masa berlaku |
+
+#### Usage Logs Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | BIGSERIAL | Primary key |
+| api_key_id | UUID | Foreign key ke api_keys |
+| network | VARCHAR(50) | Blockchain network |
+| method | VARCHAR(100) | RPC method |
+| response_time_ms | INTEGER | Response time |
+| status_code | INTEGER | HTTP status |
+| created_at | TIMESTAMP | Timestamp |
+
+#### Blockchain Networks Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | SERIAL | Primary key |
+| name | VARCHAR(100) | Network name |
+| slug | VARCHAR(50) | URL-friendly name |
+| chain_id | INTEGER | Chain ID |
+| rpc_endpoint | TEXT | RPC URL |
+| ws_endpoint | TEXT | WebSocket URL |
+| explorer_url | TEXT | Block explorer URL |
+| is_active | BOOLEAN | Status aktif |
+
+---
+
+## Search Implementation
+
+### Phase 1 — PostgreSQL FTS + pg_trgm
+
+```text
+PostgreSQL
+├── Full Text Search (tsvector, tsquery)
+├── pg_trgm (fuzzy matching, similarity)
+├── GIN indexes (fast text search)
+├── Custom ranking (utility_score + freshness + relevance)
+```
+
+### Phase 2 — OpenSearch (ketika data sudah jutaan)
+
+```text
+PostgreSQL
+      │
+      ├── Source of Truth
+      │
+      └── OpenSearch
+              ↓
+          Search
+```
+
+---
+
+## Background Jobs
+
+### MVP — APScheduler
+
+```text
+01:00 → crawl source A (jobs)
+02:00 → crawl source B (tools)
+03:00 → crawl source C (APIs)
+04:00 → verify expired jobs
+05:00 → rebuild search indexes
+06:00 → check API status
+```
+
+### Scale — Celery + Redis
+
+```text
+Celery Workers
+├── Crawler Tasks (per source)
+├── Verification Tasks (active/expired check)
+├── Index Tasks (rebuild FTS indexes)
+└── Notification Tasks (alert delivery)
+```
+
+### Schedule
+
+| Job | Interval | Description |
+|-----|----------|-------------|
+| Job crawl | 6 jam | Crawl career pages & job boards |
+| Tool crawl | 24 jam | Crawl tool directories |
+| API crawl | 12 jam | Crawl API directories |
+| Supplier crawl | 7 hari | Crawl supplier directories |
+| Job verification | 6 jam | Check if jobs are still active |
+| API health check | 1 jam | Check if APIs are online |
+| Tool availability | 12 jam | Check if tools are accessible |
+| Index rebuild | 24 jam | Rebuild search indexes |
+| Score recalculation | 24 jam | Recalculate utility scores |
+
+---
+
+## UtilityRank
+
+### Scoring Factors
+
+```text
+Utility Score = weighted_average(
+    Freshness      (0.20)  — Seberapa baru data ini
+    Availability   (0.20)  — Apakah masih bisa digunakan
+    Relevance      (0.25)  — Seberapa relevan dengan query
+    Reliability    (0.10)  — Seberapa reliable sumbernya
+    Completeness   (0.15)  — Seberapa lengkap data field-nya
+    Popularity     (0.05)  — Seberapa banyak orang mengakses
+    Accessibility  (0.05)  — Seberapa mudah diakses/digunakan
+)
+```
+
+### Score Display
+
+```text
+Utility Score: 94/100
+```
+
+### Ranking Philosophy
+
+> **Hasil terbaik bukan yang paling banyak backlink-nya, tetapi yang paling berguna bagi intent user.**
+
+---
+
+## Freshness & Availability
+
+### Status System
+
+| Object | Status Options | Detection Method |
+|--------|---------------|-----------------|
+| Jobs | 🟢 ACTIVE, 🟡 CLOSING SOON, ⚪ UNKNOWN, 🔴 EXPIRED | Re-crawl & check apply link |
+| APIs | 🟢 ONLINE, 🟡 DEGRADED, 🔴 OFFLINE | Health check endpoint |
+| Tools | 🟢 AVAILABLE, 🔴 UNAVAILABLE | HTTP status check |
+| Products | 🟢 IN STOCK, 🟡 LOW STOCK, 🔴 OUT OF STOCK | Price/availability check |
+
+### Freshness Scoring
+
+- **Re-crawl Interval** — Jobs: 6 jam, Tools: 24 jam, APIs: 1 jam, Suppliers: 7 hari
+- **Staleness Penalty** — Data yang sudah lama tidak di-crawl mendapat penalty score
+- **Active Priority** — Data dengan status aktif selalu diprioritaskan
+
+---
+
+## Data Normalization Schema
+
+### Job Schema
+
+```text
+JOB
+├── title (normalized)
+├── company
+├── location (city, country, remote_flag)
+├── remote (boolean)
+├── salary_min / salary_max / salary_currency
+├── skills[] (normalized)
+├── employment_type (full-time, part-time, contract, internship)
+├── posted_date
+├── expiration_date
+├── source_url
+├── source_name
+├── status (active, closing_soon, expired, unknown)
+├── utility_score
+└── created_at / updated_at
+```
+
+### Tool Schema
+
+```text
+TOOL
+├── name
+├── description
+├── url
+├── category (calculator, converter, generator, etc.)
+├── pricing (free, freemium, paid, enterprise)
+├── features[]
+├── status (available, unavailable)
+├── source_name
+├── utility_score
+└── created_at / updated_at
+```
+
+### API Schema
+
+```text
+API
+├── name
+├── description
+├── url
+├── docs_url
+├── category
+├── pricing_model
+├── free_tier (boolean)
+├── sdks[] (python, javascript, go, etc.)
+├── status (online, degraded, offline)
+├── source_name
+├── utility_score
+└── created_at / updated_at
+```
+
+### Supplier Schema
+
+```text
+SUPPLIER
+├── name
+├── description
+├── url
+├── category
+├── location (city, country)
+├── products[]
+├── contact_email
+├── contact_phone
+├── source_name
+├── utility_score
+└── created_at / updated_at
+```
 
 ---
 
@@ -362,7 +955,7 @@
 - **Framework:** FastAPI (Python)
 - **Templates:** Jinja2
 - **Cache:** Redis + in-memory fallback
-- **Rate Limiting:** Per-IP (60 req/min)
+- **Rate Limiting:** Per-IP (60 req/min) untuk tools; Per-API-key untuk developer platform
 - **Validation:** Custom validators (domain, IP, URL, host)
 
 ### Frontend
@@ -380,6 +973,8 @@
 | Web Server | Nginx | Nginx | Nginx | Nginx | Nginx |
 | Database | SQLite → PostgreSQL | PostgreSQL | PostgreSQL | PG Primary+Replica | PG Multi Region |
 | Cache | Redis | Redis | Redis | Redis Cluster | Redis Cluster |
+| Search | — | PostgreSQL FTS | OpenSearch | OpenSearch Cluster | OpenSearch Multi Region |
+| Queue | — | APScheduler | Celery + Redis | Celery + Redis Cluster | Celery + Redis Cluster |
 | DNS | External | External | DNS Hosting | DNS Anycast | Public DNS |
 
 ---
@@ -435,7 +1030,7 @@
 - [x] Async non-blocking (asyncio.to_thread)
 - [x] HTTP fallback (HTTPS → HTTP)
 - [x] HTTP client reuse (shared httpx.AsyncClient + connection pooling)
-- [x] Cache TTL tuning (blacklist 10min, CDN 1hr, DNS/Website 1-5min)
+- [x] Cache TTL tuning (optimized per data volatility)
 
 ---
 
@@ -463,289 +1058,28 @@
 
 ---
 
----
-
-# Fitur Hub.konektivitas.com — Blockchain Infrastructure
-
-> Platform infrastruktur blockchain yang menyediakan akses node RPC API untuk developer, startup, perusahaan, dan aplikasi Web3.
-
----
-
-## Visi
-
-Menjadi penyedia infrastruktur konektivitas blockchain yang sederhana, cepat, dan andal untuk developer di Indonesia maupun global.
-
-## Misi
-
-1. Menyediakan RPC Node berkinerja tinggi.
-2. Mempermudah integrasi blockchain melalui REST API dan JSON-RPC.
-3. Menyediakan endpoint yang stabil dengan uptime tinggi.
-4. Mendukung berbagai jaringan blockchain populer.
-5. Menjadi fondasi berbagai aplikasi Web3.
-
----
-
-## Fase 1 — MVP (2026)
-
-### Authentication System
-
-- **User Registration** — Email + password dengan email verification
-- **Login System** — JWT token-based authentication
-- **Password Hashing** — Bcrypt untuk keamanan
-- **Session Management** — Token refresh mechanism
-- **Profile Management** — Edit profil pengguna
-
-### API Key Management
-
-- **Generate API Keys** — Prefix `hk_` untuk identifikasi
-- **Hash API Keys** — SHA-256 hash sebelum storage
-- **CRUD Operations** — Create, list, update, delete API keys
-- **Network Permissions** — Batasi akses per blockchain network
-- **Key Expiration** — Set masa berlaku API key
-- **Rate Limit Per Key** — Batasi request per API key
-
-### RPC Proxy
-
-- **JSON-RPC Proxy** — Proxy untuk Ethereum mainnet
-- **Request Validation** — Validasi JSON-RPC request format
-- **Response Caching** — Cache response di Redis
-- **Rate Limiting** — 100 request per menit per API key
-- **Request Logging** — Log semua RPC requests
-
-### Dashboard
-
-- **Landing Page** — Hero section, features, pricing
-- **User Dashboard** — Overview usage statistics
-- **API Key Management UI** — Kelola API keys dari UI
-- **Network Status** — Status kesehatan node
-- **Usage Statistics** — Grafik penggunaan API
-
-### API Documentation
-
-- **Swagger/OpenAPI** — Interactive API documentation
-- **Code Examples** — Contoh integrasi Python, JavaScript, Go
-- **SDK Information** — Library yang tersedia
-
-### Monitoring
-
-- **Health Check Endpoints** — `/api/v1/status`
-- **Node Health** — Cek kesehatan blockchain node
-- **Prometheus Metrics** — Export metrics untuk monitoring
-- **Grafana Dashboards** — Dashboard monitoring visual
-
-### Security
-
-- **API Key Authentication** — Wajib API key untuk akses
-- **JWT Validation** — Validasi token di setiap request
-- **CORS Configuration** — Cross-origin resource sharing
-- **Rate Limiting** — Per-API-key rate limiting
-- **Request Logging** — Audit trail untuk semua request
-
----
-
-## Fase 2 — Multi Blockchain (2027)
-
-### Multi Chain Support
-
-| Network | Chain ID | Status |
-|---------|----------|--------|
-| Ethereum | 1 | ✅ MVP |
-| Polygon | 137 | 📋 Planned |
-| BSC | 56 | 📋 Planned |
-| Arbitrum | 42161 | 📋 Planned |
-| Optimism | 10 | 📋 Planned |
-| Avalanche | 43114 | 📋 Planned |
-
-### Load Balancer
-
-- **Round-Robin Routing** — Distribusi beban merata
-- **Health-Based Routing** — Route ke node sehat
-- **Failover Handling** — Automatic failover jika node down
-
-### WebSocket
-
-- **WebSocket Proxy** — Proxy untuk real-time events
-- **Subscription Management** — Kelola subscriptions
-- **Connection Pooling** — Optimasi koneksi
-
-### Analytics
-
-- **Detailed Usage Analytics** — Analisis penggunaan mendalam
-- **Cost Tracking** — Lacak biaya penggunaan
-- **Performance Metrics** — Metrik performa API
-
-### Billing
-
-- **Usage-Based Billing** — Bayar sesuai penggunaan
-- **Plan Management** — Kelola paket berlangganan
-- **Invoice Generation** — Generate invoice otomatis
-
-### Team Management
-
-- **Team Workspace** — Kolaborasi tim
-- **Team Members** — Undang anggota tim
-- **Roles & Permissions** — Role admin, developer, viewer
-- **Shared API Keys** — API keys yang dibagikan tim
-
----
-
-## Fase 3 — Enterprise (2028-2029)
-
-### Global Infrastructure
-
-- **Multi-Region Deployment** — Server di beberapa wilayah
-- **Auto Scaling** — Otomatis menambah resource
-- **CDN Integration** — CDN untuk static assets
-
-### Enterprise Features
-
-- **SSO Integration** — Login perusahaan (SAML, OIDC)
-- **Audit Logging** — Jejak aktivitas lengkap
-- **SLA Monitoring** — Jaminan uptime
-- **Custom Rate Limits** — Rate limit kustom per klien
-- **Priority Support** — Support prioritas
-
-### Marketplace
-
-- **Third-Party Node Providers** — Provider node pihak ketiga
-- **Revenue Sharing** — Berbagi pendapatan
-- **Quality Monitoring** — Monitor kualitas layanan
-
----
-
-## API Endpoints
-
-### Authentication
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/v1/auth/register` | POST | Register pengguna baru |
-| `/api/v1/auth/login` | POST | Login |
-| `/api/v1/auth/refresh` | POST | Refresh token |
-| `/api/v1/auth/me` | GET | Ambil data pengguna |
-| `/api/v1/auth/me` | PUT | Update profil |
-
-### API Keys
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/v1/keys` | GET | List API keys |
-| `/api/v1/keys` | POST | Buat API key baru |
-| `/api/v1/keys/{id}` | PUT | Update API key |
-| `/api/v1/keys/{id}` | DELETE | Hapus API key |
-
-### RPC Proxy
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/rpc/{network}` | POST | JSON-RPC proxy |
-| `/rpc/{network}/health` | GET | Node health check |
-
-### Blockchain Data
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/v1/networks` | GET | List supported networks |
-| `/api/v1/networks/{slug}` | GET | Network details |
-| `/api/v1/{network}/block/{id}` | GET | Get block |
-| `/api/v1/{network}/tx/{hash}` | GET | Get transaction |
-| `/api/v1/{network}/address/{addr}` | GET | Get address info |
-| `/api/v1/{network}/balance/{addr}` | GET | Get balance |
-| `/api/v1/{network}/broadcast` | POST | Broadcast transaction |
-
-### Monitoring
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/v1/status` | GET | System status |
-| `/api/v1/status/{network}` | GET | Network status |
-| `/api/v1/usage` | GET | Usage statistics |
-| `/api/v1/usage/daily` | GET | Daily usage stats |
-
----
-
-## Technology Stack
-
-### Backend
-
-- **Framework:** FastAPI (Python)
-- **Database:** PostgreSQL 15+
-- **Cache:** Redis 7+
-- **Auth:** JWT + API Keys (bcrypt + SHA-256)
-- **Migration:** Alembic
-
-### Infrastructure
-
-- **Container:** Docker + Docker Compose
-- **Reverse Proxy:** Nginx
-- **Orchestration:** Traefik (optional)
-- **Monitoring:** Prometheus + Grafana
-- **Database:** PostgreSQL (relational, berbeda dengan SQLite Konektivitas.com)
-
-### Architecture
-
-```
-Client Apps → Nginx → FastAPI → PostgreSQL
-                            → Redis Cache
-                            → Blockchain Nodes
-                            → Prometheus → Grafana
-```
-
----
-
-## Database Schema
-
-### Users Table
-
-| Column | Type | Description |
-|--------|------|-------------|
-| id | UUID | Primary key |
-| email | VARCHAR(255) | Unique email |
-| password_hash | VARCHAR(255) | Bcrypt hash |
-| full_name | VARCHAR(255) | Nama lengkap |
-| company | VARCHAR(255) | Perusahaan |
-| is_active | BOOLEAN | Status aktif |
-| plan | VARCHAR(50) | Paket: free/pro/team |
-| created_at | TIMESTAMP | Tanggal daftar |
-
-### API Keys Table
-
-| Column | Type | Description |
-|--------|------|-------------|
-| id | UUID | Primary key |
-| user_id | UUID | Foreign key ke users |
-| name | VARCHAR(100) | Nama key |
-| key_hash | VARCHAR(255) | SHA-256 hash |
-| key_prefix | VARCHAR(10) | Prefix untuk display |
-| networks | TEXT[] | Blockchain networks |
-| rate_limit | INTEGER | Request per menit |
-| is_active | BOOLEAN | Status aktif |
-| expires_at | TIMESTAMP | Masa berlaku |
-
-### Usage Logs Table
-
-| Column | Type | Description |
-|--------|------|-------------|
-| id | BIGSERIAL | Primary key |
-| api_key_id | UUID | Foreign key ke api_keys |
-| network | VARCHAR(50) | Blockchain network |
-| method | VARCHAR(100) | RPC method |
-| response_time_ms | INTEGER | Response time |
-| status_code | INTEGER | HTTP status |
-| created_at | TIMESTAMP | Timestamp |
-
-### Blockchain Networks Table
-
-| Column | Type | Description |
-|--------|------|-------------|
-| id | SERIAL | Primary key |
-| name | VARCHAR(100) | Network name |
-| slug | VARCHAR(50) | URL-friendly name |
-| chain_id | INTEGER | Chain ID |
-| rpc_endpoint | TEXT | RPC URL |
-| ws_endpoint | TEXT | WebSocket URL |
-| explorer_url | TEXT | Block explorer URL |
-| is_active | BOOLEAN | Status aktif |
+## Filosofi Produk
+
+> **Intent → Discovery → Action → Outcome**
+
+Bukan: Attention → scrolling → ads.
+
+Outcome yang dibantu:
+- Mendapat pekerjaan
+- Mendapat pelanggan
+- Mendapat supplier
+- Mendapat produk
+- Menemukan software
+- Membangun sesuatu
+- Menjalankan bisnis
+- Menghasilkan uang
+
+### Prinsip
+
+1. **MVP tidak bergantung pada paid AI API** — Rule-based dulu, AI hanya ketika diperlukan
+2. **Mulai dari satu vertical** — Buktikan value, baru perluas
+3. **Core Engine → Vertical sebagai modul** — Tidak perlu rewrite saat menambah vertical
+4. **Solo developer friendly** — Stack yang bisa dijalankan dengan 1 VPS
 
 ---
 
@@ -753,6 +1087,8 @@ Client Apps → Nginx → FastAPI → PostgreSQL
 
 - [BRIEF.md](BRIEF.md) — Visi, misi, dan filosofi
 - [BRIEF2.md](BRIEF2.md) — Detail teknis dan arsitektur
+- [BRIEF3.md](BRIEF3.md) — Brief Utility Search Engine
+- [BRIEF4.md](BRIEF4.md) — Tech stack Utility Search Engine
 - [ROADMAP.md](ROADMAP.md) — Roadmap pengembangan 5 tahun
 - [AGENT.md](AGENT.md) — Panduan untuk AI/agent
-- [plans/hub-konektivitas-plan.md](plans/hub-konektivitas-plan.md) — Rencana detail Hub.konektivitas.com
+- [plans/hub-konektivitas-plan.md](plans/hub-konektivitas-plan.md) — Rencana detail blockchain infrastructure

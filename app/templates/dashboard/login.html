@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Konektivitas.com{% endblock %}
+{% block description %}Login ke Konektivitas.com workspace.{% endblock %}
+
+{% block head %}
+<style>
+    .auth-page {
+        min-height: calc(100vh - 60px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: var(--bg-primary);
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 420px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 32px;
+    }
+
+    .auth-card h1 {
+        text-align: center;
+        margin: 0 0 8px;
+        font-size: 1.5rem;
+        color: var(--text-primary);
+    }
+
+    .auth-card .subtitle {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-bottom: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: var(--text-primary);
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        box-sizing: border-box;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 12px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 8px;
+    }
+
+    .btn-primary:hover {
+        opacity: 0.9;
+    }
+
+    .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .auth-links {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    .auth-links a {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+    .error-msg {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        margin-bottom: 16px;
+        display: none;
+    }
+
+    .dark-mode .error-msg {
+        background: #450a0a;
+        border-color: #7f1d1d;
+        color: #fca5a5;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card">
+        <h1>🔑 Login</h1>
+        <p class="subtitle">Masuk ke Konektivitas.com workspace</p>
+
+        <div class="error-msg" id="errorMsg"></div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="email@contoh.com" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Password Anda" required>
+            </div>
+            <button type="submit" class="btn-primary" id="loginBtn">Login</button>
+        </form>
+
+        <div class="auth-links">
+            Belum punya akun? <a href="/register">Daftar sekarang</a>
+        </div>
+        <div class="auth-links" style="margin-top: 8px;">
+            <a href="/">← Kembali ke beranda</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        // Redirect if already logged in
+        if (localStorage.getItem('konek_token')) {
+            window.location.href = '/dashboard';
+            return;
+        }
+
+        window.handleLogin = function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            const errorDiv = document.getElementById('errorMsg');
+
+            btn.textContent = '⏳ Login...';
+            btn.disabled = true;
+            errorDiv.style.display = 'none';
+
+            const body = {
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value,
+            };
+
+            fetch('/api/v1/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            })
+                .then(r => r.ok ? r.json() : r.json().then(d => Promise.reject(d)))
+                .then(data => {
+                    localStorage.setItem('konek_token', data.access_token);
+                    if (data.refresh_token) {
+                        localStorage.setItem('konek_refresh_token', data.refresh_token);
+                    }
+                    window.location.href = '/dashboard';
+                })
+                .catch(err => {
+                    btn.textContent = 'Login';
+                    btn.disabled = false;
+                    errorDiv.textContent = err.detail || 'Login gagal. Periksa email dan password.';
+                    errorDiv.style.display = 'block';
+                });
+        };
+    })();
+</script>
+{% endblock %}
