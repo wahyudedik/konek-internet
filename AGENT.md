@@ -329,10 +329,11 @@ Apakah fitur ini membantu pengguna memahami internet *(Learn)*, mengelola aset i
 ### Fase 1 — Public Tools MVP (2026) ✅ SELESAI
 
 #### Public Tools
-- 25 API endpoints aktif (+ 2 UA endpoints + CDN detect)
-- 25 halaman frontend + About page + API Docs page
-- 9 service files (dns, whois, ssl, ip, website, ua, email, port, cdn)
-- 6 router files (dns, domain, ssl, website, ip, cdn)
+- 30 tools aktif (DNS, Domain, SSL, Website, IP + 5 baru: Traceroute, Tech Detector, Speed Test, DNS History, SSL History)
+- 36+ API endpoints aktif (+ DDNS, API Dashboard)
+- 30 halaman frontend + About page + API Docs page
+- 14 service files (dns, whois, ssl, ip, website, ua, email, port, cdn, traceroute, tech_detector, speed_test, dns_history, ssl_history)
+- 8 router files (dns, domain, ssl, website, ip, cdn, tools_v2, ddns)
 
 #### Core Infrastructure
 - Redis caching + in-memory fallback
@@ -359,7 +360,7 @@ Apakah fitur ini membantu pengguna memahami internet *(Learn)*, mengelola aset i
 - Tool Page Preloading (prefetch on hover untuk navigasi cepat)
 - Section edukasi interaktif di semua 25 tool pages
 - Navigation dropdown 5 kategori (DNS, Domain, SSL, Website, IP)
-- Footer grid dengan semua 25 tools terorganisir + About + API Docs
+- Footer grid dengan semua 30 tools terorganisir + About + API Docs
 - Search/filter tools di homepage
 - Back-to-top button
 - 404 page dengan tool suggestions
@@ -522,16 +523,20 @@ Strict-Transport-Security: max-age=31536000 (HTTPS only)
 ## Roadmap (Ringkasan)
 
 ### Fase 1 — Foundation (2026) ✅ SELESAI
-- 25 Public Tools (DNS, Domain, SSL, Website, IP)
-- API gratis dengan rate limit
+- 30 Public Tools (DNS, Domain, SSL, Website, IP + Traceroute, Tech Detector, Speed Test, DNS History, SSL History)
+- 36+ API endpoints (RESTful, rate limit 60 req/min)
+- User Authentication & Workspace (JWT)
+- API Key System (kn_ prefix) & Dashboard
+- Dynamic DNS (token-based)
+- Notification System (Email, Telegram, Discord)
+- 30 tool pages + 6 dashboard pages
 - Target: 100.000 visitor/bulan
 
 ### Fase 2 — Developer Platform, Workspace & Utility Search MVP (2027)
-- 5 tools tambahan (total 30)
-- User Authentication & Workspace
-- Domain, SSL, DNS, Uptime Monitoring
-- API Key System & Dashboard
-- Dynamic DNS
+- Utility Search Engine: Core Engine + Jobs Vertical
+- PostgreSQL FTS + pg_trgm
+- Crawler Pipeline (Discovery → Crawl → Extract → Normalize → Index → Search)
+- Target: 500.000 visitor/bulan, 100 premium subscribers
 - Utility Search Engine: Core Engine + Jobs Vertical
 - Target: 500.000 visitor/bulan, 100 premium subscribers
 
@@ -725,7 +730,7 @@ app/
 | Metric | Target | Status |
 |--------|--------|--------|
 | Visitor/bulan | 100.000 | 🔄 |
-| Tools | 25 | ✅ |
+| Tools | 30 | ✅ |
 | API request/hari | 10.000 | 🔄 |
 
 ### Year 2 (2027) — Developer Platform, Workspace & Search MVP

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
+{% block title %}Traceroute - Trace Route ke Server{% endblock %}
+{% block content %}
+{{ render_breadcrumb("Website", "Traceroute", "/traceroute", "/?category=website") }}
+<h1 class="section-title">🛤️ Traceroute</h1>
+<p class="tool-desc">Trace routing path dari server Anda ke server tujuan. Lihat setiap hop yang dilewati dan response
+    time.</p>
+
+<div class="tool-form">
+    <form id="tracerouteForm">
+        <div class="form-group">
+            <label for="host">Hostname / IP</label>
+            <input type="text" id="host" name="host" placeholder="contoh: google.com" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Trace Sekarang</button>
+    </form>
+    <div class="loading" role="status" aria-live="polite">
+        <div class="spinner"></div>
+        <p>Sedang melakukan traceroute...</p>
+    </div>
+    <div class="results" aria-live="polite"></div>
+    <div id="historyContainer"></div>
+</div>
+
+{{ render_education(edu_data) }}
+{% endblock %}
+{% block scripts %}
+<script>
+    displayHistory('traceroute', 'historyContainer');
+    loadURLState('tracerouteForm');
+    document.getElementById('tracerouteForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const host = document.getElementById('host').value.trim();
+        if (!host) return;
+        updateURLState('tracerouteForm');
+        saveHistory('traceroute', host);
+        const resultsDiv = document.querySelector('.results');
+        const loadingDiv = document.querySelector('.loading');
+        resultsDiv.innerHTML = '';
+        loadingDiv.style.display = 'block';
+        fetch(`/api/v1/traceroute/${encodeURIComponent(host)}`)
+            .then(r => r.json())
+            .then(data => {
+                loadingDiv.style.display = 'none';
+                if (data.error) {
+                    resultsDiv.innerHTML = `<div class="result-card error"><p>❌ ${data.error}</p></div>`;
+                    return;
+                }
+                let html = `<div class="result-card">`;
+                html += `<h3>🛤️ Trace ke <strong>${data.host}</strong> (${data.ip_address})</h3>`;
+                html += `<p>Total hops: <strong>${data.total_hops}</strong></p>`;
+                if (data.hops && data.hops.length > 0) {
+                    html += `<div style="overflow-x:auto"><table class="result-table">`;
+                    html += `<thead><tr><th>#</th><th>IP Address</th><th>Hostname</th><th>Min</th><th>Avg</th><th>Max</th></tr></thead><tbody>`;
+                    data.hops.forEach(hop => {
+                        const cls = hop.timed_out ? ' class="timeout"' : '';
+                        html += `<tr${cls}>`;
+                        html += `<td>${hop.hop}</td>`;
+                        html += `<td>${hop.ip || '*'}</td>`;
+                        html += `<td>${hop.hostname || '-'}</td>`;
+                        html += `<td>${hop.min_ms !== null ? hop.min_ms + ' ms' : '*'}</td>`;
+                        html += `<td>${hop.avg_ms !== null ? hop.avg_ms + ' ms' : '*'}</td>`;
+                        html += `<td>${hop.max_ms !== null ? hop.max_ms + ' ms' : '*'}</td>`;
+                        html += `</tr>`;
+                    });
+                    html += `</tbody></table></div>`;
+                } else {
+                    html += `<p>Tidak ada hop ditemukan.</p>`;
+                }
+                html += `</div>`;
+                resultsDiv.innerHTML = html;
+            })
+            .catch(err => {
+                loadingDiv.style.display = 'none';
+                resultsDiv.innerHTML = `<div class="result-card error"><p>❌ Error: ${err.message}</p></div>`;
+            });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
+{% block title %}Website Speed Test - Test Kecepatan Website{% endblock %}
+{% block content %}
+{{ render_breadcrumb("Website", "Speed Test", "/speed-test", "/?category=website") }}
+<h1 class="section-title">⚡ Website Speed Test</h1>
+<p class="tool-desc">Ukur kecepatan loading website: TTFB, page size, kompresi, caching, dan dapatkan rekomendasi
+    optimasi.</p>
+
+<div class="tool-form">
+    <form id="speedForm">
+        <div class="form-group">
+            <label for="domain">Domain / URL</label>
+            <input type="text" id="domain" name="domain" placeholder="contoh: google.com" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Test Sekarang</button>
+    </form>
+    <div class="loading" role="status" aria-live="polite">
+        <div class="spinner"></div>
+        <p>Sedang mengukur kecepatan website...</p>
+    </div>
+    <div class="results" aria-live="polite"></div>
+    <div id="historyContainer"></div>
+</div>
+
+{{ render_education(edu_data) }}
+{% endblock %}
+{% block scripts %}
+<script>
+    displayHistory('speed-test', 'historyContainer');
+    loadURLState('speedForm');
+    document.getElementById('speedForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const domain = document.getElementById('domain').value.trim();
+        if (!domain) return;
+        updateURLState('speedForm');
+        saveHistory('speed-test', domain);
+        const resultsDiv = document.querySelector('.results');
+        const loadingDiv = document.querySelector('.loading');
+        resultsDiv.innerHTML = '';
+        loadingDiv.style.display = 'block';
+        const url = domain.startsWith('http') ? domain : `https://${domain}`;
+        fetch(`/api/v1/speed/${encodeURIComponent(url)}`)
+            .then(r => r.json())
+            .then(data => {
+                loadingDiv.style.display = 'none';
+                if (data.error) {
+                    resultsDiv.innerHTML = `<div class="result-card error"><p>❌ ${data.error}</p></div>`;
+                    return;
+                }
+                let html = `<div class="result-card">`;
+                html += `<h3>⚡ Hasil Speed Test: <strong>${data.url}</strong></h3>`;
+                // Performance Score
+                if (data.performance_score) {
+                    const s = data.performance_score;
+                    const gradeColors = { A: 'var(--success)', B: 'var(--success)', C: 'var(--warning)', D: '#f97316', F: 'var(--error)' };
+                    html += `<div style="text-align:center;margin:1rem 0">`;
+                    html += `<div style="font-size:3em;font-weight:bold;color:${gradeColors[s.grade] || 'var(--text)'}">${s.score}</div>`;
+                    html += `<div style="font-size:1.5em;color:${gradeColors[s.grade] || 'var(--text)'}">Grade ${s.grade}</div>`;
+                    html += `</div>`;
+                }
+                // Metrics
+                if (data.metrics) {
+                    const m = data.metrics;
+                    html += `<div style="overflow-x:auto"><table class="result-table">`;
+                    html += `<thead><tr><th>Metric</th><th>Nilai</th></tr></thead><tbody>`;
+                    html += `<tr><td>TTFB</td><td><strong>${m.ttfb_ms} ms</strong></td></tr>`;
+                    html += `<tr><td>Total Load Time</td><td><strong>${m.total_load_time_ms} ms</strong></td></tr>`;
+                    html += `<tr><td>Page Size</td><td><strong>${m.page_size_kb} KB</strong> (${m.page_size_mb} MB)</td></tr>`;
+                    html += `</tbody></table></div>`;
+                }
+                // Optimization
+                if (data.optimization) {
+                    const o = data.optimization;
+                    html += `<h4 style="margin-top:1rem">🔧 Optimasi</h4>`;
+                    html += `<ul>`;
+                    html += `<li>Kompresi: ${o.is_compressed ? '✅ ' + (o.compression_type || 'gzip') : '❌ Tidak ada'}</li>`;
+                    html += `<li>Caching: ${o.has_caching ? '✅ ' + (o.cache_control || 'OK') : '❌ Tidak ada'}</li>`;
+                    html += `<li>ETag: ${o.etag ? '✅' : '❌'}</li>`;
+                    html += `</ul>`;
+                }
+                // Resources
+                if (data.resources) {
+                    const r = data.resources;
+                    html += `<h4 style="margin-top:1rem">📦 Resources</h4>`;
+                    html += `<p>CSS: <strong>${r.css_count}</strong> | JS: <strong>${r.js_count}</strong> | Gambar: <strong>${r.image_count}</strong> | Total: <strong>${r.total}</strong></p>`;
+                }
+                // Recommendations
+                if (data.recommendations && data.recommendations.length > 0) {
+                    html += `<h4 style="margin-top:1rem">💡 Rekomendasi</h4>`;
+                    data.recommendations.forEach(rec => {
+                        const pColor = rec.priority === 'tinggi' ? 'var(--error)' : 'var(--warning)';
+                        html += `<div style="margin:0.5rem 0;padding:0.5rem;border-left:3px solid ${pColor};background:var(--bg-secondary);border-radius:0 4px 4px 0">`;
+                        html += `<strong>[${rec.priority.toUpperCase()}] ${rec.title}</strong>`;
+                        html += `<p style="margin:0.25rem 0;font-size:0.9em">${rec.description}</p>`;
+                        if (rec.tips) {
+                            html += `<ul style="margin:0.25rem 0;padding-left:1.5rem;font-size:0.85em">`;
+                            rec.tips.forEach(tip => { html += `<li>${tip}</li>`; });
+                            html += `</ul>`;
+                        }
+                        html += `</div>`;
+                    });
+                }
+                html += `</div>`;
+                resultsDiv.innerHTML = html;
+            })
+            .catch(err => {
+                loadingDiv.style.display = 'none';
+                resultsDiv.innerHTML = `<div class="result-card error"><p>❌ Error: ${err.message}</p></div>`;
+            });
+    });
+</script>
+{% endblock %}

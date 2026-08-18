@@ -1,0 +1,776 @@
+{% extends "base.html" %}
+
+{% block title %}Dynamic DNS - Konektivitas.com{% endblock %}
+{% block description %}Kelola Dynamic DNS (DDNS) records - Update DNS record otomatis via API.{% endblock %}
+
+{% block head %}
+<style>
+    .dashboard-layout {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 0;
+        min-height: calc(100vh - 60px);
+    }
+
+    .dashboard-sidebar {
+        background: var(--bg-secondary);
+        border-right: 1px solid var(--border-color);
+        padding: 24px 0;
+    }
+
+    .dashboard-sidebar .sidebar-header {
+        padding: 0 20px 20px;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 16px;
+    }
+
+    .dashboard-sidebar .sidebar-header h3 {
+        margin: 0 0 4px;
+        font-size: 1rem;
+    }
+
+    .dashboard-sidebar .sidebar-header .plan-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .sidebar-nav a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+        background: var(--bg-hover);
+        color: var(--primary-color);
+    }
+
+    .sidebar-nav a .nav-icon {
+        font-size: 1.1rem;
+        width: 24px;
+        text-align: center;
+    }
+
+    .dashboard-main {
+        padding: 24px 32px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .page-header .subtitle {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-top: 4px;
+    }
+
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 20px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+
+    .btn-primary:hover {
+        opacity: 0.9;
+    }
+
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+
+    .btn-outline {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .btn-outline:hover {
+        background: var(--bg-hover);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        opacity: 0.9;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 16px;
+    }
+
+    .stat-card .stat-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-bottom: 4px;
+    }
+
+    .stat-card .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .records-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .records-table th,
+    .records-table td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .records-table th {
+        background: var(--bg-primary);
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .records-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .records-table tr:hover td {
+        background: var(--bg-hover);
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .status-active {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-inactive {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .ip-badge {
+        font-family: monospace;
+        font-size: 0.85rem;
+        padding: 2px 8px;
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-secondary);
+    }
+
+    .empty-state .icon {
+        font-size: 3rem;
+        margin-bottom: 16px;
+    }
+
+    .empty-state h3 {
+        margin: 0 0 8px;
+        color: var(--text-primary);
+    }
+
+    .empty-state p {
+        margin: 0 0 20px;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal {
+        background: var(--bg-secondary);
+        border-radius: 16px;
+        padding: 32px;
+        width: 90%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .modal h2 {
+        margin: 0 0 20px;
+        font-size: 1.2rem;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+
+    .form-group .hint {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 24px;
+    }
+
+    .token-box {
+        background: var(--bg-primary);
+        border: 2px solid var(--primary-color);
+        border-radius: 8px;
+        padding: 16px;
+        margin: 16px 0;
+    }
+
+    .token-box .token-value {
+        font-family: monospace;
+        font-size: 0.85rem;
+        word-break: break-all;
+        padding: 8px;
+        background: var(--bg-secondary);
+        border-radius: 4px;
+        margin: 8px 0;
+    }
+
+    .token-box .token-warning {
+        font-size: 0.8rem;
+        color: #dc3545;
+        font-weight: 600;
+    }
+
+    .copy-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 8px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        cursor: pointer;
+    }
+
+    .copy-btn:hover {
+        opacity: 0.9;
+    }
+
+    .api-example {
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px;
+        margin: 12px 0;
+        font-family: monospace;
+        font-size: 0.8rem;
+        overflow-x: auto;
+    }
+
+    .api-example .method {
+        color: #28a745;
+        font-weight: 700;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 6px;
+    }
+
+    .action-btn {
+        padding: 4px 8px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        background: var(--bg-primary);
+        color: var(--text-secondary);
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .action-btn.danger:hover {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+
+    .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        border-radius: 8px;
+        color: white;
+        font-size: 0.9rem;
+        z-index: 2000;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.3s;
+    }
+
+    .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .toast.success {
+        background: #28a745;
+    }
+
+    .toast.error {
+        background: #dc3545;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .dashboard-sidebar {
+            display: none;
+        }
+
+        .dashboard-main {
+            padding: 16px;
+        }
+
+        .records-table {
+            font-size: 0.85rem;
+        }
+
+        .records-table th,
+        .records-table td {
+            padding: 8px;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    <aside class="dashboard-sidebar">
+        <div class="sidebar-header">
+            <h3>{{ user.username }}</h3>
+            <span class="plan-badge">{{ user.plan|default('Free') }}</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/dashboard">
+                <span class="nav-icon">📊</span> Dashboard
+            </a>
+            <a href="/dashboard/domains">
+                <span class="nav-icon">🌐</span> Domain Saya
+            </a>
+            <a href="/dashboard/ddns" class="active">
+                <span class="nav-icon">🔄</span> Dynamic DNS
+            </a>
+            <a href="/dashboard/api-keys">
+                <span class="nav-icon">🔑</span> API Keys
+            </a>
+            <a href="/dashboard/notifications">
+                <span class="nav-icon">🔔</span> Notifikasi
+            </a>
+            <a href="/dashboard/profile">
+                <span class="nav-icon">👤</span> Profil
+            </a>
+        </nav>
+    </aside>
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <div>
+                <h1>🔄 Dynamic DNS</h1>
+                <p class="subtitle">Update DNS record otomatis via API — Cocok untuk IP dinamis, IoT, dan router</p>
+            </div>
+            <button class="btn-primary" onclick="openCreateModal()">
+                + Tambah Record
+            </button>
+        </div>
+
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-label">Total Records</div>
+                <div class="stat-value" id="totalCount">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Aktif</div>
+                <div class="stat-value" id="activeCount" style="color: #28a745;">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">IP Terakhir Update</div>
+                <div class="stat-value" id="lastIp" style="font-size: 1rem;">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Rate Limit</div>
+                <div class="stat-value" style="font-size: 1rem;">60 detik</div>
+            </div>
+        </div>
+
+        <div id="recordsContainer">
+            <div class="empty-state" id="emptyState">
+                <div class="icon">🔄</div>
+                <h3>Belum ada DDNS record</h3>
+                <p>Buat record pertama untuk mulai update DNS secara otomatis dari router, server, atau IoT device.</p>
+                <button class="btn-primary" onclick="openCreateModal()">+ Buat Record</button>
+            </div>
+            <table class="records-table" id="recordsTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Hostname</th>
+                        <th>Tipe</th>
+                        <th>IP Saat Ini</th>
+                        <th>Status</th>
+                        <th>Terakhir Update</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="recordsBody"></tbody>
+            </table>
+        </div>
+
+        <div
+            style="margin-top: 32px; padding: 20px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px;">
+            <h3 style="margin: 0 0 12px;">📖 Cara Penggunaan</h3>
+            <p style="color: var(--text-secondary); margin: 0 0 16px; font-size: 0.9rem;">
+                Setelah membuat record, gunakan token untuk update IP dari device Anda:
+            </p>
+            <div class="api-example">
+                <span class="method">GET</span>
+                /api/v1/ddns/update?token=<strong>YOUR_TOKEN</strong>&ip=<strong>1.2.3.4</strong>
+            </div>
+            <div class="api-example">
+                <span class="method">Contoh (Linux/Mac cron):</span><br>
+                curl "https://konektivitas.com/api/v1/ddns/update?token=YOUR_TOKEN&ip=$(curl -s ifconfig.me)"
+            </div>
+            <div class="api-example">
+                <span class="method">Contoh (Router/DHCP Hook):</span><br>
+                wget -q -O- "https://konektivitas.com/api/v1/ddns/update?token=YOUR_TOKEN&ip=$wan_ip"
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Create Modal -->
+<div class="modal-overlay" id="createModal">
+    <div class="modal">
+        <h2>➕ Tambah DDNS Record</h2>
+        <form id="createForm" onsubmit="handleCreate(event)">
+            <div class="form-group">
+                <label>Hostname</label>
+                <input type="text" id="createHostname" placeholder="home.example.com" required>
+                <div class="hint">Hostname yang akan di-update IP-nya</div>
+            </div>
+            <div class="form-group">
+                <label>Domain</label>
+                <input type="text" id="createDomain" placeholder="example.com" required>
+                <div class="hint">Domain induk</div>
+            </div>
+            <div class="form-group">
+                <label>Record Type</label>
+                <select id="createRecordType">
+                    <option value="A">A (IPv4)</option>
+                    <option value="AAAA">AAAA (IPv6)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>TTL (detik)</label>
+                <input type="number" id="createTtl" value="300" min="60" max="86400">
+                <div class="hint">60-86400 detik. Default: 300 (5 menit)</div>
+            </div>
+            <div class="form-group">
+                <label>Provider</label>
+                <select id="createProvider">
+                    <option value="manual">Manual (Update via API)</option>
+                    <option value="cloudflare">Cloudflare (Coming Soon)</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-primary btn-outline" onclick="closeModal('createModal')">Batal</button>
+                <button type="submit" class="btn-primary">Buat Record</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Token Display Modal -->
+<div class="modal-overlay" id="tokenModal">
+    <div class="modal">
+        <h2>🔑 Token DDNS Anda</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Simpan token ini di tempat aman. <strong>Token hanya ditampilkan sekali</strong> dan tidak bisa dilihat
+            lagi.
+        </p>
+        <div class="token-box">
+            <div style="font-size: 0.85rem; font-weight: 600;">Hostname:</div>
+            <div id="tokenHostname" style="font-weight: 600; margin-bottom: 8px;"></div>
+            <div style="font-size: 0.85rem; font-weight: 600;">Token:</div>
+            <div class="token-value" id="tokenValue"></div>
+            <button class="copy-btn" onclick="copyToken()">📋 Copy Token</button>
+            <div class="token-warning" style="margin-top: 8px;">
+                ⚠️ Jangan share token ini. Gunakan di device/device Anda saja.
+            </div>
+        </div>
+        <div class="form-actions">
+            <button class="btn-primary" onclick="closeModal('tokenModal')">Tutup</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+    const TOKEN = '{{ user.token if user.token else "" }}';
+    const API_BASE = '/api/v1';
+
+    async function apiCall(url, method = 'GET', body = null) {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + TOKEN
+        };
+        const opts = { method, headers };
+        if (body) opts.body = JSON.stringify(body);
+        const res = await fetch(url, opts);
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || err.message || 'Request gagal');
+        }
+        return res.json();
+    }
+
+    function showToast(msg, type = 'success') {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = 'toast ' + type + ' show';
+        setTimeout(() => t.className = 'toast', 3000);
+    }
+
+    function openCreateModal() {
+        document.getElementById('createModal').classList.add('active');
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+    }
+
+    async function loadRecords() {
+        try {
+            const records = await apiCall(`${API_BASE}/ddns/records`);
+            renderRecords(records);
+        } catch (e) {
+            showToast('Gagal memuat records: ' + e.message, 'error');
+        }
+    }
+
+    function renderRecords(records) {
+        const tbody = document.getElementById('recordsBody');
+        const table = document.getElementById('recordsTable');
+        const empty = document.getElementById('emptyState');
+
+        document.getElementById('totalCount').textContent = records.length;
+        document.getElementById('activeCount').textContent = records.filter(r => r.is_active).length;
+
+        if (records.length === 0) {
+            empty.style.display = 'block';
+            table.style.display = 'none';
+            return;
+        }
+
+        empty.style.display = 'none';
+        table.style.display = 'table';
+
+        const lastRecord = records.find(r => r.current_ip);
+        document.getElementById('lastIp').textContent = lastRecord ? lastRecord.current_ip : '-';
+
+        tbody.innerHTML = records.map(r => `
+        <tr>
+            <td><strong>${escHtml(r.hostname)}</strong><br><small style="color: var(--text-secondary);">${escHtml(r.domain)}</small></td>
+            <td><code>${escHtml(r.record_type)}</code></td>
+            <td>${r.current_ip ? `<span class="ip-badge">${escHtml(r.current_ip)}</span>` : '<span style="color: var(--text-secondary);">-</span>'}</td>
+            <td><span class="status-badge ${r.is_active ? 'status-active' : 'status-inactive'}">${r.is_active ? 'Aktif' : 'Nonaktif'}</span></td>
+            <td style="font-size: 0.8rem; color: var(--text-secondary);">${r.last_updated ? new Date(r.last_updated).toLocaleString('id-ID') : 'Belum pernah'}</td>
+            <td>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="showTokenInfo(${r.id}, '${escHtml(r.hostname)}')" title="Lihat Info">ℹ️</button>
+                    <button class="action-btn" onclick="toggleActive(${r.id}, ${r.is_active})" title="${r.is_active ? 'Nonaktifkan' : 'Aktifkan'}">${r.is_active ? '⏸️' : '▶️'}</button>
+                    <button class="action-btn danger" onclick="deleteRecord(${r.id}, '${escHtml(r.hostname)}')" title="Hapus">🗑️</button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+    }
+
+    function escHtml(s) {
+        if (!s) return '';
+        return String(s).replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"');
+    }
+
+    async function handleCreate(e) {
+        e.preventDefault();
+        try {
+            const data = {
+                hostname: document.getElementById('createHostname').value,
+                domain: document.getElementById('createDomain').value,
+                record_type: document.getElementById('createRecordType').value,
+                ttl: parseInt(document.getElementById('createTtl').value),
+                provider: document.getElementById('createProvider').value
+            };
+            const result = await apiCall(`${API_BASE}/ddns/records`, 'POST', data);
+            closeModal('createModal');
+            document.getElementById('createForm').reset();
+
+            // Show token
+            if (result.token) {
+                document.getElementById('tokenHostname').textContent = result.hostname;
+                document.getElementById('tokenValue').textContent = result.token;
+                document.getElementById('tokenModal').classList.add('active');
+            }
+
+            showToast('Record berhasil dibuat!');
+            loadRecords();
+        } catch (e) {
+            showToast('Gagal membuat record: ' + e.message, 'error');
+        }
+    }
+
+    function copyToken() {
+        const token = document.getElementById('tokenValue').textContent;
+        navigator.clipboard.writeText(token).then(() => showToast('Token disalin!'));
+    }
+
+    function showTokenInfo(id, hostname) {
+        alert(`Record: ${hostname}\n\nToken hanya ditampilkan saat pertama kali dibuat.\nJika lupa token, gunakan "Regenerate Token".`);
+    }
+
+    async function toggleActive(id, currentActive) {
+        try {
+            await apiCall(`${API_BASE}/ddns/records/${id}`, 'PUT', { is_active: !currentActive });
+            showToast(currentActive ? 'Record dinonaktifkan' : 'Record diaktifkan');
+            loadRecords();
+        } catch (e) {
+            showToast('Gagal update: ' + e.message, 'error');
+        }
+    }
+
+    async function deleteRecord(id, hostname) {
+        if (!confirm(`Hapus record "${hostname}"?`)) return;
+        try {
+            await apiCall(`${API_BASE}/ddns/records/${id}`, 'DELETE');
+            showToast('Record berhasil dihapus');
+            loadRecords();
+        } catch (e) {
+            showToast('Gagal hapus: ' + e.message, 'error');
+        }
+    }
+
+    // Load on page ready
+    document.addEventListener('DOMContentLoaded', loadRecords);
+
+    // Close modals on overlay click
+    document.querySelectorAll('.modal-overlay').forEach(el => {
+        el.addEventListener('click', e => {
+            if (e.target === el) el.classList.remove('active');
+        });
+    });
+</script>
+{% endblock %}

@@ -316,6 +316,41 @@ TOOL_META = {
         "category": "Domain",
         "icon": "⚔️",
     },
+    "traceroute": {
+        "title": "Traceroute - Trace Route ke Server",
+        "description": "Trace routing path dari server Anda ke server tujuan. Lihat setiap hop, IP, dan response time.",
+        "keywords": "traceroute, trace route, network path, hop count, routing, jalur paket, mtr",
+        "category": "Website",
+        "icon": "🛤️",
+    },
+    "tech_detector": {
+        "title": "Technology Detector - Deteksi Teknologi Website",
+        "description": "Deteksi teknologi yang digunakan website: CMS, framework, JavaScript library, analytics, web server.",
+        "keywords": "technology detection, tech stack, website technology, cms detection, framework detection, what technology, teknologi website",
+        "category": "Website",
+        "icon": "🔍",
+    },
+    "speed_test": {
+        "title": "Website Speed Test - Test Kecepatan Website",
+        "description": "Ukur kecepatan loading website: TTFB, page size, kompresi, caching, dan rekomendasi optimasi.",
+        "keywords": "website speed test, page speed, load time, ttfb, kecepatan website, performance test, core web vitals",
+        "category": "Website",
+        "icon": "⚡",
+    },
+    "dns_history": {
+        "title": "DNS History - Riwayat DNS Record",
+        "description": "Periksa DNS record dari multiple nameserver global. Deteksi perbedaan propagasi DNS antar resolver.",
+        "keywords": "dns history, dns propagation, dns records, multiple nameserver, dns consistency, riwayat dns, propagasi dns",
+        "category": "DNS",
+        "icon": "📜",
+    },
+    "ssl_history": {
+        "title": "SSL History - Riwayat Sertifikat SSL",
+        "description": "Lihat riwayat sertifikat SSL dari Certificate Transparency logs. Lacak semua sertifikat yang pernah diterbitkan.",
+        "keywords": "ssl history, certificate transparency, crt.sh, ssl certificate log, riwayat ssl, sertifikat ssl",
+        "category": "SSL",
+        "icon": "📜",
+    },
 }
 
 

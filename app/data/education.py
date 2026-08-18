@@ -1339,4 +1339,210 @@ EDUCATION_DATA = {
             {"slug": "batch-lookup", "name": "Batch Lookup", "icon": "📋"}
         ]
     },
+
+    # ============================================================
+    # NEW TOOLS (5 tools - Fase 2)
+    # ============================================================
+
+    "traceroute": {
+        "title": "📚 Belajar: Apa itu Traceroute?",
+        "difficulty": "menengah",
+        "sections": [
+            {
+                "heading": "🛤️ Apa itu Traceroute?",
+                "content": """<p>Traceroute adalah tool diagnostik jaringan yang menunjukkan <strong>path (jalur)</strong> yang ditempuh paket data dari komputer Anda ke server tujuan.</p>
+<p>Setiap perangkat jaringan (router) yang dilewati disebut <strong>hop</strong>. Traceroute menunjukkan setiap hop beserta response time-nya.</p>"""
+            },
+            {
+                "heading": "📋 Cara Kerja",
+                "content": """<ul>
+<li>Traceroute mengirim paket dengan <strong>TTL (Time To Live)</strong> yang meningkat</li>
+<li>TTL=1 → router pertama membalas "TTL expired"</li>
+<li>TTL=2 → router kedua membalas, dst.</li>
+<li>Proses berlanjut hingga paket sampai ke tujuan</li>
+</ul>"""
+            },
+            {
+                "heading": "📖 Cara Membaca Hasil",
+                "content": """<div class="edu-table">
+<table>
+<tr><th>Field</th><th>Arti</th></tr>
+<tr><td><code>Hop</code></td><td>Nomor urut router yang dilewati</td></tr>
+<tr><td><code>IP</code></td><td>IP address router</td></tr>
+<tr><td><code>Hostname</code></td><td>Nama domain router (jika ada)</td></tr>
+<tr><td><code>Min/Avg/Max</code></td><td>Response time dalam milidetik</td></tr>
+<tr><td><code>*</code></td><td>Request timeout (router tidak merespon)</td></tr>
+</table>
+</div>"""
+            },
+            {
+                "heading": "💡 Tips & Best Practices",
+                "content": """<ul>
+<li>Response time tinggi di hop tertentu = kemungkinan bottleneck</li>
+<li>Banyak hop <code>*</code> = router memblokir ICMP (wajar)</li>
+<li>Total hop yang wajar: 10-20 untuk lokal, 15-30 untuk internasional</li>
+<li>Gunakan untuk debugging: "Website lambat" → cek di mana delay terjadi</li>
+</ul>"""
+            }
+        ],
+        "related_tools": [
+            {"slug": "ping-checker", "name": "Ping Checker", "icon": "📡"},
+            {"slug": "ip-lookup", "name": "IP Lookup", "icon": "🔍"},
+            {"slug": "http-status", "name": "HTTP Status", "icon": "🌐"},
+        ]
+    },
+
+    "tech_detector": {
+        "title": "📚 Belajar: Deteksi Teknologi Website",
+        "difficulty": "pemula",
+        "sections": [
+            {
+                "heading": "🔍 Apa itu Technology Detection?",
+                "content": """<p>Technology detection adalah proses mengidentifikasi <strong>teknologi</strong> yang digunakan oleh sebuah website, mulai dari CMS, framework, JavaScript library, hingga analytics tools.</p>
+<p>Pembaharuan ini berguna untuk: competitor analysis, security audit, dan mencari inspirasi tech stack.</p>"""
+            },
+            {
+                "heading": "📋 Teknologi yang Bisa Dideteksi",
+                "content": """<div class="edu-table">
+<table>
+<tr><th>Kategori</th><th>Contoh</th></tr>
+<tr><td><code>CMS</code></td><td>WordPress, Joomla, Drupal, Shopify</td></tr>
+<tr><td><code>Framework</code></td><td>Laravel, Django, Rails, ASP.NET</td></tr>
+<tr><td><code>JS Framework</code></td><td>React, Vue.js, Angular, Next.js</td></tr>
+<tr><td><code>CSS Framework</code></td><td>Bootstrap, Tailwind CSS, Bulma</td></tr>
+<tr><td><code>Analytics</code></td><td>Google Analytics, Hotjar, Mixpanel</td></tr>
+<tr><td><code>Web Server</code></td><td>Nginx, Apache, LiteSpeed, IIS</td></tr>
+<tr><td><code>Hosting</code></td><td>Vercel, Netlify, Firebase</td></tr>
+</table>
+</div>"""
+            },
+            {
+                "heading": "💡 Tips Penggunaan",
+                "content": """<ul>
+<li>Masukkan URL lengkap atau cukup domain saja</li>
+<li>Confidence tinggi (≥60%) = deteksi sangat yakin</li>
+<li>Cocok untuk analisis kompetitor atau mencari referensi tech stack</li>
+<li>Gunakan bersama CDN Detection untuk analisis infrastruktur lengkap</li>
+</ul>"""
+            }
+        ],
+        "related_tools": [
+            {"slug": "cdn-detect", "name": "CDN Detection", "icon": "🌐"},
+            {"slug": "header-checker", "name": "Header Checker", "icon": "📋"},
+            {"slug": "ssl-checker", "name": "SSL Checker", "icon": "🔒"},
+        ]
+    },
+
+    "speed_test": {
+        "title": "📚 Belajar: Website Speed Test",
+        "difficulty": "pemula",
+        "sections": [
+            {
+                "heading": "⚡ Apa itu Speed Test?",
+                "content": """<p>Speed test mengukur <strong>kecepatan loading</strong> sebuah website. Kecepatan website mempengaruhi SEO, pengalaman pengguna, dan konversi.</p>
+<p>Google menyarankan TTFB < 200ms dan total load time < 3 detik untuk performa terbaik.</p>"""
+            },
+            {
+                "heading": "📋 Metrik yang Diukur",
+                "content": """<div class="edu-table">
+<table>
+<tr><th>Metric</th><th>Arti</th><th>Target Ideal</th></tr>
+<tr><td><code>TTFB</code></td><td>Time to First Byte - waktu server merespon</td><td>< 200ms</td></tr>
+<tr><td><code>Load Time</code></td><td>Total waktu loading halaman</td><td>< 3 detik</td></tr>
+<tr><td><code>Page Size</code></td><td>Ukuran total halaman</td><td>< 500KB</td></tr>
+<tr><td><code>Kompresi</code></td><td>Gzip/Brotli aktif</td><td>Ya</td></tr>
+<tr><td><code>Caching</code></td><td>Cache-Control header</td><td>Ya</td></tr>
+</table>
+</div>"""
+            },
+            {
+                "heading": "💡 Tips Optimasi",
+                "content": """<ul>
+<li><strong>TTFB tinggi</strong> → Optimasi server-side caching (Redis)</li>
+<li><strong>Page size besar</strong> → Kompres gambar ke WebP, minify CSS/JS</li>
+<li><strong>Tidak ada kompresi</strong> → Aktifkan gzip/brotli di Nginx</li>
+<li><strong>Tidak ada caching</strong> → Set Cache-Control header</li>
+<li><strong>Banyak resource</strong> → Gabungkan CSS/JS files</li>
+</ul>"""
+            }
+        ],
+        "related_tools": [
+            {"slug": "header-checker", "name": "Header Checker", "icon": "📋"},
+            {"slug": "cdn-detect", "name": "CDN Detection", "icon": "🌐"},
+            {"slug": "http-status", "name": "HTTP Status", "icon": "🌐"},
+        ]
+    },
+
+    "dns_history": {
+        "title": "📚 Belajar: DNS History & Propagation",
+        "difficulty": "menengah",
+        "sections": [
+            {
+                "heading": "📜 Apa itu DNS History?",
+                "content": """<p>DNS History memungkinkan Anda melihat <strong>perbedaan DNS record</strong> dari berbagai nameserver di seluruh dunia.</p>
+<p>Ketika Anda mengubah DNS record, perubahan tidak langsung menyebar ke semua nameserver. Proses ini disebut <strong>DNS propagation</strong> dan bisa memakan waktu 24-48 jam.</p>"""
+            },
+            {
+                "heading": "📋 Konsistensi DNS",
+                "content": """<div class="edu-table">
+<table>
+<tr><th>Status</th><th>Arti</th></tr>
+<tr><td><code>KONSISTEN</code></td><td>Semua nameserver memberikan hasil sama</td></tr>
+<tr><td><code>SEBAGIAN_BEDA</code></td><td>Beberapa nameserver belum propagate</td></tr>
+<tr><td><code>BANYAK_BEDA</code></td><td>Propagasi sedang berlangsung</td></tr>
+<tr><td><code>TIDAK_DITEMUKAN</code></td><td>Record tidak ada di nameserver manapun</td></tr>
+</table>
+</div>"""
+            },
+            {
+                "heading": "💡 Tips Penggunaan",
+                "content": """<ul>
+<li>Gunakan setelah mengubah DNS record untuk cek propagasi</li>
+<li>Periksa record type yang berbeda (A, MX, TXT, CNAME)</li>
+<li>TTL rendah = propagasi lebih cepat</li>
+<li>Cocok untuk troubleshooting email (MX record) dan website (A record)</li>
+</ul>"""
+            }
+        ],
+        "related_tools": [
+            {"slug": "dns-lookup", "name": "DNS Lookup", "icon": "🔧"},
+            {"slug": "dns-propagation", "name": "DNS Propagation", "icon": "🌍"},
+            {"slug": "mx-lookup", "name": "MX Lookup", "icon": "📧"},
+        ]
+    },
+
+    "ssl_history": {
+        "title": "📚 Belajar: SSL History & Certificate Transparency",
+        "difficulty": "menengah",
+        "sections": [
+            {
+                "heading": "📜 Apa itu SSL History?",
+                "content": """<p>SSL History menunjukkan <strong>riwayat sertifikat SSL</strong> yang pernah diterbitkan untuk sebuah domain, berdasarkan data <strong>Certificate Transparency (CT) logs</strong>.</p>
+<p>Setiap sertifikat SSL yang diterbitkan secara public tercatat di CT logs, sehingga kita bisa melacak riwayat sertifikasi domain.</p>"""
+            },
+            {
+                "heading": "📋 Manfaat SSL History",
+                "content": """<ul>
+<li><strong>Keamanan</strong> — Deteksi sertifikat tidak sah yang mungkin diterbitkan</li>
+<li><strong>Audit</strong> — Lacak kapan SSL diperbarui dan oleh siapa</li>
+<li><strong>Compliance</strong> — Pastikan domain selalu menggunakan SSL valid</li>
+<li><strong>Investigasi</strong> — Cek apakah ada sertifikat yang diterbitkan tanpa sepengetahuan Anda</li>
+</ul>"""
+            },
+            {
+                "heading": "💡 Tips Penggunaan",
+                "content": """<ul>
+<li>Cek SSL history domain Anda secara berkala untuk keamanan</li>
+<li>Jika ada issuer yang tidak dikenal, kemungkinan ada masalah keamanan</li>
+<li>Gunakan bersama SSL Checker untuk status sertifikat aktif</li>
+<li>Data diambil dari crt.sh (Certificate Transparency logs)</li>
+</ul>"""
+            }
+        ],
+        "related_tools": [
+            {"slug": "ssl-checker", "name": "SSL Checker", "icon": "🔒"},
+            {"slug": "ssl-expiry", "name": "SSL Expiry", "icon": "⏰"},
+            {"slug": "whois-lookup", "name": "WHOIS Lookup", "icon": "🌍"},
+        ]
+    },
 }

@@ -1,0 +1,374 @@
+{% extends "base.html" %}
+
+{% block content %}
+<nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Beranda</a> &raquo;
+    <span>API Dashboard</span>
+</nav>
+
+<div class="tool-header">
+    <h1>📊 API Dashboard</h1>
+    <p class="tool-description">Statistik penggunaan API, rate limit info, dan daftar lengkap endpoints yang tersedia.
+    </p>
+</div>
+
+<!-- Rate Limit Info -->
+<div class="result-card" id="rateLimitCard">
+    <h2>⚡ Rate Limit</h2>
+    <div id="rateLimitContent">
+        <p>Memuat info rate limit...</p>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="result-card">
+    <h2>📈 Ringkasan</h2>
+    <div class="result-table" id="summaryContent">
+        <p>Memuat ringkasan...</p>
+    </div>
+</div>
+
+<!-- Endpoints by Category -->
+<div id="endpointsContainer">
+    <h2>🔌 API Endpoints</h2>
+    <p style="color:var(--text-secondary);margin-bottom:16px;">Semua endpoints tersedia tanpa API key (Public API). Rate
+        limit: 60 requests/menit per IP.</p>
+    <div id="endpointsContent">
+        <p>Memuat daftar endpoints...</p>
+    </div>
+</div>
+
+<!-- Usage Example -->
+<div class="result-card">
+    <h2>💡 Contoh Penggunaan</h2>
+    <div class="result-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Tool</th>
+                    <th>Request</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>DNS Lookup</td>
+                    <td><code>GET /api/v1/dns/google.com</code></td>
+                    <td><button class="btn-copy" onclick="tryApi('/api/v1/dns/google.com')">Try</button></td>
+                </tr>
+                <tr>
+                    <td>WHOIS Lookup</td>
+                    <td><code>GET /api/v1/whois/google.com</code></td>
+                    <td><button class="btn-copy" onclick="tryApi('/api/v1/whois/google.com')">Try</button></td>
+                </tr>
+                <tr>
+                    <td>SSL Check</td>
+                    <td><code>GET /api/v1/ssl/google.com</code></td>
+                    <td><button class="btn-copy" onclick="tryApi('/api/v1/ssl/google.com')">Try</button></td>
+                </tr>
+                <tr>
+                    <td>My IP</td>
+                    <td><code>GET /api/v1/ip/me</code></td>
+                    <td><button class="btn-copy" onclick="tryApi('/api/v1/ip/me')">Try</button></td>
+                </tr>
+                <tr>
+                    <td>Traceroute</td>
+                    <td><code>GET /api/v1/traceroute/1.1.1.1</code></td>
+                    <td><button class="btn-copy" onclick="tryApi('/api/v1/traceroute/1.1.1.1')">Try</button></td>
+                </tr>
+                <tr>
+                    <td>Speed Test</td>
+                    <td><code>GET /api/v1/speed/example.com</code></td>
+                    <td><button class="btn-copy" onclick="tryApi('/api/v1/speed/example.com')">Try</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- API Response Preview -->
+<div class="result-card" id="responseCard" style="display:none;">
+    <h2>🔍 Response Preview</h2>
+    <div style="margin-bottom:12px;">
+        <code id="responseUrl" style="color:var(--accent);"></code>
+    </div>
+    <div class="result-table">
+        <pre id="responseBody"
+            style="max-height:400px;overflow:auto;font-size:0.85rem;background:var(--bg-secondary);padding:16px;border-radius:8px;"></pre>
+    </div>
+</div>
+
+<!-- Authentication Info -->
+<div class="result-card">
+    <h2>🔐 Authentication</h2>
+    <div class="result-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Fitur</th>
+                    <th>Auth Required</th>
+                    <th>Keterangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Public Tools (30 tools)</td>
+                    <td><span style="color:var(--success);">❌ Tidak</span></td>
+                    <td>Gratis, tanpa API key</td>
+                </tr>
+                <tr>
+                    <td>Premium Features (Future)</td>
+                    <td><span style="color:var(--warning);">✅ Ya</span></td>
+                    <td>API key dengan prefix <code>kn_</code></td>
+                </tr>
+                <tr>
+                    <td>Workspace API (Future)</td>
+                    <td><span style="color:var(--warning);">✅ Ya</span></td>
+                    <td>JWT token atau API key</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .btn-copy {
+        padding: 4px 12px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--bg-secondary);
+        color: var(--accent);
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s;
+    }
+
+    .btn-copy:hover {
+        background: var(--accent);
+        color: white;
+    }
+
+    .category-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 20px 0 10px;
+        padding: 8px 12px;
+        background: var(--bg-secondary);
+        border-radius: 8px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .category-header:hover {
+        background: var(--border);
+    }
+
+    .category-header .count {
+        margin-left: auto;
+        background: var(--accent);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+    }
+
+    .endpoint-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 12px 8px 24px;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.9rem;
+    }
+
+    .endpoint-item:last-child {
+        border-bottom: none;
+    }
+
+    .endpoint-method {
+        font-weight: 700;
+        color: var(--success);
+        min-width: 40px;
+    }
+
+    .endpoint-path {
+        font-family: monospace;
+        font-size: 0.85rem;
+        flex: 1;
+    }
+
+    .endpoint-desc {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        min-width: 180px;
+        text-align: right;
+    }
+
+    .category-content {
+        border: 1px solid var(--border);
+        border-radius: 0 0 8px 8px;
+        margin-top: -10px;
+        overflow: hidden;
+    }
+
+    .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 16px;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 16px;
+        background: var(--bg-secondary);
+        border-radius: 8px;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--accent);
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+    }
+
+    .rate-bar {
+        width: 100%;
+        height: 8px;
+        background: var(--border);
+        border-radius: 4px;
+        margin-top: 8px;
+        overflow: hidden;
+    }
+
+    .rate-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.5s;
+    }
+</style>
+
+<script>
+    const CATEGORY_ICONS = {
+        'DNS': '🔧',
+        'Domain': '🌍',
+        'SSL': '🔒',
+        'Website': '🌐',
+        'IP': '📡'
+    };
+
+    async function loadDashboard() {
+        try {
+            const resp = await fetch('/api/v1/dashboard/stats');
+            const data = await resp.json();
+
+            // Rate Limit
+            const rl = data.rate_limit;
+            const used = rl.max_requests - rl.remaining;
+            const pct = Math.round((used / rl.max_requests) * 100);
+            const barColor = pct > 80 ? 'var(--danger)' : pct > 50 ? 'var(--warning)' : 'var(--success)';
+
+            document.getElementById('rateLimitContent').innerHTML = `
+            <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;">
+                <div style="flex:1;min-width:200px;">
+                    <p><strong>${used}</strong> / ${rl.max_requests} requests digunakan</p>
+                    <div class="rate-bar">
+                        <div class="rate-fill" style="width:${pct}%;background:${barColor};"></div>
+                    </div>
+                    <p style="margin-top:8px;font-size:0.85rem;color:var(--text-secondary);">
+                        ${rl.remaining} requests tersisa &bull; Window: ${rl.window_seconds}s
+                    </p>
+                </div>
+                <div style="text-align:center;padding:16px 24px;background:var(--bg-secondary);border-radius:8px;">
+                    <div style="font-size:2.5rem;font-weight:700;color:${barColor};">${rl.remaining}</div>
+                    <div style="font-size:0.85rem;color:var(--text-secondary);">Sisa Request</div>
+                </div>
+            </div>
+        `;
+
+            // Summary
+            const cats = Object.keys(data.categories);
+            document.getElementById('summaryContent').innerHTML = `
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-value">${data.total_endpoints}</div>
+                    <div class="stat-label">Total Endpoints</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${cats.length}</div>
+                    <div class="stat-label">Kategori</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${rl.max_requests}</div>
+                    <div class="stat-label">Rate Limit/min</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">30</div>
+                    <div class="stat-label">Tools Aktif</div>
+                </div>
+            </div>
+        `;
+
+            // Endpoints by category
+            let endpointsHtml = '';
+            for (const [cat, info] of Object.entries(data.categories)) {
+                const icon = CATEGORY_ICONS[cat] || '📌';
+                endpointsHtml += `
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <span>${icon} ${cat}</span>
+                    <span class="count">${info.count} endpoints</span>
+                </div>
+                <div class="category-content" style="display:none;">
+            `;
+                for (const ep of info.endpoints) {
+                    endpointsHtml += `
+                    <div class="endpoint-item">
+                        <span class="endpoint-method">${ep.method}</span>
+                        <span class="endpoint-path">${ep.path}</span>
+                        <span class="endpoint-desc">${ep.description}</span>
+                    </div>
+                `;
+                }
+                endpointsHtml += '</div>';
+            }
+            document.getElementById('endpointsContent').innerHTML = endpointsHtml;
+
+        } catch (err) {
+            document.getElementById('rateLimitContent').innerHTML = '<p style="color:var(--danger);">Gagal memuat data: ' + err.message + '</p>';
+        }
+    }
+
+    function toggleCategory(header) {
+        const content = header.nextElementSibling;
+        content.style.display = content.style.display === 'none' ? 'block' : 'none';
+    }
+
+    async function tryApi(url) {
+        const card = document.getElementById('responseCard');
+        const urlEl = document.getElementById('responseUrl');
+        const bodyEl = document.getElementById('responseBody');
+
+        card.style.display = 'block';
+        urlEl.textContent = url;
+        bodyEl.textContent = 'Memuat...';
+
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        try {
+            const resp = await fetch(url);
+            const data = await resp.json();
+            bodyEl.textContent = JSON.stringify(data, null, 2);
+        } catch (err) {
+            bodyEl.textContent = 'Error: ' + err.message;
+        }
+    }
+
+    // Load on page load
+    loadDashboard();
+</script>
+{% endblock %}

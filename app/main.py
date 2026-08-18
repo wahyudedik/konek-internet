@@ -12,7 +12,8 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 from app.config import get_settings
 from app.routers import dns, domain, ssl, website, ip, cdn, batch, compare
-from app.routers import auth, keys, workspace, notifications
+from app.routers import tools_v2
+from app.routers import auth, keys, workspace, notifications, ddns
 from app.scheduler.jobs import scheduler
 from app.utils.rate_limit import check_rate_limit, get_client_ip, get_remaining_requests
 from app.data.education import EDUCATION_DATA
@@ -231,6 +232,12 @@ app.include_router(keys.router, prefix="/api/v1", tags=["API Keys"])
 app.include_router(workspace.router, prefix="/api/v1", tags=["Workspace"])
 app.include_router(notifications.router, prefix="/api/v1", tags=["Notifications"])
 
+# API routers — New Tools Fase 2
+app.include_router(tools_v2.router, prefix="/api/v1", tags=["Tools v2"])
+
+# API routers — Dynamic DNS (Fase 2)
+app.include_router(ddns.router, prefix="/api/v1", tags=["Dynamic DNS"])
+
 
 # ============ PAGE ROUTES ============
 
@@ -384,6 +391,36 @@ async def page_compare(request: Request):
     return templates.TemplateResponse("tools/compare.html", tool_context(request, "Tool Comparison", "compare"))
 
 
+@app.get("/traceroute")
+async def page_traceroute(request: Request):
+    return templates.TemplateResponse("tools/traceroute.html", tool_context(request, "Traceroute", "traceroute"))
+
+
+@app.get("/tech-detector")
+async def page_tech_detector(request: Request):
+    return templates.TemplateResponse("tools/tech_detector.html", tool_context(request, "Technology Detector", "tech_detector"))
+
+
+@app.get("/speed-test")
+async def page_speed_test(request: Request):
+    return templates.TemplateResponse("tools/speed_test.html", tool_context(request, "Website Speed Test", "speed_test"))
+
+
+@app.get("/dns-history")
+async def page_dns_history(request: Request):
+    return templates.TemplateResponse("tools/dns_history.html", tool_context(request, "DNS History", "dns_history"))
+
+
+@app.get("/ssl-history")
+async def page_ssl_history(request: Request):
+    return templates.TemplateResponse("tools/ssl_history.html", tool_context(request, "SSL History", "ssl_history"))
+
+
+@app.get("/api-dashboard")
+async def page_api_dashboard(request: Request):
+    return templates.TemplateResponse("tools/api_dashboard.html", tool_context(request, "API Dashboard", "api_dashboard"))
+
+
 # ============ Dashboard Pages (Fase 2) ============
 
 @app.get("/dashboard")
@@ -438,6 +475,15 @@ async def page_profile(request: Request):
     if not user:
         return templates.TemplateResponse("tools/dns_lookup.html", tool_context(request, "Profil", "dns_lookup"))
     return templates.TemplateResponse("dashboard/profile.html", {"request": request, "user": user, "title": "Profil", "meta": None})
+
+
+@app.get("/dashboard/ddns")
+async def page_ddns(request: Request):
+    from app.dependencies import get_current_user_optional
+    user = await get_current_user_optional(request)
+    if not user:
+        return templates.TemplateResponse("tools/dns_lookup.html", tool_context(request, "Dynamic DNS", "dns_lookup"))
+    return templates.TemplateResponse("dashboard/ddns.html", {"request": request, "user": user, "title": "Dynamic DNS", "meta": None})
 
 
 @app.get("/login")
@@ -518,6 +564,12 @@ async def sitemap_xml():
         ("/cdn-detect", "0.8", "monthly"),
         ("/batch-lookup", "0.8", "monthly"),
         ("/compare", "0.8", "monthly"),
+        ("/traceroute", "0.8", "monthly"),
+        ("/tech-detector", "0.8", "monthly"),
+        ("/speed-test", "0.8", "monthly"),
+        ("/dns-history", "0.8", "monthly"),
+        ("/ssl-history", "0.8", "monthly"),
+        ("/api-dashboard", "0.7", "monthly"),
         ("/about", "0.7", "monthly"),
         ("/api-docs", "0.7", "monthly"),
     ]

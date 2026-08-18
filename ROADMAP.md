@@ -8,24 +8,24 @@
 
 **Target:** Menjadi platform utilitas internet terbesar berbahasa Indonesia.
 
-### ✅ Public Tools — 25 Tools (SELESAI)
+### ✅ Public Tools — 30 Tools (SELESAI)
 
-- ✅ 25 Tools DNS, Domain, SSL, Website, IP
-- ✅ 25+ API Endpoints (RESTful, rate limit 60 req/min)
-- ✅ 25 Tool Pages dengan form interaktif
+- ✅ 30 Tools DNS, Domain, SSL, Website, IP (+5 baru: Traceroute, Tech Detector, Speed Test, DNS History, SSL History)
+- ✅ 36+ API Endpoints (RESTful, rate limit 60 req/min)
+- ✅ 30 Tool Pages dengan form interaktif
 - ✅ Redis + in-memory Cache
 - ✅ SEO: JSON-LD, robots.txt, sitemap.xml
 - ✅ Dark Mode, PWA, Tool History, URL State
 - ✅ Mobile Responsive, Keyboard Shortcuts
 - ✅ Section Edukasi interaktif di semua tool pages
-- ✅ CDN Detection (tool ke-25)
+- ✅ CDN Detection, API Dashboard
 
 ### Target Metrics
 
 | Metric | Target | Status |
 |--------|--------|--------|
 | Visitor/bulan | 100.000 | 🔄 |
-| Tools | 25 | ✅ |
+| Tools | 30 | ✅ |
 | API request/hari | 10.000 | 🔄 |
 | SEO ranking | Top 3 "dns checker indonesia" | 🔄 |
 
@@ -41,27 +41,27 @@
 
 **Target:** Developer mulai memakai API. Workspace MVP launching. Utility Search Engine dimulai.
 
-### Public Tools (lanjutan)
+### Public Tools (lanjutan) ✅
 
-- 5 tools tambahan (total 30)
+- ✅ 5 tools tambahan (total 30) — Traceroute, Tech Detector, Speed Test, DNS History, SSL History
 - Improved SEO & content
 - Multi-language support (ID/EN)
 
-### Workspace MVP
+### Workspace MVP ✅
 
-- **User Authentication** — Login, register, email verification
-- **Domain Management** — Tambah & monitor domain
-- **SSL Monitoring** — Alert saat SSL expiry < 30 hari
-- **DNS Monitoring** — Deteksi perubahan DNS record
-- **Uptime Monitoring** — Cek uptime setiap 5 menit
-- **Notification Settings** — Email, Telegram, Discord
-- **Dashboard** — Overview semua aset internet
+- ✅ **User Authentication** — Login, register (JWT token-based)
+- ✅ **Domain Management** — Tambah & monitor domain
+- ✅ **SSL Monitoring** — Alert saat SSL expiry < 30 hari
+- ✅ **DNS Monitoring** — Deteksi perubahan DNS record
+- ✅ **Uptime Monitoring** — Cek uptime setiap 5 menit
+- ✅ **Notification Settings** — Email, Telegram, Discord
+- ✅ **Dashboard** — Overview semua aset internet (6 pages)
 
-### API Platform
+### API Platform ✅
 
-- **API Key System** — Daftar & kelola API key
-- **API Dashboard** — Usage stats, rate limit info
-- **Dynamic DNS** — Update DNS record via API
+- ✅ **API Key System** — Daftar & kelola API key (kn_ prefix)
+- ✅ **API Dashboard** — Usage stats, rate limit info (36 endpoints)
+- ✅ **Dynamic DNS** — Update DNS record via API (8 endpoints, token-based)
 
 ### Utility Search Engine — Core Engine & Jobs Vertical
 

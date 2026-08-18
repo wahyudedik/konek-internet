@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
+{% block title %}DNS History - Riwayat DNS Record{% endblock %}
+{% block content %}
+{{ render_breadcrumb("DNS", "DNS History", "/dns-history", "/?category=dns") }}
+<h1 class="section-title">📜 DNS History</h1>
+<p class="tool-desc">Periksa DNS record dari multiple nameserver global. Deteksi perbedaan propagasi DNS antar resolver.
+</p>
+
+<div class="tool-form">
+    <form id="dnsHistoryForm">
+        <div class="form-group">
+            <label for="domain">Domain</label>
+            <input type="text" id="domain" name="domain" placeholder="contoh: google.com" required>
+        </div>
+        <div class="form-group">
+            <label for="record_type">Record Type</label>
+            <select id="record_type" name="record_type">
+                <option value="A">A</option>
+                <option value="AAAA">AAAA</option>
+                <option value="MX">MX</option>
+                <option value="TXT">TXT</option>
+                <option value="CNAME">CNAME</option>
+                <option value="NS">NS</option>
+                <option value="SOA">SOA</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Cek History</button>
+    </form>
+    <div class="loading" role="status" aria-live="polite">
+        <div class="spinner"></div>
+        <p>Sedang mengecek DNS dari multiple nameserver...</p>
+    </div>
+    <div class="results" aria-live="polite"></div>
+    <div id="historyContainer"></div>
+</div>
+
+{{ render_education(edu_data) }}
+{% endblock %}
+{% block scripts %}
+<script>
+    displayHistory('dns-history', 'historyContainer');
+    loadURLState('dnsHistoryForm');
+    document.getElementById('dnsHistoryForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const domain = document.getElementById('domain').value.trim();
+        const recordType = document.getElementById('record_type').value;
+        if (!domain) return;
+        updateURLState('dnsHistoryForm');
+        saveHistory('dns-history', domain);
+        const resultsDiv = document.querySelector('.results');
+        const loadingDiv = document.querySelector('.loading');
+        resultsDiv.innerHTML = '';
+        loadingDiv.style.display = 'block';
+        fetch(`/api/v1/dns/${encodeURIComponent(domain)}/history?record_type=${recordType}`)
+            .then(r => r.json())
+            .then(data => {
+                loadingDiv.style.display = 'none';
+                if (data.error && !data.results) {
+                    resultsDiv.innerHTML = `<div class="result-card error"><p>❌ ${data.error}</p></div>`;
+                    return;
+                }
+                let html = `<div class="result-card">`;
+                html += `<h3>📜 DNS History: <strong>${data.domain}</strong> (${data.record_type})</h3>`;
+                // Summary
+                if (data.summary) {
+                    const s = data.summary;
+                    const consColors = { KONSISTEN: 'var(--success)', SEBAGIAN_BEDA: 'var(--warning)', BANYAK_BEDA: 'var(--error)', TIDAK_DITEMUKAN: 'var(--text-muted)' };
+                    html += `<div style="margin:1rem 0;padding:0.75rem;background:var(--bg-secondary);border-radius:8px">`;
+                    html += `<p>Konsistensi: <strong style="color:${consColors[s.consistency] || 'var(--text)'}">${s.consistency}</strong></p>`;
+                    html += `<p style="font-size:0.9em">${s.consistency_description}</p>`;
+                    html += `<p>Nameservers dicek: <strong>${s.total_nameservers}</strong> | Berhasil: <strong>${s.successful_queries}</strong> | Record unik: <strong>${s.unique_records}</strong></p>`;
+                    if (s.average_ttl) html += `<p>Average TTL: <strong>${s.average_ttl}s</strong></p>`;
+                    html += `</div>`;
+                }
+                // Per-NS results
+                if (data.results) {
+                    html += `<div style="overflow-x:auto"><table class="result-table">`;
+                    html += `<thead><tr><th>Nameserver</th><th>Records</th><th>TTL</th><th>Status</th></tr></thead><tbody>`;
+                    for (const [ns, info] of Object.entries(data.results)) {
+                        html += `<tr>`;
+                        html += `<td>${ns}</td>`;
+                        html += `<td>${info.records && info.records.length > 0 ? info.records.join(', ') : '<em style="color:var(--text-muted)">-</em>'}</td>`;
+                        html += `<td>${info.ttl ? info.ttl + 's' : '-'}</td>`;
+                        html += `<td>${info.error ? '<span style="color:var(--error)">' + info.error + '</span>' : '<span style="color:var(--success)">OK</span>'}</td>`;
+                        html += `</tr>`;
+                    }
+                    html += `</tbody></table></div>`;
+                }
+                // All unique records
+                if (data.summary && data.summary.all_records && Object.keys(data.summary.all_records).length > 0) {
+                    html += `<h4 style="margin-top:1rem">📋 Semua Record Unik</h4>`;
+                    html += `<ul>`;
+                    for (const [record, nsList] of Object.entries(data.summary.all_records)) {
+                        html += `<li><code>${record}</code> — ditemukan di: ${nsList.join(', ')}</li>`;
+                    }
+                    html += `</ul>`;
+                }
+                html += `</div>`;
+                resultsDiv.innerHTML = html;
+            })
+            .catch(err => {
+                loadingDiv.style.display = 'none';
+                resultsDiv.innerHTML = `<div class="result-card error"><p>❌ Error: ${err.message}</p></div>`;
+            });
+    });
+</script>
+{% endblock %}

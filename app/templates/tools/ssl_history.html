@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
+{% block title %}SSL History - Riwayat Sertifikat SSL{% endblock %}
+{% block content %}
+{{ render_breadcrumb("SSL", "SSL History", "/ssl-history", "/?category=ssl") }}
+<h1 class="section-title">📜 SSL History</h1>
+<p class="tool-desc">Lihat riwayat sertifikat SSL dari Certificate Transparency logs. Lacak semua sertifikat yang pernah
+    diterbitkan untuk domain Anda.</p>
+
+<div class="tool-form">
+    <form id="sslHistoryForm">
+        <div class="form-group">
+            <label for="domain">Domain</label>
+            <input type="text" id="domain" name="domain" placeholder="contoh: google.com" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Cek History</button>
+    </form>
+    <div class="loading" role="status" aria-live="polite">
+        <div class="spinner"></div>
+        <p>Sedang mengambil riwayat SSL dari CT logs...</p>
+    </div>
+    <div class="results" aria-live="polite"></div>
+    <div id="historyContainer"></div>
+</div>
+
+{{ render_education(edu_data) }}
+{% endblock %}
+{% block scripts %}
+<script>
+    displayHistory('ssl-history', 'historyContainer');
+    loadURLState('sslHistoryForm');
+    document.getElementById('sslHistoryForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const domain = document.getElementById('domain').value.trim();
+        if (!domain) return;
+        updateURLState('sslHistoryForm');
+        saveHistory('ssl-history', domain);
+        const resultsDiv = document.querySelector('.results');
+        const loadingDiv = document.querySelector('.loading');
+        resultsDiv.innerHTML = '';
+        loadingDiv.style.display = 'block';
+        fetch(`/api/v1/ssl/${encodeURIComponent(domain)}/cert-history`)
+            .then(r => r.json())
+            .then(data => {
+                loadingDiv.style.display = 'none';
+                if (data.error && !data.certificates) {
+                    resultsDiv.innerHTML = `<div class="result-card error"><p>❌ ${data.error}</p></div>`;
+                    return;
+                }
+                let html = `<div class="result-card">`;
+                html += `<h3>📜 SSL History: <strong>${data.domain}</strong></h3>`;
+                // Summary
+                if (data.summary) {
+                    const s = data.summary;
+                    html += `<div style="margin:1rem 0;padding:0.75rem;background:var(--bg-secondary);border-radius:8px">`;
+                    html += `<p>Total sertifikat: <strong>${s.total_certs}</strong></p>`;
+                    html += `<p>Issuer unik: <strong>${s.unique_issuers}</strong></p>`;
+                    if (s.latest_issuer) html += `<p>Issuer terbaru: <strong>${s.latest_issuer}</strong></p>`;
+                    if (s.date_range) html += `<p>Coverage: <strong>${s.date_range.earliest}</strong> s/d <strong>${s.date_range.latest}</strong></p>`;
+                    html += `<p>Status aktif: ${s.current_cert_valid ? '✅ <strong style="color:var(--success)">Valid</strong>' : '❌ <strong style="color:var(--error)">Expired/Tidak diketahui</strong>'}</p>`;
+                    html += `</div>`;
+                }
+                // Certificate list
+                if (data.certificates && data.certificates.length > 0) {
+                    html += `<div style="overflow-x:auto"><table class="result-table">`;
+                    html += `<thead><tr><th>ID</th><th>Issuer</th><th>Common Name</th><th>Valid From</th><th>Valid Until</th></tr></thead><tbody>`;
+                    data.certificates.forEach(cert => {
+                        html += `<tr>`;
+                        html += `<td><a href="https://crt.sh/?d=${cert.id}" target="_blank" rel="noopener">${cert.id}</a></td>`;
+                        html += `<td>${cert.issuer}</td>`;
+                        html += `<td>${cert.common_name}</td>`;
+                        html += `<td>${cert.not_before}</td>`;
+                        html += `<td>${cert.not_after}</td>`;
+                        html += `</tr>`;
+                    });
+                    html += `</tbody></table></div>`;
+                    html += `<p style="font-size:0.85em;color:var(--text-muted);margin-top:0.5rem">Data dari <a href="https://crt.sh" target="_blank" rel="noopener">crt.sh</a> (Certificate Transparency logs)</p>`;
+                } else {
+                    html += `<p>Tidak ada sertifikat ditemukan untuk domain ini.</p>`;
+                }
+                html += `</div>`;
+                resultsDiv.innerHTML = html;
+            })
+            .catch(err => {
+                loadingDiv.style.display = 'none';
+                resultsDiv.innerHTML = `<div class="result-card error"><p>❌ Error: ${err.message}</p></div>`;
+            });
+    });
+</script>
+{% endblock %}

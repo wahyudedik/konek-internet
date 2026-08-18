@@ -10,6 +10,7 @@ from app.models.ssl_history import DomainSslHistory
 from app.models.dns_history import DomainDnsHistory
 from app.models.uptime_check import UptimeCheck, UptimeLog
 from app.models.notification import NotificationSetting
+from app.models.ddns import DynamicDns
 
 __all__ = [
     "Base",
@@ -21,4 +22,5 @@ __all__ = [
     "UptimeCheck",
     "UptimeLog",
     "NotificationSetting",
+    "DynamicDns",
 ]

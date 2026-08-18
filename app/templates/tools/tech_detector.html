@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% from "partials/education.html" import render_education %}
+{% from "partials/breadcrumb.html" import render_breadcrumb %}
+{% block title %}Technology Detector - Deteksi Teknologi Website{% endblock %}
+{% block content %}
+{{ render_breadcrumb("Website", "Technology Detector", "/tech-detector", "/?category=website") }}
+<h1 class="section-title">🔍 Technology Detector</h1>
+<p class="tool-desc">Deteksi teknologi yang digunakan website: CMS, framework, JavaScript library, analytics, dan
+    lainnya.</p>
+
+<div class="tool-form">
+    <form id="techForm">
+        <div class="form-group">
+            <label for="domain">Domain / URL</label>
+            <input type="text" id="domain" name="domain" placeholder="contoh: google.com" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Deteksi Sekarang</button>
+    </form>
+    <div class="loading" role="status" aria-live="polite">
+        <div class="spinner"></div>
+        <p>Sedang menganalisis teknologi...</p>
+    </div>
+    <div class="results" aria-live="polite"></div>
+    <div id="historyContainer"></div>
+</div>
+
+{{ render_education(edu_data) }}
+{% endblock %}
+{% block scripts %}
+<script>
+    displayHistory('tech-detector', 'historyContainer');
+    loadURLState('techForm');
+    document.getElementById('techForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const domain = document.getElementById('domain').value.trim();
+        if (!domain) return;
+        updateURLState('techForm');
+        saveHistory('tech-detector', domain);
+        const resultsDiv = document.querySelector('.results');
+        const loadingDiv = document.querySelector('.loading');
+        resultsDiv.innerHTML = '';
+        loadingDiv.style.display = 'block';
+        const url = domain.startsWith('http') ? domain : `https://${domain}`;
+        fetch(`/api/v1/tech/${encodeURIComponent(url)}/detect`)
+            .then(r => r.json())
+            .then(data => {
+                loadingDiv.style.display = 'none';
+                if (data.error) {
+                    resultsDiv.innerHTML = `<div class="result-card error"><p>❌ ${data.error}</p></div>`;
+                    return;
+                }
+                let html = `<div class="result-card">`;
+                html += `<h3>🔍 Teknologi di <strong>${data.final_url || data.url}</strong></h3>`;
+                html += `<p>Status: <strong>${data.status_code}</strong> | Server: <strong>${data.server || 'Unknown'}</strong></p>`;
+                if (data.powered_by) html += `<p>Powered-By: <strong>${data.powered_by}</strong></p>`;
+                html += `<p>Total terdeteksi: <strong>${data.total_detected}</strong> teknologi</p>`;
+                if (data.categories && Object.keys(data.categories).length > 0) {
+                    html += `<div style="margin-top:1rem">`;
+                    for (const [cat, techs] of Object.entries(data.categories)) {
+                        html += `<div style="margin-bottom:0.75rem">`;
+                        html += `<strong style="color:var(--primary)">${cat}</strong>: `;
+                        html += techs.map(t => `<span style="display:inline-block;background:var(--bg-secondary);padding:2px 8px;border-radius:4px;margin:2px;font-size:0.9em">${t}</span>`).join(' ');
+                        html += `</div>`;
+                    }
+                    html += `</div>`;
+                }
+                if (data.technologies && data.technologies.length > 0) {
+                    html += `<div style="overflow-x:auto;margin-top:1rem"><table class="result-table">`;
+                    html += `<thead><tr><th>Teknologi</th><th>Kategori</th><th>Confidence</th><th>Evidence</th></tr></thead><tbody>`;
+                    data.technologies.forEach(tech => {
+                        const conf = tech.confidence;
+                        const color = conf >= 60 ? 'var(--success)' : conf >= 30 ? 'var(--warning)' : 'var(--text-muted)';
+                        html += `<tr>`;
+                        html += `<td><strong>${tech.name}</strong></td>`;
+                        html += `<td>${tech.category}</td>`;
+                        html += `<td style="color:${color}">${conf}%</td>`;
+                        html += `<td style="font-size:0.85em">${tech.evidence.join(', ')}</td>`;
+                        html += `</tr>`;
+                    });
+                    html += `</tbody></table></div>`;
+                }
+                html += `</div>`;
+                resultsDiv.innerHTML = html;
+            })
+            .catch(err => {
+                loadingDiv.style.display = 'none';
+                resultsDiv.innerHTML = `<div class="result-card error"><p>❌ Error: ${err.message}</p></div>`;
+            });
+    });
+</script>
+{% endblock %}
