@@ -153,6 +153,8 @@
                 </div>
             </nav>
             <div class="header-actions">
+                <a href="/login" class="header-auth-link" id="authLink" style="display:none;"
+                    aria-label="Login ke dashboard">🔑 Login</a>
                 <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle dark mode"
                     aria-label="Toggle dark mode">🌙</button>
                 <button class="menu-toggle" id="menuToggle" onclick="toggleMobileNav()"
@@ -271,6 +273,26 @@
             // Set dynamic footer year
             var yearEl = document.getElementById('footerYear');
             if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+            // Auth link — tampilkan Login atau Dashboard berdasarkan token
+            var authLink = document.getElementById('authLink');
+            if (authLink) {
+                var token = localStorage.getItem('konek_token');
+                var currentPath = window.location.pathname;
+                if (token) {
+                    // Pengguna sudah login — tampilkan link ke Dashboard
+                    authLink.href = '/dashboard';
+                    authLink.textContent = '📊 Dashboard';
+                    authLink.setAttribute('aria-label', 'Buka dashboard');
+                    authLink.style.display = 'inline-flex';
+                } else if (currentPath !== '/login' && currentPath !== '/register') {
+                    // Pengguna belum login — tampilkan link ke Login
+                    authLink.href = '/login';
+                    authLink.textContent = '🔑 Login';
+                    authLink.setAttribute('aria-label', 'Login ke dashboard');
+                    authLink.style.display = 'inline-flex';
+                }
+            }
 
             // Active page indicator in navigation
             var currentPath = window.location.pathname;

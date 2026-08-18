@@ -1081,6 +1081,32 @@ a.breadcrumb-item:hover {
     gap: 4px;
 }
 
+/* ============ AUTH LINK (Header) ============ */
+.header-auth-link {
+    display: none;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    background: var(--primary-color);
+    color: #fff !important;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+    min-height: 44px;
+    min-width: 44px;
+}
+
+.header-auth-link:hover {
+    opacity: 0.85;
+}
+
+.header-auth-link:active {
+    opacity: 0.7;
+}
+
 /* ============ BUTTON GROUP ============ */
 .btn-group {
     display: flex;
@@ -2372,6 +2398,142 @@ button,
     font-size: 0.8rem;
     color: var(--text-primary);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* ============ DASHBOARD LAYOUT (Shared) ============ */
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 0;
+    min-height: calc(100vh - 60px);
+}
+
+.dashboard-sidebar {
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    padding: 24px 0;
+}
+
+.dashboard-sidebar .sidebar-header {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 16px;
+}
+
+.dashboard-sidebar .sidebar-header h3 {
+    margin: 0 0 4px;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+.dashboard-sidebar .sidebar-header .plan-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--primary-color);
+    color: white;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+    background: var(--bg-hover);
+    color: var(--primary-color);
+}
+
+.sidebar-nav a .nav-icon {
+    font-size: 1.1rem;
+    width: 24px;
+    text-align: center;
+}
+
+.dashboard-main {
+    padding: 24px 32px;
+}
+
+/* ============ DASHBOARD SIDEBAR TOGGLE (Mobile) ============ */
+.sidebar-toggle-btn {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    margin: 12px 16px 0;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 44px;
+    min-width: 44px;
+    transition: background 0.2s;
+}
+
+.sidebar-toggle-btn:hover {
+    background: var(--bg-hover);
+}
+
+.dashboard-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.dashboard-overlay.active {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .sidebar-toggle-btn {
+        display: flex;
+    }
+
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 260px;
+        height: 100vh;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        overflow-y: auto;
+        padding-top: 16px;
+    }
+
+    .dashboard-sidebar.open {
+        transform: translateX(0);
+    }
+
+    .dashboard-main {
+        padding: 16px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
 /* ============ PRINT STYLES ============ */

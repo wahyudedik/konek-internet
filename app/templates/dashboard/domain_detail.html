@@ -5,67 +5,6 @@
 
 {% block head %}
 <style>
-    .dashboard-layout {
-        display: grid;
-        grid-template-columns: 250px 1fr;
-        gap: 0;
-        min-height: calc(100vh - 60px);
-    }
-
-    .dashboard-sidebar {
-        background: var(--bg-secondary);
-        border-right: 1px solid var(--border-color);
-        padding: 24px 0;
-    }
-
-    .dashboard-sidebar .sidebar-header {
-        padding: 0 20px 20px;
-        border-bottom: 1px solid var(--border-color);
-        margin-bottom: 16px;
-    }
-
-    .dashboard-sidebar .sidebar-header h3 {
-        margin: 0 0 4px;
-        font-size: 1rem;
-    }
-
-    .dashboard-sidebar .sidebar-header .plan-badge {
-        display: inline-block;
-        padding: 2px 8px;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        background: var(--primary-color);
-        color: white;
-    }
-
-    .sidebar-nav a {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 20px;
-        color: var(--text-secondary);
-        text-decoration: none;
-        font-size: 0.9rem;
-        transition: all 0.2s;
-    }
-
-    .sidebar-nav a:hover,
-    .sidebar-nav a.active {
-        background: var(--bg-hover);
-        color: var(--primary-color);
-    }
-
-    .sidebar-nav a .nav-icon {
-        font-size: 1.1rem;
-        width: 24px;
-        text-align: center;
-    }
-
-    .dashboard-main {
-        padding: 24px 32px;
-    }
-
     .breadcrumb {
         font-size: 0.85rem;
         margin-bottom: 16px;
@@ -213,18 +152,6 @@
     }
 
     @media (max-width: 768px) {
-        .dashboard-layout {
-            grid-template-columns: 1fr;
-        }
-
-        .dashboard-sidebar {
-            display: none;
-        }
-
-        .dashboard-main {
-            padding: 16px;
-        }
-
         .info-grid {
             grid-template-columns: 1fr;
         }
@@ -233,23 +160,12 @@
 {% endblock %}
 
 {% block content %}
+{% set active_page = "domains" %}
 <div class="dashboard-layout">
-    <aside class="dashboard-sidebar">
-        <div class="sidebar-header">
-            <h3>👋 {{ user.display_name or user.username }}</h3>
-            <span class="plan-badge">{{ user.plan | upper }}</span>
-        </div>
-        <nav class="sidebar-nav">
-            <a href="/dashboard"><span class="nav-icon">📊</span> Dashboard</a>
-            <a href="/dashboard/domains" class="active"><span class="nav-icon">🌐</span> Domain Saya</a>
-            <a href="/dashboard/ddns"><span class="nav-icon">🔄</span> Dynamic DNS</a>
-            <a href="/dashboard/api-keys"><span class="nav-icon">🔑</span> API Keys</a>
-            <a href="/dashboard/notifications"><span class="nav-icon">🔔</span> Notifikasi</a>
-            <a href="/dashboard/profile"><span class="nav-icon">👤</span> Profil</a>
-            <hr style="border-color: var(--border-color); margin: 12px 20px;">
-            <a href="/"><span class="nav-icon">🏠</span> Beranda</a>
-        </nav>
-    </aside>
+    <button class="sidebar-toggle-btn" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Toggle sidebar menu">☰
+        Menu</button>
+    <div class="dashboard-overlay" id="dashboardOverlay"></div>
+    {% include "partials/dashboard_sidebar.html" %}
 
     <main class="dashboard-main">
         <div class="breadcrumb">
@@ -443,5 +359,17 @@
         function loadAll() { loadDomain(); loadSSL(); loadDNS(); loadUptime(); }
         loadAll();
     })();
+
+    /* ---- Sidebar toggle (mobile) ---- */
+    window.toggleSidebar = function () {
+        var sidebar = document.getElementById('dashboardSidebar');
+        var overlay = document.getElementById('dashboardOverlay');
+        if (!sidebar) return;
+        var isOpen = sidebar.classList.toggle('open');
+        if (overlay) overlay.classList.toggle('active', isOpen);
+    };
+    document.addEventListener('click', function (e) {
+        if (e.target && e.target.id === 'dashboardOverlay') window.toggleSidebar();
+    });
 </script>
 {% endblock %}

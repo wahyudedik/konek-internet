@@ -1055,6 +1055,13 @@ SUPPLIER
 - [x] Tool page preloading (prefetch on hover)
 - [x] Touch-friendly tap targets (WCAG 2.5.5, minimum 44px)
 - [x] Tablet responsive (768px-1024px breakpoint)
+- [x] Dashboard sidebar partial (DRY, reusable across 7 pages)
+- [x] Dashboard mobile responsive (slide-in sidebar + overlay)
+- [x] Dashboard auth redirect (unauthenticated → /login)
+- [x] Header auth link (Login/Dashboard dynamic)
+- [x] CSS consolidation (350+ lines removed from dashboard pages)
+- [x] Deploy script (deploy.sh — initial server setup)
+- [x] Update script (update.sh — migration, cache clear, log rotation)
 
 ---
 

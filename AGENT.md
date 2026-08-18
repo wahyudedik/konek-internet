@@ -144,7 +144,11 @@ konek-internet/
 ├── FEATURES.md           # Daftar lengkap fitur per fase (4 pilar)
 ├── AGENT.md              # Dokumen ini
 ├── requirements.txt      # Python dependencies
+├── .env.example          # Contoh environment variables
 ├── .venv/                # Virtual environment
+├── deploy.sh             # Script deployment awal (setup VPS)
+├── update.sh             # Script update produksi (migration, cache clear)
+├── konektivitas.db       # SQLite database (development)
 ├── plans/                # Rencana detail per modul
 │   ├── hub-konektivitas-plan.md
 │   ├── full-implementation-plan.md
@@ -152,7 +156,9 @@ konek-internet/
 └── app/
     ├── __init__.py
     ├── main.py           # FastAPI app + middleware
-    ├── config.py         # Konfigurasi (Pydantic)
+    ├── config.py         # Konfigurasi (Pydantic Settings)
+    ├── database.py       # Database session & init (SQLAlchemy async)
+    ├── dependencies.py   # Auth dependencies (get_current_user, require_plan)
     ├── routers/          # API endpoints
     │   ├── dns.py        # 8 endpoints: lookup, reverse, mx, txt, cname, spf, dmarc, propagation
     │   ├── domain.py     # 2 endpoints: whois, expiry
@@ -161,7 +167,12 @@ konek-internet/
     │   ├── ip.py         # 5 endpoints: ip lookup, asn, blacklist, my-ip, port, email
     │   ├── cdn.py        # 1 endpoint: cdn detect
     │   ├── batch.py      # Batch lookup endpoints
-    │   └── compare.py    # Comparison endpoints
+    │   ├── compare.py    # Comparison endpoints
+    │   ├── auth.py       # 6 endpoints: register, login, refresh, me, update, change-password
+    │   ├── workspace.py  # 10 endpoints: domains CRUD, check-*, history, dashboard
+    │   ├── ddns.py       # Dynamic DNS endpoints
+    │   ├── keys.py       # API Key management endpoints
+    │   └── notifications.py # Notification settings endpoints
     ├── services/         # Business logic
     │   ├── dns_service.py
     │   ├── whois_service.py
@@ -171,21 +182,56 @@ konek-internet/
     │   ├── ua_service.py
     │   ├── email_service.py
     │   ├── port_service.py
-    │   └── cdn_service.py
+    │   ├── cdn_service.py
+    │   ├── traceroute_service.py
+    │   ├── tech_detector_service.py
+    │   ├── speed_test_service.py
+    │   ├── dns_history_service.py
+    │   ├── ssl_history_service.py
+    │   ├── auth_service.py
+    │   ├── workspace_service.py
+    │   ├── monitoring_service.py
+    │   ├── notification_service.py
+    │   ├── api_key_service.py
+    │   ├── api_dashboard_service.py
+    │   └── ddns_service.py
+    ├── models/           # SQLAlchemy ORM models
+    │   ├── base.py       # Base + TimestampMixin
+    │   ├── user.py       # User model (email, username, password_hash, plan)
+    │   ├── monitored_domain.py  # MonitoredDomain (user's workspace domains)
+    │   ├── ssl_history.py       # DomainSslHistory
+    │   ├── dns_history.py       # DomainDnsHistory
+    │   ├── uptime_check.py      # UptimeCheck + UptimeLog
+    │   ├── notification.py      # NotificationSetting (email, telegram, discord)
+    │   ├── api_key.py           # ApiKey (kn_ prefix)
+    │   └── ddns.py             # DynamicDns records
+    ├── scheduler/        # Background job scheduler
+    │   └── jobs.py       # MonitoringScheduler (auto-check SSL, DNS, uptime)
     ├── utils/
     │   ├── cache.py      # Redis + in-memory fallback cache
     │   ├── rate_limit.py # Per-IP rate limiting (60 req/min)
-    │   └── validators.py # Input validation (domain, IP, URL, host)
-    ├── models/           # Data models (Pydantic)
+    │   ├── validators.py # Input validation (domain, IP, URL, host)
+    │   └── security.py   # JWT tokens, API key hashing (bcrypt)
     ├── templates/        # Jinja2 HTML templates
     │   ├── base.html     # Base layout (navbar, footer, JSON-LD)
     │   ├── index.html    # Homepage (tools grid)
+    │   ├── dashboard.html # Dashboard homepage
     │   ├── 404.html      # Custom 404 page
     │   ├── about.html    # About page
     │   ├── api_docs.html # API Documentation page
     │   ├── partials/
     │   │   ├── education.html
-    │   │   └── breadcrumb.html
+    │   │   ├── breadcrumb.html
+    │   │   └── dashboard_sidebar.html  # Reusable sidebar partial
+    │   ├── dashboard/    # Dashboard pages (auth required)
+    │   │   ├── login.html
+    │   │   ├── register.html
+    │   │   ├── domains.html
+    │   │   ├── domain_detail.html
+    │   │   ├── api_keys.html
+    │   │   ├── notifications.html
+    │   │   ├── ddns.html
+    │   │   └── profile.html
     │   └── tools/        # Tool pages (dengan section edukasi)
     ├── data/
     │   ├── education.py  # Konten edukasi tools
@@ -197,7 +243,7 @@ konek-internet/
         ├── sitemap.xml
         ├── manifest.json
         ├── sw.js
-        ├── css/style.css # Responsive CSS (65+ variables, dark mode)
+        ├── css/style.css # Responsive CSS (65+ variables, dark mode, dashboard layout)
         └── js/app.js     # Frontend JavaScript
 ```
 
@@ -333,7 +379,7 @@ Apakah fitur ini membantu pengguna memahami internet *(Learn)*, mengelola aset i
 - 36+ API endpoints aktif (+ DDNS, API Dashboard)
 - 30 halaman frontend + About page + API Docs page
 - 14 service files (dns, whois, ssl, ip, website, ua, email, port, cdn, traceroute, tech_detector, speed_test, dns_history, ssl_history)
-- 8 router files (dns, domain, ssl, website, ip, cdn, tools_v2, ddns)
+- 13 router files (dns, domain, ssl, website, ip, cdn, tools_v2, ddns, auth, workspace, keys, notifications)
 
 #### Core Infrastructure
 - Redis caching + in-memory fallback
@@ -341,6 +387,27 @@ Apakah fitur ini membantu pengguna memahami internet *(Learn)*, mengelola aset i
 - Security headers middleware
 - Input validation di semua endpoints
 - Async non-blocking di semua services (asyncio.to_thread)
+
+#### Database & Auth
+- SQLAlchemy 2.0 async ORM (mapped_column / Mapped type annotations)
+- JWT Authentication (python-jose) + bcrypt password hashing
+- User model (email, username, password_hash, plan)
+- 8 ORM models (User, MonitoredDomain, DomainSslHistory, DomainDnsHistory, UptimeCheck, UptimeLog, NotificationSetting, ApiKey, DynamicDns)
+- API Key system (kn_ prefix, bcrypt hashing)
+- Auth dependencies (get_current_user, require_plan, get_optional_user)
+- Dashboard auth redirect (unauthenticated → /login)
+- Header auth link (Login/Dashboard dynamic berdasarkan auth state)
+
+#### Dashboard & Workspace
+- Dashboard sidebar partial (DRY, reusable across 7 pages via {% include %})
+- Dashboard mobile responsive (slide-in sidebar + overlay backdrop)
+- Workspace domain management (CRUD)
+- Monitoring scheduler (auto-check SSL, DNS, uptime)
+- Notification system (Email, Telegram, Discord)
+
+#### Deployment Infrastructure
+- Deploy script (deploy.sh — initial VPS setup: Python, Nginx, Supervisor, Gunicorn)
+- Update script (update.sh — migration, cache clear, log rotation, graceful reload)
 
 #### SEO
 - JSON-LD (FAQPage + BreadcrumbList)
@@ -364,6 +431,7 @@ Apakah fitur ini membantu pengguna memahami internet *(Learn)*, mengelola aset i
 - Search/filter tools di homepage
 - Back-to-top button
 - 404 page dengan tool suggestions
+- CSS consolidation (350+ lines removed dari dashboard pages ke global style.css)
 
 #### Advanced Features
 - WHOIS extra fields (registrant, admin/tech contact, updated_date)
@@ -397,6 +465,10 @@ e:\PROJEKU\konek-internet\.venv\Scripts\python.exe -m uvicorn app.main:app --rel
 # Health: http://localhost:8002/health
 # About: http://localhost:8002/about
 # API Docs: http://localhost:8002/api-docs
+
+# Deployment (VPS)
+# bash deploy.sh    # Initial setup: Python, Nginx, Supervisor, Gunicorn
+# bash update.sh    # Update produksi: migration, cache clear, log rotation
 ```
 
 ### Cara Menjalankan (Future — Utility Search + Blockchain)
@@ -720,6 +792,13 @@ app/
 - [x] Tool page preloading (prefetch on hover)
 - [x] Touch-friendly tap targets (WCAG 2.5.5, minimum 44px)
 - [x] Tablet responsive (768px-1024px breakpoint)
+- [x] Dashboard sidebar partial (DRY, reusable across 7 pages)
+- [x] Dashboard mobile responsive (slide-in sidebar + overlay)
+- [x] Dashboard auth redirect (unauthenticated → /login)
+- [x] Header auth link (Login/Dashboard dynamic)
+- [x] CSS consolidation (350+ lines removed from dashboard pages)
+- [x] Deploy script (deploy.sh — initial server setup)
+- [x] Update script (update.sh — migration, cache clear, log rotation)
 
 ---
 

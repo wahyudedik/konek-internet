@@ -423,12 +423,15 @@ async def page_api_dashboard(request: Request):
 
 # ============ Dashboard Pages (Fase 2) ============
 
+from fastapi.responses import RedirectResponse
+
+
 @app.get("/dashboard")
 async def page_dashboard(request: Request):
     from app.dependencies import get_current_user_optional
     user = await get_current_user_optional(request)
     if not user:
-        return templates.TemplateResponse("tools/dns_lookup.html", tool_context(request, "Dashboard", "dns_lookup"))
+        return RedirectResponse(url="/login", status_code=302)
     return templates.TemplateResponse("dashboard.html", {"request": request, "user": user, "title": "Dashboard", "meta": None})
 
 
@@ -437,7 +440,7 @@ async def page_domains(request: Request):
     from app.dependencies import get_current_user_optional
     user = await get_current_user_optional(request)
     if not user:
-        return templates.TemplateResponse("tools/dns_lookup.html", tool_context(request, "Domain Saya", "dns_lookup"))
+        return RedirectResponse(url="/login", status_code=302)
     return templates.TemplateResponse("dashboard/domains.html", {"request": request, "user": user, "title": "Domain Saya", "meta": None})
 
 
@@ -446,7 +449,7 @@ async def page_domain_detail(request: Request, domain_id: int):
     from app.dependencies import get_current_user_optional
     user = await get_current_user_optional(request)
     if not user:
-        return templates.TemplateResponse("tools/dns_lookup.html", tool_context(request, "Detail Domain", "dns_lookup"))
+        return RedirectResponse(url="/login", status_code=302)
     return templates.TemplateResponse("dashboard/domain_detail.html", {"request": request, "user": user, "domain_id": domain_id, "title": "Detail Domain", "meta": None})
 
 
@@ -455,7 +458,7 @@ async def page_api_keys(request: Request):
     from app.dependencies import get_current_user_optional
     user = await get_current_user_optional(request)
     if not user:
-        return templates.TemplateResponse("tools/dns_lookup.html", tool_context(request, "API Keys", "dns_lookup"))
+        return RedirectResponse(url="/login", status_code=302)
     return templates.TemplateResponse("dashboard/api_keys.html", {"request": request, "user": user, "title": "API Keys", "meta": None})
 
 
@@ -464,7 +467,7 @@ async def page_notifications(request: Request):
     from app.dependencies import get_current_user_optional
     user = await get_current_user_optional(request)
     if not user:
-        return templates.TemplateResponse("tools/dns_lookup.html", tool_context(request, "Notifikasi", "dns_lookup"))
+        return RedirectResponse(url="/login", status_code=302)
     return templates.TemplateResponse("dashboard/notifications.html", {"request": request, "user": user, "title": "Notifikasi", "meta": None})
 
 
@@ -473,7 +476,7 @@ async def page_profile(request: Request):
     from app.dependencies import get_current_user_optional
     user = await get_current_user_optional(request)
     if not user:
-        return templates.TemplateResponse("tools/dns_lookup.html", tool_context(request, "Profil", "dns_lookup"))
+        return RedirectResponse(url="/login", status_code=302)
     return templates.TemplateResponse("dashboard/profile.html", {"request": request, "user": user, "title": "Profil", "meta": None})
 
 
@@ -482,7 +485,7 @@ async def page_ddns(request: Request):
     from app.dependencies import get_current_user_optional
     user = await get_current_user_optional(request)
     if not user:
-        return templates.TemplateResponse("tools/dns_lookup.html", tool_context(request, "Dynamic DNS", "dns_lookup"))
+        return RedirectResponse(url="/login", status_code=302)
     return templates.TemplateResponse("dashboard/ddns.html", {"request": request, "user": user, "title": "Dynamic DNS", "meta": None})
 
 

@@ -19,6 +19,10 @@
 - ✅ Mobile Responsive, Keyboard Shortcuts
 - ✅ Section Edukasi interaktif di semua tool pages
 - ✅ CDN Detection, API Dashboard
+- ✅ Dashboard sidebar partial (DRY, reusable across 7 pages)
+- ✅ Dashboard mobile responsive (slide-in sidebar + overlay)
+- ✅ CSS consolidation (350+ lines removed dari dashboard pages)
+- ✅ Deploy script (deploy.sh) & Update script (update.sh)
 
 ### Target Metrics
 

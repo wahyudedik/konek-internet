@@ -1,0 +1,48 @@
+<!--
+    Dashboard Sidebar Partial — Digunakan di semua halaman dashboard.
+    Penggunaan: {% include "partials/dashboard_sidebar.html" %}
+    Variabel yang dibutuhkan: user, active_page (opsional, default: "dashboard")
+-->
+{% set active_page = active_page | default("dashboard") %}
+<aside class="dashboard-sidebar" id="dashboardSidebar">
+    <div class="sidebar-header">
+        <h3>{{ user.display_name or user.username }}</h3>
+        <span class="plan-badge">{{ user.plan | upper }}</span>
+        <p style="margin: 6px 0 0; font-size: 0.8rem; color: var(--text-secondary);">{{ user.email }}</p>
+    </div>
+    <nav class="sidebar-nav" aria-label="Menu dashboard">
+        <a href="/dashboard" {% if active_page=="dashboard" %}class="active" {% endif %}>
+            <span class="nav-icon">📊</span> Dashboard
+        </a>
+        <a href="/dashboard/domains" {% if active_page=="domains" %}class="active" {% endif %}>
+            <span class="nav-icon">🌐</span> Domain Saya
+        </a>
+        <a href="/dashboard/api-keys" {% if active_page=="api-keys" %}class="active" {% endif %}>
+            <span class="nav-icon">🔑</span> API Keys
+        </a>
+        <a href="/dashboard/ddns" {% if active_page=="ddns" %}class="active" {% endif %}>
+            <span class="nav-icon">🔄</span> Dynamic DNS
+        </a>
+        <a href="/dashboard/notifications" {% if active_page=="notifications" %}class="active" {% endif %}>
+            <span class="nav-icon">🔔</span> Notifikasi
+        </a>
+        <a href="/dashboard/profile" {% if active_page=="profile" %}class="active" {% endif %}>
+            <span class="nav-icon">👤</span> Profil
+        </a>
+        <hr style="border: none; border-top: 1px solid var(--border-color); margin: 8px 20px;">
+        <a href="/" style="font-size: 0.85rem;">
+            <span class="nav-icon">🏠</span> Beranda
+        </a>
+        <a href="#" onclick="handleLogout(); return false;" style="font-size: 0.85rem; color: #ef4444;">
+            <span class="nav-icon">🚪</span> Logout
+        </a>
+    </nav>
+</aside>
+
+<script>
+    function handleLogout() {
+        localStorage.removeItem('konek_token');
+        localStorage.removeItem('konek_refresh_token');
+        window.location.href = '/login';
+    }
+</script>
